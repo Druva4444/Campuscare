@@ -1,0 +1,102 @@
+.Svernav{ 
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    padding-top: 0%;
+    height: 100%;
+    border-right: 1px solid black;
+    position: fixed;
+    overflow: auto;
+    background:linear-gradient(90deg,#0A7273,#0A7273);
+    border:none;
+    overflow-y: hidden;
+    
+    
+    
+   
+}
+
+li{
+    list-style-type: none;
+    display: inline;
+    cursor: pointer;
+    font-size: 23px;
+    
+}
+.Sul{
+    display: flex;
+    flex-direction: column;
+}
+.Suserdetail {
+   display: flex;
+   flex-direction: row;
+   padding-left: 10%;
+   padding-top: 10%;
+   padding-bottom: 0%;
+   
+
+}
+.Suserdetail img{
+    height:60px;
+    border-radius: 50%;
+}
+.Suserdetail .Stextpart{
+    color: snow;
+    font-size: 20px;
+    padding-left: 15px;
+}
+.Snavbar{
+margin-top: 45%;
+ padding-left: 1%;
+    padding-right: 1%; 
+    margin-left: 0;
+   
+}
+.Slogo{
+    margin-left: 1%;
+    margin-right: 1%;
+    
+
+    
+}
+button{
+    width: 60%;
+    margin: 12px 0px 10px 0px;
+    padding: 5px 0px 5px 0px;
+    font-size: 18px;
+    margin-left: 13%;
+    font-size: larger;
+    border:none;
+   
+}
+.Snavbar img{
+    width: 17%;
+    float: left;
+}
+.Sele{
+    display: flex;
+    align-items: center;
+    padding: 5% 0 5% 5%;
+}
+.Sele svg{
+    height:auto;
+    width:15%;
+    float:left;
+    color:snow;
+}
+.Sele a{
+font-size: 25px;
+text-decoration: none;
+color:snow;
+
+}
+.Siiit{
+    margin-top: 70%;
+}
+
+.Svernav svg {
+    height:auto;
+    width:15%;
+    float:left;
+    color:snow;
+}

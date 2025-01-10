@@ -1,0 +1,225 @@
+/* styles/form1.css */
+
+.container {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.addclgcontainer {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    max-width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.addclgcontainer:hover {
+    transform: scale(1.02);
+}
+
+.collegeForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.collegeForm p {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.collegeForm .input-field {
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.collegeForm .button {
+    padding: 10px;
+    background-color: #5cb85c;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.collegeForm .button:hover {
+    background-color: #4cae4c;
+}
+
+.collegeForm .submit-button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.collegeForm .submit-button:hover {
+    background-color: #0056b3;
+}
+
+.input-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-wrapper .add-button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.input-wrapper .add-button:hover {
+    background-color: #0056b3;
+}
+
+.input-wrapper .clear-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.input-wrapper .clear-button:hover {
+    background-color: #c82333;
+}
+
+.array-display {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+.pass {
+    position: relative;
+}
+
+.pass .password-field {
+    width: calc(100% - 40px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.pass .toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: none;
+}
+#container{
+    display: flex;
+}
+.plan-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.plan {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.plan:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.plan h2 {
+    color: #0A7273;
+}
+
+.plan p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.plan ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.plan ul li {
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.plan .action-button {
+    background-color: #0A7273;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.plan .action-button:hover {
+    background-color: #084b4a;
+}
+
+@media (max-width: 768px) {
+    .plan-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .plan {
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 300px;
+    }
+}

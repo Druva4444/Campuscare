@@ -1,0 +1,63 @@
+[
+    {
+        "gmail": "doctor1@gmail.com",
+        "password": "password1",
+        "college": "iiit sricity",
+        "fields": "fever"
+    },
+    {
+        "gmail": "doctor2@gmail.com",
+        "password": "password2",
+        "college": "iiit sricity",
+        "fields": "orthopedics"
+    },
+    {
+        "gmail": "doctor3@gmail.com",
+        "password": "password3",
+        "college": "AIIMS",
+        "fields": ["cardiology", "internal medicine"]
+    },
+    {
+        "gmail": "doctor4@gmail.com",
+        "password": "password4",
+        "college": "Apollo Hospital",
+        "fields": ["pediatrics", "nutrition"]
+    },
+    {
+        "gmail": "doctor5@gmail.com",
+        "password": "password5",
+        "college": "CMC Vellore",
+        "fields": ["neurology", "psychiatry"]
+    },
+    {
+        "gmail": "doctor6@gmail.com",
+        "password": "password6",
+        "college": "Fortis Hospital",
+        "fields": ["gynecology", "obstetrics"]
+    },
+    {
+        "gmail": "doctor7@gmail.com",
+        "password": "password7",
+        "college": "nit trichy",
+        "fields": "dermatology"
+    },
+    {
+        "gmail": "doctor8@gmail.com",
+        "password": "password8",
+        "college": "Manipal Hospital",
+        "fields": ["gastroenterology", "hepatology"]
+    },
+    {
+        "gmail": "doctor9@gmail.com",
+        "password": "password9",
+        "college": "Sanjivani Hospital",
+        "fields": ["endocrinology", "diabetes"]
+    },
+    {
+        "gmail": "doctor10@gmail.com",
+        "password": "password10",
+        "college": "Narayana Health",
+        "fields": ["rheumatology", "immunology"]
+    }
+]
+

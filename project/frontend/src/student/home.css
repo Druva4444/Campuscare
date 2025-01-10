@@ -1,0 +1,241 @@
+/* .body{
+
+        display: flex;
+        background-color:#0A7273;
+    
+} */
+.SHnonnavbar {
+   
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    background-color:whitesmoke;
+    border-left: 235px solid #0A7273;
+
+    height: 100vh;
+    
+    
+
+}
+.SHhornav{
+    
+    display: flex;
+    height: 10%;
+    margin-left: 7.5%;
+    align-items: center;
+    justify-content: space-between;
+    color: #0A7273;
+    transition: all 0.3s ease;
+    animation: slidedown 1s ease forwards;
+}
+.SHhornav p{
+    font-size: 50px;
+    
+}
+.SHdates {
+    margin-right: 5%;
+    display: flex;
+    flex-direction: column;
+}
+.SHwelcome{
+    width: 90%;
+    height: 30%;
+    margin-left: 5%;
+    margin-right: auto;
+    margin-top: 0.5%;
+    border: 1px solid black;
+    background-position: center;
+    background-image: url("../../public/w100.jpg");
+    background-size: cover;
+    position: relative;
+    border:none;
+    border-radius: 2%;
+    
+}
+.SHhome p {
+    font-size:3rem;
+    color: #0A7273;
+}
+
+.SHwelcome p{
+    font-size: 2.5rem;
+    margin-top: 3%;
+    margin-left: 4%;
+    color: whitesmoke
+}
+.SHtext{
+    display: flex;
+    flex-direction: row;
+}
+.SHtext svg{
+
+    
+    height:100%;
+    width: 400%;
+
+}
+.SHdashboard{
+    width: 25%;
+    height: 47%;
+   
+   margin-left: 8%;  
+    margin-top: 3%;
+    border: none;
+    padding-bottom: 0%;
+   animation: slideup 1s ease;
+   
+}
+.SHdashboard p{
+    color: black;
+    font-size: 40px;
+    margin-left: 2%;
+    margin-top: 4%;
+}
+.SHsessions{
+    color: snow;
+    width: 100%;
+    height: auto;
+    margin-top: 0%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #0A7273;
+    border-radius: 13px;
+    box-shadow:  10px 10px 10px #bebebe,
+             -7px -7px 15px #ffffff;
+}
+.SHsessions p{
+    margin-top: 5%;
+}
+.SHtextpart1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-around;
+    margin-bottom: 5%;
+    border-radius: 13px;
+}
+
+#SHdate{
+    font-size: 26px;
+    color: #0A7273;
+}
+#SHtime{
+    font-size: 26px;
+    color: #0A7273;
+}
+.SHtextdiv{
+   
+    width: 60%;
+}
+.SHtextdiv #main7{
+    font-size: 20px;
+    color: whitesmoke;
+}
+.SHtextdiv p {
+    font-size: 25px;
+    color: whitesmoke;
+}
+.SHimgdiv img{
+    width: 80px;
+    float: right;
+}
+.SHschedule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.SHschedule {
+    width: 90%;
+    margin: 0;
+    padding-bottom: 5%;
+    font-size: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+.SHnofi{
+    width: 25%; 
+    height: 20%;
+    margin-left: 69%;
+    margin-top:-20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: slideup 1s ease;
+        
+}
+table{
+    margin-top: 0%;
+    width: 100%;
+    border: 2px solid whitesmoke ;
+    padding: 0;
+    border-spacing: 0;
+    background-color: white;
+}
+th{
+    width: 33%;
+ 
+}
+th,td{
+text-align: center;
+padding-top:5% ;
+padding-bottom: 5%;
+font-size: 15px;
+border: 2.5px solid whitesmoke;
+
+
+}
+
+
+
+.SHdashboard table{
+    margin-top: 0%;
+    width:125%;
+    margin-left:12.5%;
+    background-color: white;
+    border:none;
+    border-radius: 50px;
+    box-shadow:  20px 20px 60px #bebebe,
+             -20px -20px 60px #ffffff;
+}
+
+.SHdashboard th,td {
+    border-radius:2%;
+}
+.SHimgdiv svg{
+    padding-top: 5px;
+   height:50px;
+   width:70px;
+}
+.SHicon{
+    margin-left: 0px;
+}
+.SHicon svg{
+    height:50px;
+   width:70px;
+
+}
+
+.SHnofi table{
+    border-radius: 13px;
+background: #ffffff;
+box-shadow:  7px 7px 15px #bebebe,
+             -7px -7px 15px #ffffff;
+}
+/* 
+text {
+    display: flex;
+    flex-direction: column;
+} */
+.SHhornav {
+    display: flex;
+    height: 10%;
+    margin-left: 7.5%;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    color: #0A7273;
+    transition: all 0.3s ease;
+    animation: slideDown 1s ease forwards;
+}

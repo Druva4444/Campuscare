@@ -42,7 +42,7 @@ import AddClgs from './forms/addcollages'
 import SuserNewPassword from './forms/SuserNewPAssword';
 import Suserforget from './forms/suserForgot';
 import Addadmin from './forms/Addadmin';
-
+import LeaveDetails from './student/Leave';
 function App() {
   return (
     <div className="App">
@@ -77,7 +77,7 @@ function App() {
           <Route path="/studentbooking" element={<><Vernavstud style={{marginTop:'-25px'}} /><StudBook></StudBook></>} /> 
           <Route path="/studentschedule" element={<><Vernavstud  /><StudSch></StudSch></>} /> 
           <Route path="/studentsetting" element={<><Vernavstud  /><Set></Set></>} /> 
-          <Route path="/leave" element={<><Vernavstud  /></>} /> 
+          <Route path="/leave" element={<><Vernavstud  /><LeaveDetails></LeaveDetails></>} /> 
           <Route path="/doctorhome" element={<><Docvernav></Docvernav><Dochome></Dochome></>} /> 
           <Route path="/doctorbooking" element={<><Docvernav></Docvernav><Docbooking></Docbooking></>} /> 
           <Route path="/doctorschedule" element={<><Docvernav></Docvernav><Docschedule></Docschedule></>} /> 

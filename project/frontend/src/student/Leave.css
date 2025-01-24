@@ -1,0 +1,115 @@
+/* Main container styling */
+.leaveSecondPart {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fc;
+    min-height: 100vh;
+  }
+  
+  /* Header styling */
+  .leaveSecondHeader {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  
+  /* Section styling */
+  .leaveMainBody {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Subheader for each section */
+  .leaveFirstPart {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-transform: capitalize;
+  }
+  
+  /* List styling */
+  .leaveDescription1 {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .leaveDescription2 {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .leaveDescription2:last-child {
+    border-bottom: none;
+  }
+  
+  /* Status color styles */
+  .leaveDescription2 {
+    background-color: #f9fafb;
+  }
+  
+  .leaveDescription2.pending {
+    background-color: #fbe6e6;
+    color: #e74c3c;
+  }
+  
+  .leaveDescription2.completed {
+    background-color: #d4f4db;
+    color: #27ae60;
+  }
+  
+  .leaveDescription2.rejected {
+    background-color: #fbe6e6;
+    color: #e74c3c;
+  }
+  
+  .leaveDescription2 .leaveStatus {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  
+  .leaveDescription2 .leaveDates {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  /* No leave message */
+  .leaveDescription1 p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    text-align: center;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .leaveSecondHeader {
+      font-size: 1.6rem;
+    }
+  
+    .leaveFirstPart {
+      font-size: 1.3rem;
+    }
+  
+    .leaveDescription2 {
+      font-size: 1rem;
+      flex-direction: column;
+      text-align: left;
+    }
+  
+    .leaveDescription2 .leaveDates {
+      margin-top: 5px;
+    }
+  }
+  

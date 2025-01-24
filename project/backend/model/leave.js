@@ -4,13 +4,17 @@ const leave = new mongoose.Schema({
     type:String,
     required:true
     },
+    appointmentId:{
+    type:String,
+    unique:true,
+    required:true
+    },
     doctoremail:{
         type:String,
         required:true
     },
     college:{
         type:String,
-        required:true,
     }
     ,
     startdate: {
@@ -22,6 +26,11 @@ const leave = new mongoose.Schema({
         type: Date,
         required: true
     },
+    status:{
+        type:String,
+        required:true,
+        default:"pending"
+    }
     
 });
 const Leave = mongoose.model('leaves', leave);

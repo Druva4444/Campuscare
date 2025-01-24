@@ -11,6 +11,7 @@ const Collage = require('../model/college')
 const reportdb = require('../model/report')
 const accappointment = require('../model/acceptedappointments')
 const rejappointment = require('../model/rejectedappointments')
+const Leave = require('../model/leave')
 
 async function handleloginS(req,res){
     try {
@@ -347,5 +348,29 @@ async function fetchcolleges1(req, res) {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+  async function applyleave(req,res) {
+    const {email,data,startDate,endDate} = req.body;
+    console.log(data._id);
+   try {
+      const leave = await Leave.findOne({
+        appointmentId:data._id
+      })
+      if (leave) {
+        return res.status(400).json({message:"Leave for this appointment is already exist"});
+      }
+      await Leave.create({
+        email:email,
+        appointmentId:data._id,
+        doctoremail:data.acceptedby,
+        startdate:startDate,
+        college:data.college,
+        enddate:endDate
+      })
+      return res.status(200).json({message:"leave sucessfully created"})
+   } catch (error) {
+    
+   }
+
+  }
   
-module.exports = {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent}
+module.exports = {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent,applyleave}

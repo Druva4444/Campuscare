@@ -9,8 +9,8 @@ function StudSch() {
     const [currentTime, setCurrentTime] = useState("");
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const [appointment,setappointment] = useState([])
-    const [com,setcomi] = useState([])
-
+    const [com,setcomi] = useState([]);
+const[email,setEmail]  = useState(null)
     useEffect(() => {
         // Set the current date
         const date = new Date();
@@ -46,10 +46,12 @@ function StudSch() {
           const userDetails = Cookies.get('userdetails');
           const token = Cookies.get('Uid2');
           let email = null;
+          
       
           if (userDetails) {
             const parsedDetails = JSON.parse(userDetails);
             email = parsedDetails.gmail;
+            setEmail(email)
           } else if (token) {
             try {
               const decoded = decodeToken(token);
@@ -127,7 +129,7 @@ function StudSch() {
 
                 {/* Example History section */}
                 {console.log(com)}
-                {com.length>0?com.map((indi,index)=><Mainbody key={index} det={indi} no={index}/>):<p style={{marginLeft:'40%',marginTop:'25%',fontSize:'40px',color:'#0A7273'}}>No History found</p>}
+                {com.length>0?com.map((indi,index)=><Mainbody key={index} det={indi} email={email}  no={index}/>):<p style={{marginLeft:'40%',marginTop:'25%',fontSize:'40px',color:'#0A7273'}}>No History found</p>}
                 
              
 

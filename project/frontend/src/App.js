@@ -43,6 +43,7 @@ import SuserNewPassword from './forms/SuserNewPAssword';
 import Suserforget from './forms/suserForgot';
 import Addadmin from './forms/Addadmin';
 import LeaveDetails from './student/Leave';
+import Leaves from './doctor/Leaves';
 function App() {
   return (
     <div className="App">
@@ -83,6 +84,7 @@ function App() {
           <Route path="/doctorschedule" element={<><Docvernav></Docvernav><Docschedule></Docschedule></>} /> 
           <Route path="/doctorpatients" element={<><Docvernav></Docvernav><Docpatients></Docpatients></>} /> 
           <Route path="/doctorsetting" element={<><Docvernav></Docvernav><Docsetting></Docsetting></>} /> 
+          <Route path="/doctorleaves" element={<><Docvernav></Docvernav><Leaves></Leaves></>} /> 
           <Route path='/aboutus' element={<Aboutus></Aboutus>}></Route>
           <Route path='/a' element={<A/>}></Route>
           <Route path='/suserlogin' element={<Suserlg/>}></Route>

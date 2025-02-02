@@ -55,7 +55,7 @@ useEffect(()=>{
 
   const pendingLeaves = leaves.filter((leave) => leave.status === "pending");
   const completedLeaves = leaves.filter((leave) => leave.status === "success");
-  const rejectedLeaves = leaves.filter((leave) => leave.status === "Rejected");
+  const rejectedLeaves = leaves.filter((leave) => leave.status === "rejected");
 
   return (
     <div className="leaveSecondPart">
@@ -79,7 +79,7 @@ useEffect(()=>{
       </section>
 
       <section className="leaveMainBody">
-        <h2 className="leaveFirstPart">Completed Leaves</h2>
+        <h2 className="leaveFirstPart">Accepted Leaves</h2>
         {completedLeaves.length > 0 ? (
           <ul className="leaveDescription1">
              {completedLeaves.map((leave) => (

@@ -375,11 +375,21 @@ async function fetchcolleges1(req, res) {
 async function getleaves(req,res) {
     const {email} =  req.query;
     console.log(email + 312);
-    const leaves = await Leave.find({email:email});
+    const leaves = await Leave.find({email:email})  ;
     console.log(leaves)
     if(!leaves){
        return res.status(404).json({message:"no leaves found"});
     }
     return res.status(200).json(leaves);
 }
-module.exports = {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent,applyleave,getleaves}
+async function getleaves2(req,res) {
+    const {email} =  req.query;
+    console.log(email + 312);
+    const leaves = await Leave.find({doctoremail:email})  ;
+    console.log(leaves)
+    if(!leaves){
+       return res.status(404).json({message:"no leaves found"});
+    }
+    return res.status(200).json(leaves);
+}
+module.exports = {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2}

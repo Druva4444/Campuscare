@@ -7,8 +7,8 @@ const Student = require('../model/user')
 const Doctors = require('../model/doctor')
 const Collage = require('../model/college')
 const mongoose = require('mongoose')
-const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc} = require('../controllers/doctor')
-const {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2} = require('../controllers/Student')
+const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves} = require('../controllers/doctor')
+const {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu ,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2} = require('../controllers/Student')
 const {handleadminlogin,adminhome,deletepd} = require('../controllers/admin')
 const {postloginpage,handlelogout,gethome,getadminpage,deleteadmins,getcollegepage,handledeletecollege,getcolleges1,Addadmin,getGmail, fetchWaitingClgs, acceptClgReq, susersendotp, suserresetp, suserhandleforget} = require('../controllers/suser');
 router.get('/getcolleges' , getcolleges);
@@ -38,6 +38,7 @@ router.post('/addstu',addstu)
 router.post('/applyleave' ,  applyleave);
 router.get('/leaves' , getleaves);
 router.get('/leaves2' , getleaves2);
+router.post('/modifyleaves' ,  modifyleaves);
 const upload = multer({
     storage: multer.diskStorage({
       destination: (req, file, cb) => {

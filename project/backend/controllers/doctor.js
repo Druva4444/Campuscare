@@ -3,7 +3,7 @@ const express= require('express');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const mongoose =  require('mongoose');
-
+const Leave = require('../model/leave')
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const Collage = require('../model/college')
@@ -296,4 +296,18 @@ async function adddoc(req,res){
     await Doctor.create({gmail:email,password:password,fields:field,college:college.college})
     return res.status(200).json({msg:'doctor added succesfull '})
 }
-module.exports = {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc}
+async function modifyleaves(req,res) {
+    const {leaveid,message} = req.body;
+    console.log(leaveid + message + "hello");
+    try {
+        const leave = await  Leave.findById({_id:leaveid});
+        if (!leave) {
+            return res.json(404).json({message:"No leave found"})
+        }
+        await Leave.findByIdAndUpdate(leaveid,{status:message});
+        console.log(leave)
+    } catch (error) {
+        
+    }
+}
+module.exports = {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves}

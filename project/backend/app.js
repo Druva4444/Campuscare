@@ -11,11 +11,12 @@ const cron = require('node-cron');
 const moment = require('moment'); 
 const fs = require('fs');
 const path =  require('path');
+const helmet  =  require('helmet');
 const generateDefaultSlots = () => {
   const slots = [];
-  const start = 9 * 60; // 9 AM in minutes
-  const end = 17 * 60; // 5 PM in minutes
-  const step = 15; // 15-minute intervals
+  const start = 9 * 60; 
+  const end = 17 * 60; 
+  const step = 15; 
 
   for (let time = start; time < end; time += step) {
     const startHours = Math.floor(time / 60);
@@ -68,7 +69,15 @@ app.use(express.json());
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 app.use(morgan('dev', { stream: accessLogStream }));
+app.use(
+  helmet({
+      contentSecurityPolicy: false,
+      frameguard: { action: 'deny' }, 
+  })
+);
+
 app.use(router); 
+
 
 
 const port = 3020;

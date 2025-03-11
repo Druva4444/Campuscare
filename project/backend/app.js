@@ -9,8 +9,15 @@ const {getmongoconnect} = require('./connection.js/connection');
 const router = require('./routes/routes');
 const cron = require('node-cron');
 const moment = require('moment'); 
+<<<<<<< HEAD
 const fs = require('fs');
 const path =  require('path');
+=======
+const DoctorRouter  = require('./routes/DoctorRouter.js');
+const StudentRouter = require('./routes/StudentRouter.js');
+const AdminRouter = require('./routes/AdminRouter.js');
+const SuserAdmin = require('./routes/SuserAdmin.js');
+>>>>>>> e73c2e6 (abc)
 const generateDefaultSlots = () => {
   const slots = [];
   const start = 9 * 60; // 9 AM in minutes
@@ -65,9 +72,16 @@ getmongoconnect('mongodb+srv://druvadruvs:Druva%402907@cluster0.7eaal.mongodb.ne
 app.use(cookieParser());
 app.use(express.json()); 
 // app.use(express.urlencoded({ extended: false })); 
+<<<<<<< HEAD
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 app.use(morgan('dev', { stream: accessLogStream }));
+=======
+app.use('/',StudentRouter)
+app.use('/',DoctorRouter)
+app.use('/',AdminRouter)
+app.use('/',SuserAdmin)
+>>>>>>> e73c2e6 (abc)
 app.use(router); 
 
 

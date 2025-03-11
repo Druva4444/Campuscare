@@ -150,9 +150,7 @@ function Leaves (){
        Leave Request from: {new Date(leave.startdate).toLocaleDateString("en-GB")} 
        to {new Date(leave.enddate).toLocaleDateString("en-GB")}
    </span>
-   <button className="doctorleave-button reject" onClick={() => updateLeaveStatus(leave._id, "rejected")}>
-       Reject
-   </button>
+   
 </div>
 
       </div>

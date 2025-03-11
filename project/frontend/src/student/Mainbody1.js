@@ -6,7 +6,7 @@ function Mainbody1(props) {
     try {
       const response = await axios.post('http://localhost:3020/deletebooking', { id: props.det._id });
       alert(response.data.msg);
-      window.localStorage.href='/studentbooking'
+      window.location.href='/studentbooking'
     } catch (error) {
       console.error("Error while cancelling appointment:", error);
       alert("An error occurred. Please try again.");

@@ -110,7 +110,7 @@ function Docbooking() {
                         <div className="dbtextpart1">
                             <div className="dbtextdiv"style={{margin: "0" , padding: "0"}} >
                                 <p id="db"style={{ margin: "0",fontSize: "30px",color:"snow"  }}></p>
-                                <p id="db"style={{margin: "0", fontSize: "40px",color:"snow" }}>New Appointments</p>
+                                <p id="db"style={{margin: "0", fontSize: "40px",color:"snow" }}>Slots</p>
                             </div>
                             <div className="dbimgdiv">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-plus" viewBox="0 0 16 16">

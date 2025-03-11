@@ -1,0 +1,4 @@
+::1 - - [11/Mar/2025:15:16:52 +0000] "GET /getcolleges HTTP/1.1" 200 602 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+::1 - - [11/Mar/2025:15:16:53 +0000] "GET /getcolleges HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+[0mGET /getcolleges [36m304[0m 55.166 ms - -[0m
+[0mGET /getcolleges [36m304[0m 36.450 ms - -[0m

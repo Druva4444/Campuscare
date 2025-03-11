@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose =require('mongoose');
 const app = express();
+const morgan = require('morgan');
 const Doctor = require('./model/doctor.js')
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -8,6 +9,8 @@ const {getmongoconnect} = require('./connection.js/connection');
 const router = require('./routes/routes');
 const cron = require('node-cron');
 const moment = require('moment'); 
+const fs = require('fs');
+const path =  require('path');
 const generateDefaultSlots = () => {
   const slots = [];
   const start = 9 * 60; // 9 AM in minutes
@@ -62,7 +65,9 @@ getmongoconnect('mongodb+srv://druvadruvs:Druva%402907@cluster0.7eaal.mongodb.ne
 app.use(cookieParser());
 app.use(express.json()); 
 // app.use(express.urlencoded({ extended: false })); 
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
+app.use(morgan('dev', { stream: accessLogStream }));
 app.use(router); 
 
 

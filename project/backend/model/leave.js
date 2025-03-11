@@ -32,6 +32,6 @@ const leave = new mongoose.Schema({
         default:"pending"
     }
     
-});
+},{timestamps:true});
 const Leave = mongoose.model('leaves', leave);
 module.exports= Leave

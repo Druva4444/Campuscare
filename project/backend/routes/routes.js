@@ -7,38 +7,16 @@ const Student = require('../model/user')
 const Doctors = require('../model/doctor')
 const Collage = require('../model/college')
 const mongoose = require('mongoose')
-const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves} = require('../controllers/doctor')
-const {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu ,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2} = require('../controllers/Student')
-const {handleadminlogin,adminhome,deletepd} = require('../controllers/admin')
-const {postloginpage,handlelogout,gethome,getadminpage,deleteadmins,getcollegepage,handledeletecollege,getcolleges1,Addadmin,getGmail, fetchWaitingClgs, acceptClgReq, susersendotp, suserresetp, suserhandleforget} = require('../controllers/suser');
-router.get('/getcolleges' , getcolleges);
-router.post('/dlogin',handlelogin)
-router.post('/gethome',givehomedet)
-router.post('/dltapp',deleteapp)
-router.post('/getpatients',getpatients)
-router.post('/postreport',addreport)
-router.post('/slogin',handleloginS)
-router.post('/getStuhome',handlestudenthome)
-router.post('/deletebooking',deletebooking)
-router.post('/adminlogin',handleadminlogin)
-router.post('/getadminhome',adminhome)
-router.post('/deletepd',deletepd)
-router.post('/sendotp',sendotp)
-router.post('/handleforget',handleforget)
-router.post('/resetpassword',resetp)
-router.post('/resetpasswords',resetps)
-router.post('/sendotps',sendotps)
-router.post('/handleforgetstu',handleverify)
-router.post('/getdoc',handle_appointments)
-router.post('/getslots',getslots)
-router.post('/bookslot',bookslot)
-router.post('/getslotsdoc',getslotsdoc)
-router.post('/adddoc',adddoc)
-router.post('/addstu',addstu)
-router.post('/applyleave' ,  applyleave);
-router.get('/leaves' , getleaves);
-router.get('/leaves2' , getleaves2);
-router.post('/modifyleaves' ,  modifyleaves);
+
+
+
+
+
+
+
+
+
+
 const upload = multer({
     storage: multer.diskStorage({
       destination: (req, file, cb) => {
@@ -342,21 +320,5 @@ const WaitingClgs = require('../model/pendingclgs'); // Adjust the path as neede
             res.status(500).json({ message: 'Server error. Please try again later.' });
         }
     });
-router.get('/fetchcolleges' , getcolleges1);
-router.post('/getsuserhome' , postloginpage);
-router.post('/logoutsuser' , handlelogout);
-router.get('/gethomedata' , gethome);
-router.get('/waitingclgs' , fetchWaitingClgs)
-router.get('/getadmin' , getadminpage);
-router.post('/deleteadmins' , deleteadmins );
-router.get('/getcollege' , getcollegepage);
-router.post('/deletecollege' ,handledeletecollege)
-router.post('/Addadmin' , Addadmin)
-router.get('/getGmail',getGmail);
-router.post('/acceptclgreq/:id/:email',acceptClgReq);
-router.post('/superuser/handleforget',suserhandleforget)
-router.post('/superuser/resetpassword',suserresetp)
-router.post('/superuser/sendotp',susersendotp)
-router.get('/fetchcolleges1' , fetchcolleges1)
-router.post('/Addstudent' , Addstudent);
+
 module.exports=router

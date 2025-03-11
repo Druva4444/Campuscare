@@ -5,3 +5,4 @@
 [0mPOST /dlogin [32m200[0m 151.660 ms - 29[0m
 [0mPOST /gethome [32m200[0m 95.213 ms - 2538[0m
 [0mPOST /gethome [32m200[0m 96.024 ms - 2538[0m
+[0mHEAD / [33m404[0m 2.200 ms - 140[0m

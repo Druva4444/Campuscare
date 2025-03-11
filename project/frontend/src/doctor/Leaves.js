@@ -122,7 +122,7 @@ function Leaves (){
       </section>
 
       <section className="leaveMainBody">
-        <h2 className="leaveFirstPart">Completed Leaves</h2>
+        <h2 className="leaveFirstPart">Accepted Leaves</h2>
         {completedLeaves.length > 0 ? (
           <ul className="leaveDescription1">
           {completedLeaves.map((leave) => (

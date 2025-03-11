@@ -350,6 +350,7 @@ async function fetchcolleges1(req, res) {
   }
   async function applyleave(req,res) {
     const {email,data,startDate,endDate} = req.body;
+    console.log(email + 353);
     console.log(data._id);
    try {
       const leave = await Leave.findOne({

@@ -9,7 +9,8 @@ const {getmongoconnect} = require('./connection.js/connection');
 const router = require('./routes/routes');
 const cron = require('node-cron');
 const moment = require('moment'); 
-
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql/schema');
 const fs = require('fs');
 const path =  require('path');
 const helmet  =  require('helmet');
@@ -68,7 +69,10 @@ app.use(cors({
   credentials: true
 }));
 getmongoconnect('mongodb+srv://druvadruvs:Druva%402907@cluster0.7eaal.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(()=>{console.log("mongoDb connected")}).catch((err)=>{console.log("mongo db connection error" + err)});
-
+app.use('/graphql', graphqlHTTP({
+  schema,
+  graphiql: true, // Enables GraphiQL UI for testing
+}));
 
 app.use(cookieParser());
 app.use(express.json()); 

@@ -9,11 +9,18 @@ const {getmongoconnect} = require('./connection.js/connection');
 const router = require('./routes/routes');
 const cron = require('node-cron');
 const moment = require('moment'); 
+
+
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./graphql/schema');
 const fs = require('fs');
 const path =  require('path');
 const helmet  =  require('helmet');
+
+
+const errorHandler = require('./middleware/errorhandler.js');
+const fs = require('fs');
+const path =  require('path');
 
 const DoctorRouter  = require('./routes/DoctorRouter.js');
 const StudentRouter = require('./routes/StudentRouter.js');
@@ -90,10 +97,13 @@ app.use(
   })
 );
 
+
 app.use('/',StudentRouter)
 app.use('/',DoctorRouter)
 app.use('/',AdminRouter)
 app.use('/',SuserAdmin)
+
+app.use(errorHandler);
 
 app.use(router); 
 

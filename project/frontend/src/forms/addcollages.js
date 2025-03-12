@@ -143,7 +143,7 @@ export default function Addclgs() {
             <input
               style={inputStyle}
               type="text"
-              placeholder="Enter an array element"
+              placeholder="Enter a field"
               value={specialistInput}
               onChange={(e) => setSpecialistInput(e.target.value)}
             />
@@ -165,7 +165,7 @@ export default function Addclgs() {
           <input
             style={inputStyle}
             type="email"
-            placeholder="Enter email"
+            placeholder="Enter admin email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

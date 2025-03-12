@@ -1,5 +1,11 @@
 const express = require('express');
 const DoctorRouter = express.Router();
+const checkAuth = require('../middleware/Doctor.js');
+// errorMiddleware.js
+
+
+
+
 const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves} = require('../controllers/doctor')
 DoctorRouter.get('/getcolleges' , getcolleges);
 DoctorRouter.post('/dlogin',handlelogin)
@@ -13,4 +19,5 @@ DoctorRouter.post('/resetpassword',resetp)
 DoctorRouter.post('/getslotsdoc',getslotsdoc)
 DoctorRouter.post('/adddoc',adddoc)
 DoctorRouter.post('/modifyleaves' ,  modifyleaves);
+
 module.exports = DoctorRouter;

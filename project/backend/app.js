@@ -81,6 +81,8 @@ app.use(express.json());
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 app.use(morgan('dev', { stream: accessLogStream }));
+// app.use(morgan(':method :url  - :response-time mss'));
+
 app.use(
   helmet({
       contentSecurityPolicy: false,

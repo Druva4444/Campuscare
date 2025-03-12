@@ -1,4 +1,5 @@
 const express = require('express');
+const  checkAuth  = require('../middleware/Student.js');
 const StudentRouter = express.Router();
 const {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu ,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2} = require('../controllers/Student')
 StudentRouter.post('/slogin',handleloginS)

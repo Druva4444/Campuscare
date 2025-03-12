@@ -20,7 +20,7 @@ const clgschema = mongoose.Schema({
     domain:{
         type:String,
         required:true,
-        unique:true
+        
     },
     amount:{
         type:Number,

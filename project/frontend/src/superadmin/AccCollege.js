@@ -33,6 +33,7 @@ function AccCollege() {
      await axios.post(`http://localhost:3020/acceptclgreq/${id}/${email}`).then((response)=>{
         if (response.ok) {
           alert("accepted Successfully")
+          window.location.reload();
           fetchColleges();
         }
      });
@@ -92,60 +93,68 @@ function AccCollege() {
           </div>
         </div>
       </div>
-      {colleges.map((college) => (
-  <div className="addclg-mainbody16" style={{ marginLeft: '22%' }} key={college._id}> 
-    <div className="addclg-collegeName">
-      <p>{college.name}</p> {/* Display college name here */}
-    </div>
+      {colleges.length > 0 ? (
+  colleges.map((college) => (
+    <div className="addclg-mainbody16" style={{ marginLeft: '22%' }} key={college._id}> 
+      <div className="addclg-collegeName">
+        <p>{college.name}</p> {/* Display college name here */}
+      </div>
 
-    <div className="addclg-details">
-      <p>No. of Students: {college.noOfStudents}</p>
-      <p>No. of Doctors: {college.noOfDoctors}</p>
-      <p>Plan Expires: {new Date(college.plan).toLocaleDateString()}</p>
-      <p>Admin email : {college.credentials[0].email}</p>
-    </div>
-    <div className="addclg-details">
-      <p>Amount: {college.amount}</p> 
-      <p>Domain: {college.domain}</p>
-      <span>Fields: </span>
-      {college.fields.map((field)=>(
-        <span>{field +"  ,"}</span>
-      ))}
-    </div>
+      <div className="addclg-details">
+        <p>No. of Students: {college.noOfStudents}</p>
+        <p>No. of Doctors: {college.noOfDoctors}</p>
+        <p>Plan Expires: {new Date(college.plan).toLocaleDateString()}</p>
+        <p>Admin email : {college.credentials[0]?.email}</p>
+      </div>
 
-    <div className="addclg-actions">
-      <button
-        className="addclg-acceptBtn"
-        style={{
-          marginRight: "10px",
-          backgroundColor: "#0A7273",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          padding: "5px 10px",
-          cursor: "pointer",
-        }}
-        onClick={() => handleAccept(college._id ,college.credentials[0].email )} // Call accept function here
-      >
-        Accept
-      </button>
-      <button
-        className="addclg-deleteBtn"
-        style={{
-          backgroundColor: "#0A7273",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          padding: "5px 10px",
-          cursor: "pointer",
-        }}
-        onClick={() => handleDelete(college._id , college.credentials[0].email)} // Call delete function here
-      >
-        Delete
-      </button>
+      <div className="addclg-details">
+        <p>Amount: {college.amount}</p> 
+        <p>Domain: {college.domain}</p>
+        <span>Fields: </span>
+        {college.fields.map((field, index) => (
+          <span key={index}>{field}{index !== college.fields.length - 1 ? ', ' : ''}</span>
+        ))}
+      </div>
+
+      <div className="addclg-actions">
+        <button
+          className="addclg-acceptBtn"
+          style={{
+            marginRight: "10px",
+            backgroundColor: "#0A7273",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "5px 10px",
+            cursor: "pointer",
+          }}
+          onClick={() => handleAccept(college._id, college.credentials[0]?.email)} 
+        >
+          Accept
+        </button>
+        <button
+          className="addclg-deleteBtn"
+          style={{
+            backgroundColor: "#0A7273",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "5px 10px",
+            cursor: "pointer",
+          }}
+          onClick={() => handleDelete(college._id, college.credentials[0]?.email)}
+        >
+          Delete
+        </button>
+      </div>
     </div>
-  </div>
-))}
+  ))
+) : (
+  <p style={{ textAlign: 'center', fontSize: '28px', marginTop: '300px',color:"#0A7273" }}>
+    No requests available
+  </p>
+)}
+
 
 
     </div>

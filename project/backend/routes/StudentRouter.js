@@ -2,6 +2,12 @@ const express = require('express');
 const  checkAuth  = require('../middleware/Student.js');
 const StudentRouter = express.Router();
 const {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu ,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2} = require('../controllers/Student')
+StudentRouter.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
+    next();
+  });
+  
+  
 StudentRouter.post('/slogin',handleloginS)
 StudentRouter.post('/getStuhome',handlestudenthome)
 StudentRouter.post('/deletebooking',deletebooking)

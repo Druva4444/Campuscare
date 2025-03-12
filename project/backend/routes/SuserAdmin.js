@@ -17,7 +17,7 @@ SuserAdmin.get('/getcollege' , getcollegepage);
 SuserAdmin.post('/deletecollege' ,handledeletecollege)
 SuserAdmin.post('/Addadmin' , Addadmin)
 SuserAdmin.get('/getGmail',getGmail);
-SuserAdmin.post('/acceptclgreq/:id/:email',acceptClgReq);
+SuserAdmin.post('/acceptclgreq/:id/:email/:password/:name',acceptClgReq);
 SuserAdmin.post('/deleteclgreq/:id/:email',deleteclgreq);
 SuserAdmin.post('/superuser/handleforget',suserhandleforget)
 SuserAdmin.post('/superuser/resetpassword',suserresetp)

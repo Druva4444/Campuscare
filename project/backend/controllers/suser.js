@@ -344,7 +344,7 @@ async function suserresetp(req,res){
         // Update the password
         student.password = password; // Direct assignment (use hashing in real apps for security)
         await student.save();
-
+       
         res.json({ success: true, message: "Password reset successfully" });
     } catch (error) {
         console.error(error);
@@ -353,8 +353,9 @@ async function suserresetp(req,res){
 }
 
 async function acceptClgReq(req, res) {
-    const { id ,email } = req.params;
+    const { id ,email,password,name } = req.params;
     console.log(id,email);
+    console.log(name + 358)
     try {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -371,6 +372,12 @@ async function acceptClgReq(req, res) {
         delete newClgData._id;
         const newclg = new Collage(newClgData);
         await newclg.save();
+        await admin.create({
+          email:email,
+          password1 : password,
+          college :name,
+          cretedon: new Date()
+        })
         await WaitingClgs.findByIdAndDelete(id);
         const mailOptions = {
             from: 'campuscarec@gmail.com',

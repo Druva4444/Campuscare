@@ -28,9 +28,9 @@ function AccCollege() {
   useEffect(() => {
     fetchColleges();
   }, [])
-  const handleAccept=async(id , email)=>{
+  const handleAccept=async(id , email ,password, name)=>{
     console.log(id,email)
-     await axios.post(`http://localhost:3020/acceptclgreq/${id}/${email}`).then((response)=>{
+     await axios.post(`http://localhost:3020/acceptclgreq/${id}/${email}/${password}/${name}`).then((response)=>{
         if (response.ok) {
           alert("accepted Successfully")
           fetchColleges();
@@ -125,7 +125,7 @@ function AccCollege() {
           padding: "5px 10px",
           cursor: "pointer",
         }}
-        onClick={() => handleAccept(college._id ,college.credentials[0].email )} // Call accept function here
+        onClick={() => handleAccept(college._id ,college.credentials[0].email,college.credentials[0].password,college.name )} // Call accept function here
       >
         Accept
       </button>
@@ -139,7 +139,7 @@ function AccCollege() {
           padding: "5px 10px",
           cursor: "pointer",
         }}
-        onClick={() => handleDelete(college._id , college.credentials[0].email)} // Call delete function here
+        onClick={() => handleDelete(college._id , college.credentials[0].email )} // Call delete function here
       >
         Delete
       </button>

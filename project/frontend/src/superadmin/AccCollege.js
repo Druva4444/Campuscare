@@ -37,7 +37,12 @@ function AccCollege() {
         }
      });
   }
-  const handleDelete=()=>{}
+  const handleDelete=async (id,email)=>{
+    console.log(id,email)
+     await axios.post(`http://localhost:3020/deleteclgreq/${id}/${email}`).then((response)=>{
+           fetchColleges()
+     });
+  }
   // if (colleges.length===0) {
   //   return <p>no clgs available</p>
   // }

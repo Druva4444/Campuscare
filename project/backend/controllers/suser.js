@@ -398,6 +398,25 @@ async function acceptClgReq(req, res) {
         res.status(500).json("Error processing the request");
     }
 }
+async function deleteclgreq(req, res) {
+  const { id } = req.params;
+  console.log("Deleting College Request:", id);
+
+  try {
+      const clg = await WaitingClgs.findById(id);
+      if (!clg) {
+          return res.status(404).json({ message: "College not found in waiting list" });
+      }
+
+      // Delete the college from the waiting list
+      await WaitingClgs.findByIdAndDelete(id);
+
+      res.status(200).json({ message: "College request deleted successfully." });
+  } catch (error) {
+      console.error("Error deleting college request:", error);
+      res.status(500).json({ message: "Error processing the request" });
+  }
+}
 async function getcollegepage(req, res) {
     try {
       // Extract user email from cookies
@@ -479,4 +498,4 @@ async function getcollegepage(req, res) {
     }
   }
 module.exports = {postloginpage,handlelogout,gethome,getadminpage,deleteadmins,getcollegepage,handledeletecollege 
-    ,getcolleges1,Addadmin,getGmail,fetchWaitingClgs , acceptClgReq ,susersendotp , suserhandleforget , suserresetp};
+    ,getcolleges1,Addadmin,getGmail,fetchWaitingClgs , acceptClgReq ,susersendotp , suserhandleforget , suserresetp,deleteclgreq};

@@ -27,7 +27,8 @@ async function handleButton(e){
     try {
      await axios.post('http://localhost:3020/logoutsuser', {
     }, { withCredentials: true });
-    navigate('/');
+    window.location.href='/';
+    console.log("logged out")
     } catch (error) {
       console.log(error)
     }

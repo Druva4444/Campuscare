@@ -19,5 +19,4 @@ DoctorRouter.post('/resetpassword',resetp)
 DoctorRouter.post('/getslotsdoc',getslotsdoc)
 DoctorRouter.post('/adddoc',adddoc)
 DoctorRouter.post('/modifyleaves' ,  modifyleaves);
-
 module.exports = DoctorRouter;

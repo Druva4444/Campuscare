@@ -257,6 +257,7 @@ function Colleges() {
           </div>
         ))}
       </div>
+      
     </div>
   );
 }

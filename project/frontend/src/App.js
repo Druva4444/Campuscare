@@ -5,7 +5,7 @@ import Dashboard from './superadmin/Dashboard';
 import Colleges from './superadmin/Colleges';
 import Admins from './superadmin/Admins';
 import Vernavstud from './student/Vernavstud';
-
+import Students from './superadmin/Students';
 import Home from './student/Home';
 import StudAppoint from './student/appointment';
 import StudBook from './student/bookings';
@@ -71,6 +71,7 @@ function App() {
   }
 />
           <Route path="/superadmin" element={<div><Vernav/><Dashboard/></div>}/>    
+          <Route path="/students" element={<div><Vernav/><Students></Students></div>}/>    
           <Route path="/superadmincolleges" element={<div style={{marginTop:'-25px'}}><Vernav/><Colleges></Colleges></div>} /> 
           <Route path="/superadmin_admins" element={<><Vernav /><Admins/></>} /> 
           <Route path="/studenthome" element={<><Vernavstud /><Home></Home></>} /> 

@@ -2,17 +2,14 @@ name: Campus Care Connect - CI
 
 on:
   push:
-    branches: [ "main" ]  # Runs when you push to main branch
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]  # Also runs when you open a pull request
+    branches: [ "main" ]
 
 jobs:
   backend-ci:
     runs-on: ubuntu-latest
     name: Backend - Install Check
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -20,14 +17,13 @@ jobs:
         with:
           node-version: 18
       - name: Install Backend Dependencies
-        run: npm install
+        run: |
+          cd backend
+          npm install
 
   frontend-ci:
     runs-on: ubuntu-latest
     name: Frontend - Install and Build Check
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -35,6 +31,10 @@ jobs:
         with:
           node-version: 18
       - name: Install Frontend Dependencies
-        run: npm install
+        run: |
+          cd frontend
+          npm install
       - name: Build Frontend
-        run: npm run build
+        run: |
+          cd frontend
+          npm run build

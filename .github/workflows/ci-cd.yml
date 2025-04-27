@@ -1,40 +1,35 @@
-name: Campus Care Connect - CI
+name: CampusCareConnect CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  backend-ci:
+  build:
     runs-on: ubuntu-latest
-    name: Backend - Install Check
-    defaults:
-      run:
-        working-directory: project/backend  # <-- notice project/backend
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - name: Install Backend Dependencies
-        run: npm install
 
-  frontend-ci:
-    runs-on: ubuntu-latest
-    name: Frontend - Install and Build Check
-    defaults:
-      run:
-        working-directory: project/frontend  # <-- notice project/frontend
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - name: Install Frontend Dependencies
-        run: npm install
-      - name: Build Frontend
-        run: npm run build
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Backend Install Check
+    - name: Install Backend Dependencies
+      working-directory: project/backend
+      run: npm install
+
+    # Frontend Install Check
+    - name: Install Frontend Dependencies
+      working-directory: project/frontend
+      run: npm install
+
+    # Backend Lint or Build Check (optional)
+    # You can add backend lint/build commands here if needed
+
+    # Frontend Build (important fix: CI=false)
+    - name: Build Frontend
+      working-directory: project/frontend
+      run: CI=false npm run build

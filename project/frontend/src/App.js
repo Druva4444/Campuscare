@@ -43,7 +43,10 @@ import SuserNewPassword from './forms/SuserNewPAssword';
 import Suserforget from './forms/suserForgot';
 import Addadmin from './forms/Addadmin';
 import LeaveDetails from './student/Leave';
-import Leaves from './doctor/Leaves';
+import Leaves from './doctor/Leaves';  
+
+
+
 function App() {
   return (
     <div className="App">
@@ -56,7 +59,7 @@ function App() {
       // Redirect to /doctorhome if Uid1 cookie is present
       <Navigate to="/doctorhome" />
     ) : Cookies.get('Uid2') ? (
-      // Redirect to /student/home if Uid2 cookie is present
+      
       <Navigate to="/studenthome" />
     ) : Cookies.get('Uid3') ? (
       // Redirect to /admin if Uid3 cookie is present

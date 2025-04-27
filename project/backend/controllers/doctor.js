@@ -173,13 +173,32 @@ async function deleteapp(req, res) {
     }
 }
 
-async function getpatients(req,res){
-    const { email} = req.body
-    console.log(email)
-    const patients = await accappointment.find({acceptedby:email,date:{$lt:new Date()}})
-    console.log(patients)
-    return res.status(200).json({patients})
+async function getpatients(req, res) {
+    const { email } = req.body;
+    console.log("Fetching past appointments for:", email);
+    
+    try {
+        // Use the index on `acceptedby` and filter by date
+        const patients = await accappointment.find({
+            acceptedby: email,
+            date: { $lt: Date.now() }
+        }).explain("executionStats"); // Optionally check index usage
+
+        // Log the explain output to verify the index usage
+        console.log("Query Explanation:", patients);
+
+        // Check if patients are found
+        if (!patients.length) {
+            return res.status(200).json({ message: "No past appointments found." });
+        }
+
+        return res.status(200).json({ patients });
+    } catch (error) {
+        console.error("Error fetching patients:", error);
+        return res.status(500).json({ message: "Error fetching past appointments", error });
+    }
 }
+
 async function addreport(req,res){
     const {report,email,college} = req.body
     console.log(report,email,college)

@@ -28,5 +28,6 @@ const appointmentschema = new mongoose.Schema({
         required:true
     }
 })
+appointmentschema.index({acceptedby:1,date:1});
 const accappointment = mongoose.model('accappointment',appointmentschema)
 module.exports = accappointment

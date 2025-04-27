@@ -56,7 +56,7 @@ function App() {
   path="/" 
   element={
     Cookies.get('Uid1') ? (
-      // Redirect to /doctorhome if Uid1 cookie 
+      // Redirect to /doctorhome if
       <Navigate to="/doctorhome" />
     ) : Cookies.get('Uid2') ? (
       

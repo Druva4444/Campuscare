@@ -10,6 +10,9 @@ jobs:
   backend-ci:
     runs-on: ubuntu-latest
     name: Backend - Install Check
+    defaults:
+      run:
+        working-directory: project/backend  # <-- notice project/backend
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -17,13 +20,14 @@ jobs:
         with:
           node-version: 18
       - name: Install Backend Dependencies
-        run: |
-          cd backend
-          npm install
+        run: npm install
 
   frontend-ci:
     runs-on: ubuntu-latest
     name: Frontend - Install and Build Check
+    defaults:
+      run:
+        working-directory: project/frontend  # <-- notice project/frontend
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -31,10 +35,6 @@ jobs:
         with:
           node-version: 18
       - name: Install Frontend Dependencies
-        run: |
-          cd frontend
-          npm install
+        run: npm install
       - name: Build Frontend
-        run: |
-          cd frontend
-          npm run build
+        run: npm run build

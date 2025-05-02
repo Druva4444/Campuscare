@@ -9,6 +9,8 @@ const {getmongoconnect} = require('./connection.js/connection');
 const router = require('./routes/routes');
 const cron = require('node-cron');
 const moment = require('moment'); 
+const accappointment = require('./model/acceptedappointments.js')
+
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./graphql/schema');
 
@@ -72,7 +74,22 @@ app.use(cors({
   origin: 'http://localhost:3000', 
   credentials: true
 }));
-getmongoconnect('mongodb+srv://druvadruvs:Druva%402907@cluster0.7eaal.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(()=>{console.log("mongoDb connected")}).catch((err)=>{console.log("mongo db connection error" + err)});
+getmongoconnect('mongodb+srv://druvadruvs:Druva%402907@cluster0.7eaal.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log("MongoDB connected");
+
+        // Create indexes after successful connection
+        accappointment.createIndexes()
+            .then(() => {
+                console.log("Indexes created successfully.");
+            })
+            .catch((err) => {
+                console.log("Error creating indexes:", err);
+            });
+    })
+    .catch((err) => {
+        console.log("MongoDB connection error: " + err);
+    });
 app.use('/graphql', graphqlHTTP({
   schema,
   graphiql: true, // Enables GraphiQL UI for testing

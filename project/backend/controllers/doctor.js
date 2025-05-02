@@ -241,6 +241,8 @@ async function deleteapp(req, res) {
 
 async function getpatients(req, res) {
     const { email } = req.body;
+
+    
     console.log(email);
   
     try {

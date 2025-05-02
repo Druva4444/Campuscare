@@ -1,0 +1,35 @@
+name: CampusCareConnect CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Backend Install Check
+    - name: Install Backend Dependencies
+      working-directory: project/backend
+      run: npm install
+
+    # Frontend Install Check
+    - name: Install Frontend Dependencies
+      working-directory: project/frontend
+      run: npm install
+
+    # Backend Lint or Build Check (optional)
+    # You can add backend lint/build commands here if needed
+
+    # Frontend Build (important fix: CI=false)
+    - name: Build Frontend
+      working-directory: project/frontend
+      run: CI=false npm run build

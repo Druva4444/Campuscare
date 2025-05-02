@@ -504,5 +504,63 @@ async function getcollegepage(req, res) {
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
+  
+  
+  async function getstudents(req, res) {
+    console.log("fetching students")
+    try {
+      const students = await student.find(); 
+      
+      if (!students || students.length === 0) {
+        return res.status(404).json({ message: "No students found" });
+      }
+  
+      res.status(200).json({ 
+        message: "Students fetched successfully",
+        students: students
+      });
+    } catch (error) {
+      console.error("Error fetching students", error);
+      res.status(500).json({ message: "Error processing the request" });
+    }
+  }
+  async function searchstudent(req,res){
+    console.log("searching")
+    try {
+      const query = req.query.query; // extract query string
+      if (!query) {
+        return res.status(400).json({ message: 'Query parameter is missing' });
+      }
+  
+      const students = await student.find({ 
+        gmail: { $regex: query, $options: 'i' } 
+      });
+  
+      res.status(200).json({ students });
+    } catch (error) {
+      console.error("Error searching students", error);
+      res.status(500).json({ message: "Error processing the request" });
+    }
+  }
+  async function getappointments(req,res){
+    console.log("searching+246")
+    try {
+      const query = req.query.email; // extract query string
+      console.log(query+549)
+      if (!query) {
+        return res.status(400).json({ message: 'Query parameter is missing' });
+      }
+  
+      const appointments = await accappointment.find({
+        createdy:query
+      })
+     console.log(appointments)
+      res.status(200).json({ data:appointments });
+    } catch (error) {
+      console.error("Error searching students", error);
+      res.status(500).json({ message: "Error processing the request" });
+    }
+  }
+  
 module.exports = {postloginpage,handlelogout,gethome,getadminpage,deleteadmins,getcollegepage,handledeletecollege 
-    ,getcolleges1,Addadmin,getGmail,fetchWaitingClgs , acceptClgReq ,susersendotp , suserhandleforget , suserresetp,deleteclgreq};
+    ,getcolleges1,Addadmin,getGmail,fetchWaitingClgs , acceptClgReq ,susersendotp , suserhandleforget , suserresetp,deleteclgreq,getstudents,searchstudent,getappointments};

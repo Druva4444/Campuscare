@@ -5,7 +5,7 @@ import Dashboard from './superadmin/Dashboard';
 import Colleges from './superadmin/Colleges';
 import Admins from './superadmin/Admins';
 import Vernavstud from './student/Vernavstud';
-
+import Students from './superadmin/Students';
 import Home from './student/Home';
 import StudAppoint from './student/appointment';
 import StudBook from './student/bookings';
@@ -43,7 +43,10 @@ import SuserNewPassword from './forms/SuserNewPAssword';
 import Suserforget from './forms/suserForgot';
 import Addadmin from './forms/Addadmin';
 import LeaveDetails from './student/Leave';
-import Leaves from './doctor/Leaves';
+import Leaves from './doctor/Leaves';  
+
+
+
 function App() {
   return (
     <div className="App">
@@ -53,10 +56,10 @@ function App() {
   path="/" 
   element={
     Cookies.get('Uid1') ? (
-      // Redirect to /doctorhome if Uid1 cookie is present
+      // Redirect to /doctorhome if
       <Navigate to="/doctorhome" />
     ) : Cookies.get('Uid2') ? (
-      // Redirect to /student/home if Uid2 cookie is present
+      
       <Navigate to="/studenthome" />
     ) : Cookies.get('Uid3') ? (
       // Redirect to /admin if Uid3 cookie is present
@@ -71,6 +74,7 @@ function App() {
   }
 />
           <Route path="/superadmin" element={<div><Vernav/><Dashboard/></div>}/>    
+          <Route path="/students" element={<div><Vernav/><Students></Students></div>}/>    
           <Route path="/superadmincolleges" element={<div style={{marginTop:'-25px'}}><Vernav/><Colleges></Colleges></div>} /> 
           <Route path="/superadmin_admins" element={<><Vernav /><Admins/></>} /> 
           <Route path="/studenthome" element={<><Vernavstud /><Home></Home></>} /> 

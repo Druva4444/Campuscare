@@ -12,7 +12,22 @@ const reportdb = require('../model/report')
 const accappointment = require('../model/acceptedappointments')
 const rejappointment = require('../model/rejectedappointments')
 const Leave = require('../model/leave')
+const {createClient} = require('redis');
 
+
+const redisClient = createClient();
+
+async function connectToRedis() {
+  try {
+    await redisClient.connect();
+    console.log('Redis client connected');
+  } catch (err) {
+    console.error('Error connecting to Redis:', err);
+  }
+}
+
+// Call the function to establish the Redis connection
+connectToRedis();
 async function handleloginS(req,res){
     try {
         const { email, password1, college, checkbox } = req.body;
@@ -33,7 +48,7 @@ async function handleloginS(req,res){
                     clg: specificUser.college,
                 },
                 "druva123", 
-                { expiresIn: "4d" } // Token valid for 1 day
+                { expiresIn: "4d" } 
             );
             res.cookie("Uid2", token, { maxAge: 4*24 * 60 * 60 * 1000},{ sameSite: 'None', secure: true });
         }
@@ -50,70 +65,83 @@ async function handleloginS(req,res){
         return res.status(500).send("Internal Server Error");
     }
 }
-async function handlestudenthome(req,res){
-    const { email } = req.body;
-    
-    console.log(email)
-    const total = await accappointment.find({createdy:email,date:{$gt:new Date()}}).sort({date:1})
-    const now = new Date(); 
-    console.log(now); 
-    const comi = await accappointment.find({
-      createdy: email,
-      date: { $lt: now }
-    }).sort({ date: 1 });
-    const upcom = await accappointment.find({
-        createdy: email,
-        date: { $gte: now }
-      }).sort({ date: 1 });
-    console.log(comi)
-    
-    return res.json({total,comi,upcom})
-}
-async function deletebooking(req,res){
-    const { id } = req.body;
+async function handlestudenthome(req, res) {
+  const { email } = req.body;
+  console.log(email);
 
+  try {
+    // Step 1: Fetch all appointments from Redis
+    const keys = await redisClient.keys('appointment:*');
+    let appointments = [];
+
+    if (keys.length > 0) {
+      const appointmentsData = await redisClient.mGet(keys);
+      appointments = appointmentsData
+        .map(data => JSON.parse(data))
+        .filter(app => app.createdy === email); // Filter only by student email
+    }
+
+    if (appointments.length > 0) {
+      console.log("Cache hit and filtered appointments");
+
+      const now = new Date();
+      const total = appointments.filter(app => new Date(app.date) >= now);
+      const comi = appointments.filter(app => new Date(app.date) < now);
+      const upcom = appointments.filter(app => new Date(app.date) >= now);
+
+      total.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      return res.json({ total, comi, upcom });
+    }
+
+    // Step 2: If cache miss, fallback to DB
+    const now = new Date();
+    const total = await accappointment.find({ createdy: email, date: { $gte: now } }).sort({ date: 1 });
+    const comi = await accappointment.find({ createdy: email, date: { $lt: now } }).sort({ date: 1 });
+    const upcom = await accappointment.find({ createdy: email, date: { $gte: now } }).sort({ date: 1 });
+
+    console.log("DB fallback");
+
+    return res.json({ total, comi, upcom });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function deletebooking(req,res){
+   
+    const { id } = req.body;
+  console.log('inside delete block')
+  console.log(id)
     try {
-        // Find the appointment by ID
         const appointment = await accappointment.findById(id);
         if (!appointment) {
+          console.log('Appointment not found');
             return res.status(404).json({ message: 'Appointment not found' });
         }
-
-        // Extract the doctor's Gmail from the appointment (acceptedby field)
         const acceptedby = appointment.acceptedby;
-
-        // Find the doctor by the acceptedby (doctor's Gmail)
         const doctor = await Doctor.findOne({ gmail: acceptedby });
         if (!doctor) {
             return res.status(404).json({ message: 'Doctor not found' });
         }
-
-        // Find the day of the week for the appointment date
         const appointmentDate = new Date(appointment.date);
         const dayOfWeek = appointmentDate.toLocaleString('en-us', { weekday: 'long' });
-
-        // Add the time slot back to the doctor's available slots for that day
         doctor.slots[dayOfWeek] = [...doctor.slots[dayOfWeek], appointment.time];
-
-        // Sort the slots in chronological order
         doctor.slots[dayOfWeek].sort((a, b) => {
             const timeA = a.split(':').map(Number);
             const timeB = b.split(':').map(Number);
-
-            // Convert times to minutes to compare them numerically
             const minutesA = timeA[0] * 60 + timeA[1];
             const minutesB = timeB[0] * 60 + timeB[1];
 
-            return minutesA - minutesB; // Sort in ascending order of time
+            return minutesA - minutesB; 
         });
-
-        // Save the updated doctor document
         await doctor.save();
-
-        // Delete the appointment
         await accappointment.findByIdAndDelete(id);
-
-        // Return success response
+        console.log("Appointment deleted successfully");
+        const cacheKey = `appointment:${id}`;
+        await redisClient.del(cacheKey);
         return res.status(200).json({ msg: 'Appointment deleted successfully and slot restored' });
     } catch (error) {
         console.error('Error deleting appointment:', error);
@@ -121,25 +149,33 @@ async function deletebooking(req,res){
     }
 }
 function generateOtp() {
-    return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+    return Math.floor(100000 + Math.random() * 900000).toString(); 
 }
 async function handleverify(req,res){
     const { email, otp } = req.body;
 console.log(email,otp)
     try {
-        // Find the Doctor and check the OTP
         console.log(email,otp)
+        const cachekey = `students:${email}`;
+        const cachedData = await redisClient.get(cachekey);
+        if (cachedData) {
+            console.log("Cache hit");
+            const doctor = JSON.parse(cachedData);
+            if (doctor.otp !== otp) {
+                return res.status(200).json({ message: "Invalid OTP" });
+            }
+            res.json({ message: "OTP verified successfully" });
+            return;
+        }
         const doctor = await Students.findOne({ gmail:email });
         if (!doctor) {
-            return res.status(200).json({ message: "Doctor not found" });
+            return res.status(200).json({ message: "Student not found" });
         }
         
         if (doctor.otp !== otp) {
             console.log(doctor.otp)
             return res.status(200).json({ message: "Invalid OTP" });
         }
-
-        // OTP is valid; you can proceed to reset the password
         res.json({ message: "OTP verified successfully" });
     } catch (error) {
         console.error(error);
@@ -150,7 +186,8 @@ console.log(email,otp)
 async function sendotps(req,res){
     const { email } = req.body;
     console.log(email)
-
+    const cachekey = `students:${email}`;
+    
     try {
         const otp = generateOtp();
         const doctor = await Students.findOne({ gmail:email });
@@ -159,13 +196,12 @@ async function sendotps(req,res){
         }
         doctor.otp = otp;
         await doctor.save();
-
-        // Send email with the OTP
+        await redisClient.set(cachekey, otp, { EX: 300 });
         const transporter = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: "campuscarec@gmail.com", // Replace with your email
-                pass: "aifq hosc uyeg expi",       // Replace with your email password
+                user: "campuscarec@gmail.com", 
+                pass: "aifq hosc uyeg expi",      
             },
         });
 
@@ -187,14 +223,11 @@ async function resetps(req,res){
     const { password, email } = req.body;
     console.log(password+email)
     try {
-        // Find the student by email
         const student = await Students.findOne({ gmail:email });
         if (!student) {
             return res.status(404).json({ success: false, message: "Student not found" });
         }
-
-        // Update the password
-        student.password = password; // Direct assignment (use hashing in real apps for security)
+        student.password = password; 
         await student.save();
 
         res.json({ success: true, message: "Password reset successfully" });
@@ -203,34 +236,67 @@ async function resetps(req,res){
         res.status(500).json({ success: false, message: "Error resetting password" });
     }
 }
-async function handle_appointments(req,res){
-    const {college} = req.body;
-    console.log(college)
-    const doctors =await  Doctor.find({college:college})
-    console.log(doctors)
-    return res.json({msg:doctors})
+async function handle_appointments(req, res) {
+  const { college } = req.body;
+  console.log(college);
+
+  const pattern = 'doctor:*'; 
+
+  try {
+      // Fetch all keys that match the pattern 'doctor:*' (You need to have the list of keys)
+      const keys = await redisClient.keys(pattern);
+
+      if (keys.length === 0) {
+          console.log("No doctors found in cache, fetching from DB...");
+          // Fetch doctors from the DB if no data in Redis
+          const doctors = await Doctor.find({ college: college });
+          // Cache the result for future use (only cache for the requested college)
+          await redisClient.set(`doctors:${college}`, JSON.stringify(doctors), 'EX', 3600); // Cache for 1 hour
+
+          return res.json({ msg: doctors });
+      }
+
+      // Fetch all doctor data from Redis using MGET
+      const doctorsData = await redisClient.mGet(keys);
+
+      // Parse the doctor data from Redis
+      const allDoctors = doctorsData.map(data => JSON.parse(data));
+
+      // Filter doctors by college
+      const filteredDoctors = allDoctors.filter(doctor => doctor.college === college);
+
+      if (filteredDoctors.length === 0) {
+          console.log("No doctors found for the specified college");
+          // Fetch doctors from the DB and cache for the college if not found in cache
+          const doctors = await Doctor.find({ college: college });
+          await redisClient.set(`doctors:${college}`, JSON.stringify(doctors), 'EX', 3600); // Cache for 1 hour
+
+          return res.json({ msg: doctors });
+      }
+
+      // Return filtered doctors from cache
+      return res.json({ msg: filteredDoctors });
+
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ msg: "Error handling appointments" });
+  }
 }
+
 
 async function getslots(req,res){
     const { gmail, date } = req.body;
     console.log(gmail,date)
-  
     try {
-      // Find the doctor by gmail
       const doctor = await Doctor.findOne({ gmail });
-      
       if (!doctor) {
         return res.status(404).json({ message: 'Doctor not found' });
       }
-      
-      // Get the day of the week (e.g., 'Monday', 'Tuesday') from the selected date
-      const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+       const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       const selectedDate = new Date(date);
       const dayOfWeek = daysOfWeek[selectedDate.getDay()];
-  
-      // Fetch the available slots for the selected day
       const availableSlots = doctor.slots[dayOfWeek];
-  
+
       return res.json({ slots: availableSlots });
     } catch (error) {
       console.error(error);
@@ -241,49 +307,45 @@ async function  bookslot(req,res){
     const { gmail, timeSlot, description, date, user, college } = req.body;
     
     try {
-        // Convert the date string into a JavaScript Date object
         const appointmentDate = new Date(date);
-        
-        // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
         const dayIndex = appointmentDate.getDay();
-        
-        // Map day index to day name (e.g., 0 -> 'Sunday', 1 -> 'Monday', etc.)
         const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const day = daysOfWeek[dayIndex]; // e.g., 'Monday' if the date is a Monday
-    
-        // Find the doctor using the provided Gmail address
+        const day = daysOfWeek[dayIndex];
         const doctor = await Doctor.findOne({ gmail });
         if (!doctor) {
             return res.status(404).json({ message: 'Doctor not found' });
         }
-    
-        // Check if the day and time slot are valid and available
         if (!doctor.slots[day] || !doctor.slots[day].includes(timeSlot)) {
             return res.status(400).json({ message: 'Time slot not available' });
         }
-    
-        // Remove the time slot from the doctor's available slots
         doctor.slots[day] = doctor.slots[day].filter(slot => slot !== timeSlot);
-    
-        // Save the updated doctor information
+
         await doctor.save();
-    
-        // Create a new appointment
         const newAppointment = await accappointment.create({
             date: date,
             time: timeSlot,
             description: description,
             created: new Date(),
-            acceptedby: gmail,  // Doctor who accepted the appointment
-            createdy: user,     // User who requested the appointment
-            college: college    // College associated with the user
+            acceptedby: gmail,
+            createdy: user,    
+            college: college    
         });
-    
-        // Return the success response with the updated available slots for the doctor
+        const appointmentData = {
+          _id: newAppointment._id,
+            date: date,
+            time: timeSlot,
+            description: description,
+            created: new Date(),
+            acceptedby: gmail,
+            createdy: user,
+            college: college
+        };
+        await redisClient.set(`appointment:${newAppointment._id}`, JSON.stringify(appointmentData));
+        
         res.status(200).json({
             message: 'Slot booked successfully',
             updatedSlots: doctor.slots[day],  // Return the updated slots for the correct day
-            appointment: newAppointment      // Include the created appointment data
+            appointment: newAppointment     
         });
     
     } catch (error) {
@@ -301,17 +363,33 @@ async function addstu(req,res){
 }
 async function fetchcolleges1(req, res) {
     try {
-    
+      const collegeKeys = await redisClient.keys('college:*');
   
-      const colleges = await Collage.find(); 
-      console.log(colleges)
-      return res.json(colleges); 
+      let colleges = [];
   
+      if (collegeKeys.length > 0) {
+        // Fetch all college details from Redis
+        const collegeValues = await redisClient.mGet(collegeKeys);
+        colleges = collegeValues.map(value => JSON.parse(value));
+        console.log('Fetched from Redis');
+      } else {
+        colleges = await Collage.find();
+        console.log('Fetched from DB');
+        const pipeline = redisClient.multi();
+        colleges.forEach(college => {
+          pipeline.set(`college:${college.name}`, JSON.stringify(college));
+        });
+        await pipeline.exec();
+      }
+  
+      return res.json(colleges);
+      
     } catch (error) {
-      console.log(error);
-         res.status(500).json({ message: 'Internal server error' });
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
+  
   async function Addstudent(req, res) {
     try {
     
@@ -348,49 +426,127 @@ async function fetchcolleges1(req, res) {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
-  async function applyleave(req,res) {
-    const {email,data,startDate,endDate} = req.body;
+  async function applyleave(req, res) {
+    const { email, data, startDate, endDate } = req.body;
     console.log(email + 353);
     console.log(data._id);
-   try {
-      const leave = await Leave.findOne({
-        appointmentId:data._id
-      })
-      if (leave) {
-        return res.status(400).json({message:"Leave for this appointment is already exist"});
+    try {
+      const leaveKey = `leave:${data._id}`;
+     
+      const cachedLeave = await redisClient.get(leaveKey);
+      if (cachedLeave) {
+        console.log('Leave found in Redis');
+        return res.status(400).json({ message: "Leave for this appointment already exists (cached)" });
       }
-      await Leave.create({
-        email:email,
-        appointmentId:data._id,
-        doctoremail:data.acceptedby,
-        startdate:startDate,
-        college:data.college,
-        enddate:endDate
-      })
-      return res.status(200).json({message:"leave sucessfully created"})
-   } catch (error) {
-    
-   }
-
+      const leave = await Leave.findOne({ appointmentId: data._id });
+  
+      if (leave) {
+        await redisClient.set(leaveKey, JSON.stringify(leave));
+        console.log('Leave found in DB and cached');
+        return res.status(400).json({ message: "Leave for this appointment already exists" });
+      }
+      const newLeave = await Leave.create({
+        email: email,
+        appointmentId: data._id,
+        doctoremail: data.acceptedby,
+        startdate: startDate,
+        college: data.college,
+        enddate: endDate
+      });
+      await redisClient.set(leaveKey, JSON.stringify(newLeave));
+      console.log('New leave created and cached');
+  
+      return res.status(200).json({ message: "Leave successfully created" });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
   }
-async function getleaves(req,res) {
-    const {email} =  req.query;
+  async function getleaves(req, res) {
+    const { email } = req.query;
     console.log(email + 312);
-    const leaves = await Leave.find({email:email})  ;
-    console.log(leaves)
-    if(!leaves){
-       return res.status(404).json({message:"no leaves found"});
+  
+    try {
+      const keys = await redisClient.keys('leave:*');
+  
+      let leaves = [];
+  
+      if (keys.length > 0) {
+        const leavesData = await redisClient.mGet(keys);
+        leaves = leavesData
+          .map(data => JSON.parse(data))
+          .filter(leave => leave.email === email);
+  
+        console.log('Leaves fetched and filtered from Redis');
+      }
+  
+      if (leaves.length > 0) {
+        return res.status(200).json(leaves);
+      }
+      leaves = await Leave.find({ email: email });
+      console.log('Leaves fetched from DB');
+  
+      if (!leaves || leaves.length === 0) {
+        return res.status(404).json({ message: "No leaves found" });
+      }
+      const pipeline = redisClient.multi();
+      leaves.forEach(leave => {
+        pipeline.set(`leave:${leave.appointmentId}`, JSON.stringify(leave));
+      });
+      await pipeline.exec();
+      console.log('Leaves cached in Redis');
+  
+      return res.status(200).json(leaves);
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
-    return res.status(200).json(leaves);
-}
-async function getleaves2(req,res) {
-    const {email} =  req.query;
-    console.log(email + 312);
-    const leaves = await Leave.find({doctoremail:email})  ;
-    console.log(leaves)
-    if(!leaves){
-       return res.status(404).json({message:"no leaves found"});
+  }
+  
+  async function getleaves2(req, res) {
+    const { email } = req.query;
+    console.log(email + 888); // for debug
+    console.log('inside '); // for debug
+    try {
+      const keys = await redisClient.keys('leave:*');
+  
+      let leaves = [];
+  
+      if (keys.length > 0) {
+        const leavesData = await redisClient.mGet(keys);
+        leaves = leavesData
+          .map(data => JSON.parse(data))
+          .filter(leave => leave.doctoremail === email);
+  
+        console.log('Leaves fetched and filtered by doctoremail from Redis');
+      }
+  
+      if (leaves.length > 0) {
+        return res.status(200).json(leaves);
+      }
+      leaves = await Leave.find({ doctoremail: email });
+      console.log('Leaves fetched from DB');
+  
+      if (!leaves || leaves.length === 0) {
+        return res.status(404).json({ message: "No leaves found" });
+      }
+  
+      // Step 5 (optional): Cache each leave in Redis
+      const pipeline = redisClient.multi();
+      leaves.forEach(leave => {
+        pipeline.set(`leave:${leave.appointmentId}`, JSON.stringify(leave));
+      });
+      await pipeline.exec();
+      console.log('Leaves cached in Redis');
+  
+      return res.status(200).json(leaves);
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
-    return res.status(200).json(leaves);
-}
+  }
+  
 module.exports = {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2}

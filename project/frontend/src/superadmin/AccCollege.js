@@ -107,7 +107,7 @@ function AccCollege() {
         <p>Admin email : {college.credentials[0]?.email}</p>
       </div>
 
-<<<<<<< HEAD
+
       <div className="addclg-details">
         <p>Amount: {college.amount}</p> 
         <p>Domain: {college.domain}</p>
@@ -148,38 +148,7 @@ function AccCollege() {
           Delete
         </button>
       </div>
-=======
-    <div className="addclg-actions">
-      <button
-        className="addclg-acceptBtn"
-        style={{
-          marginRight: "10px",
-          backgroundColor: "#0A7273",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          padding: "5px 10px",
-          cursor: "pointer",
-        }}
-        onClick={() => handleAccept(college._id ,college.credentials[0].email,college.credentials[0].password,college.name )} // Call accept function here
-      >
-        Accept
-      </button>
-      <button
-        className="addclg-deleteBtn"
-        style={{
-          backgroundColor: "#0A7273",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          padding: "5px 10px",
-          cursor: "pointer",
-        }}
-        onClick={() => handleDelete(college._id , college.credentials[0].email )} // Call delete function here
-      >
-        Delete
-      </button>
->>>>>>> 8f63a97b1b666b975dd28f8332f751c29fd0060f
+
     </div>
   ))
 ) : (

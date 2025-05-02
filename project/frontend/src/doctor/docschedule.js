@@ -7,6 +7,12 @@ import axios from 'axios'
 import Scmain from './scmain.js'
 function Docschedule() {
     const [appointment,setappointment] = useState([])
+      const [filterDate, setFilterDate] = useState("");
+      const [filterCreatedy, setFilterCreatedy] = useState("");
+      const [startDate, setStartDate] = useState("");
+      const [endDate, setEndDate] = useState("");
+      const [sortOrder, setSortOrder] = useState("newest");
+      
 const [upcom,setupcomi] = useState([])
 useEffect(() => {
   const fetchData = () => {
@@ -104,14 +110,74 @@ useEffect(() => {
                         </div>
                     </div>
                 </div>
+                <div className="filters"   style={{marginLeft:"17%",display: "flex", marginTop: "2%",color:"#0A7273",fontSize:"20px",backgroundColor:"whitesmoke",padding:"10px",borderRadius:"10px",alignItems:"center"}}>
+  <label>Filter by Date</label>
+  <input
+    type="date"
+    value={filterDate}
+    onChange={(e) => setFilterDate(e.target.value)}
+    placeholder="Filter by Date"
+    style={{ marginLeft: "10px", marginRight: "10px" }}
+  />
+  <label>Filter by patient</label>
+  <input
+    type="text"
+    value={filterCreatedy}
+    onChange={(e) => setFilterCreatedy(e.target.value)}
+    placeholder="Filter by Createdy (name)"
+    style={{ marginLeft: "10px", marginRight: "10px" }}
+  />
+  <label>Filter by Date Range</label>
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    placeholder="Start Range"
+    style={{ marginLeft: "10px", marginRight: "10px" }}
+  />
+  <label>to</label>
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    placeholder="End Range"
+    style={{ marginLeft: "10px", marginRight: "10px" }}
+  />
+  <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{ marginLeft: "10px", marginRight: "10px" }}  >
+    <option value="newest">Newest to Oldest</option>
+    <option value="oldest">Oldest to Newest</option>
+  </select>
+</div>
                 {console.log(upcom)}
                 {upcom.length > 0 ? (
-  upcom.map((indi, index) => (
-    <Scmain key={index} det={indi} />
-  ))
+  upcom
+    .filter((indi) => {
+      const dateObj = new Date(indi.date); // ensure proper Date conversion
+
+      const matchesFilterDate =
+        !filterDate || dateObj.toISOString().slice(0, 10)  === filterDate;
+
+      const matchesCreatedy =
+        !filterCreatedy || indi.createdy.toLowerCase().includes(filterCreatedy.toLowerCase());
+
+      const matchesDateRange =
+        (!startDate || dateObj >= new Date(startDate)) &&
+        (!endDate || dateObj <= new Date(endDate));
+
+      return matchesFilterDate && matchesCreatedy && matchesDateRange;
+    })
+    .sort((a, b) =>
+      sortOrder === "newest"
+        ? new Date(b.date) - new Date(a.date)
+        : new Date(a.date) - new Date(b.date)
+    )
+    .map((indi, index) => (
+      <Scmain key={index} det={indi} />
+    ))
 ) : (
   <p className="dstext4">No appointments available</p>
 )}
+
 
                 
 

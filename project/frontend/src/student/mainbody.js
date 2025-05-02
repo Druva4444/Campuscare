@@ -44,6 +44,7 @@ function Mainbody(props) {
             <div className="SCHsecondpart2">
                 <div className="SCHdescription1" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                     <p style={{ fontSize: "20px", marginBottom: "0", marginTop: "0", paddingLeft: '20px' }}>Description by student: {props.det.description}</p>
+                    <p style={{ fontSize: "20px", marginBottom: "0", marginTop: "0", paddingLeft: '20px' }}>Doctor: {props.det.acceptedby}</p>
                     <div>
                         {!isLeaveApplied && ( 
                             <button 

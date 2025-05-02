@@ -4,12 +4,13 @@ function Mainbody1(props) {
   async function handle_cancel(event) {
     event.preventDefault(); // Fix capitalization
     try {
+      console.log("Canceling appointment with ID:", props.det._id);
       const response = await axios.post('http://localhost:3020/deletebooking', { id: props.det._id });
       alert(response.data.msg);
       window.location.href='/studentbooking'
     } catch (error) {
       console.error("Error while cancelling appointment:", error);
-      alert("An error occurred. Please try again.");
+      alert("An error occurred. Please try again." + error);
     }
   }
 

@@ -1,10 +1,6 @@
 const express = require('express');
 const DoctorRouter = express.Router();
 const checkAuth = require('../middleware/Doctor.js');
-
-
-
-
 const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves} = require('../controllers/doctor')
 DoctorRouter.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
@@ -14,7 +10,7 @@ DoctorRouter.use((req, res, next) => {
 DoctorRouter.get('/getcolleges' , getcolleges);
 DoctorRouter.post('/dlogin',handlelogin)
 DoctorRouter.post('/gethome',givehomedet)
-DoctorRouter.post('/dltapp',deleteapp)
+DoctorRouter.post('/dltapp',deleteapp)  
 DoctorRouter.post('/getpatients',getpatients)
 DoctorRouter.post('/postreport',addreport)
 DoctorRouter.post('/sendotp',sendotp)

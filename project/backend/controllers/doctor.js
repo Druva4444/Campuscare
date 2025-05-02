@@ -10,32 +10,58 @@ const Collage = require('../model/college')
 const reportdb = require('../model/report')
 const accappointment = require('../model/acceptedappointments')
 const rejappointment = require('../model/rejectedappointments')
+const {createClient} = require('redis');
+
+
+const redisClient = createClient();
+
+async function connectToRedis() {
+  try {
+    await redisClient.connect();
+    console.log('Redis client connected');
+  } catch (err) {
+    console.error('Error connecting to Redis:', err);
+  }
+}
+
+// Call the function to establish the Redis connection
+connectToRedis();
 async function getcolleges(req, res) {
     try {
-        try {
-            const colleges = await Collage.find(); 
-            console.log(colleges);
-            return res.json(colleges); 
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to fetch colleges' });
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-async function postdslogin(req,res){
-      try {
-        
-      } catch (error) {
-        res.status(500).json({ error: 'Failed to login' });
+      const keys = await redisClient.keys('college:*');
+      let colleges = [];
+      if (keys.length > 0) {
+        const collegesData = await redisClient.mGet(keys);
+        colleges = collegesData.map(data => JSON.parse(data));
+        console.log('Colleges fetched from Redis');
       }
-}
+      if (colleges.length > 0) {
+        return res.status(200).json(colleges);
+      }
+      colleges = await Collage.find();
+      console.log('Colleges fetched from DB');
+      if (!colleges || colleges.length === 0) {
+        return res.status(404).json({ message: "No colleges found" });
+      }
+      const pipeline = redisClient.multi();
+      colleges.forEach(college => {
+        pipeline.set(`college:${college.name}`, JSON.stringify(college));
+      });
+      await pipeline.exec();
+      console.log('Colleges cached in Redis');
+      return res.status(200).json(colleges);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
+
 
 async function handlelogin(req,res){
     try {
         const { email, password1, college, checkbox } = req.body;
         console.log(req.body);
-        // Fetch the doctor based on credentials
         const specificUser = await Doctor.findOne({ gmail: email, password: password1, college });
         if (!specificUser) {
             console.log("No user found");
@@ -91,36 +117,75 @@ async function handlelogin(req,res){
         return res.status(500).send("Internal Server Error");
     }
 }
-async function givehomedet(req,res){
+async function givehomedet(req, res) {
     const { email } = req.body;
-    
-    // Example logic to get the number of appointments for the given email
-    // You would fetch this from a database, such as MongoDB, SQL, etc.
-    
-    console.log(email)
-    const total = await accappointment.find({acceptedby:email,date:{$lte:new Date()}})
-    const now = new Date(); // Current UTC date
-    console.log(now); // Debug: Verify the date
-    const upcomi = await accappointment.find({
-      acceptedby: email,
-      date: { $gte: now }
-    }).sort({ date: 1 });
-    console.log(upcomi)
-    return res.json({total,upcomi})
-}
+    console.log(email);
+  
+    try {
+      const keys = await redisClient.keys('appointment:*');
+      let appointments = [];
+  
+      if (keys.length > 0) {
+        const appointmentsData = await redisClient.mGet(keys);
+        appointments = appointmentsData
+          .map(data => JSON.parse(data))
+          .filter(app => app.acceptedby === email); 
+      }
+  
+      let total = [];
+      let upcomi = [];
+      
+      if (appointments.length > 0) {
+        console.log("Cache hit for appointments");
+  
+        const now = new Date();
+        total = appointments.filter(app => new Date(app.date) <= now); // Past and current appointments
+        upcomi = appointments.filter(app => new Date(app.date) > now);  // Future appointments
+  
+        upcomi.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort total by date
+        
+        console.log(upcomi)
+        return res.json({ total, upcomi });
+      }
+  
+      // Step 2: Cache miss - fetch from DB if no data found in Redis
+      const now = new Date();
+      total = await accappointment.find({ acceptedby: email, date: { $lte: now } }).sort({ date: 1 });
+      upcomi = await accappointment.find({ acceptedby: email, date: { $gte: now } }).sort({ date: 1 });
+  
+      // Step 3: Cache new appointments to Redis
+      const pipeline = redisClient.multi();
+      total.concat(upcomi).forEach(appointment => {
+        pipeline.set(`appointment:${appointment._id}`, JSON.stringify(appointment));
+      });
+      await pipeline.exec();
+      console.log("Appointments cached in Redis");
+  
+      return res.json({ total, upcomi });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+  
 async function deleteapp(req, res) {
     const { id, acceptedby } = req.body;
 
     try {
         // Find the appointment by ID
+        console.log(id, acceptedby)
         const person = await accappointment.findById(id);
         if (!person) {
+            console.log("Appointment not found")
             return res.status(404).send('Appointment not found');
+           
         }
 
         // Find the doctor by the acceptedby (doctor's Gmail)
         const doctor = await Doctor.findOne({ gmail: acceptedby });
         if (!doctor) {
+            console.log("Doctor not found")
             return res.status(404).send('Doctor not found');
         }
 
@@ -164,7 +229,8 @@ async function deleteapp(req, res) {
 
         // Delete the original accepted appointment
         await accappointment.findByIdAndDelete(id);
-
+        const cacheKey = `appointment:${id}`;
+        await redisClient.del(cacheKey);
         // Return success response
         return res.status(200).json('Appointment deleted and slot restored successfully');
     } catch (error) {
@@ -173,19 +239,62 @@ async function deleteapp(req, res) {
     }
 }
 
-async function getpatients(req,res){
-    const { email} = req.body
-    console.log(email)
-    const patients = await accappointment.find({acceptedby:email,date:{$lt:new Date()}})
-    console.log(patients)
-    return res.status(200).json({patients})
-}
+async function getpatients(req, res) {
+    const { email } = req.body;
+    console.log(email);
+  
+    try {
+      // Step 1: Check Redis for appointments
+      const keys = await redisClient.keys('appointment:*');
+      let appointments = [];
+  
+      if (keys.length > 0) {
+        // Fetch all appointments from Redis
+        const appointmentsData = await redisClient.mGet(keys);
+        appointments = appointmentsData
+          .map(data => JSON.parse(data))
+          .filter(app => app.acceptedby === email); // Filter appointments by email
+      }
+  
+      // Step 2: Filter by date (only past and current appointments)
+      const now = new Date();
+      let patients = [];
+  
+      if (appointments.length > 0) {
+        console.log("Cache hit and filtered appointments");
+        patients = appointments.filter(app => new Date(app.date) <= now); // Past and current appointments
+        return res.json({ patients });
+      }
+  
+      // Step 3: Cache miss - Fetch appointments from DB if not found in Redis
+      patients = await accappointment.find({
+        acceptedby: email,
+        date: { $lt: now } // Past appointments
+      }).sort({ date: 1 });
+  
+      console.log("Cache miss - Fetching from DB");
+  
+      // Step 4: Cache the DB results in Redis for future use
+      const pipeline = redisClient.multi();
+      patients.forEach(patient => {
+        pipeline.set(`appointment:${patient._id}`, JSON.stringify(patient));
+      });
+      await pipeline.exec();
+      console.log("Appointments cached in Redis");
+  
+      return res.status(200).json({ patients });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+  
 async function addreport(req,res){
     const {report,email,college} = req.body
     console.log(report,email,college)
     const rep =await reportdb.create({report:report,createdby:email,createdon:new Date(),college:college})
     return res.status(200).json({msg:"succesfull"})
-
 }
 
 function generateOtp() {
@@ -296,18 +405,54 @@ async function adddoc(req,res){
     await Doctor.create({gmail:email,password:password,fields:field,college:college.college})
     return res.status(200).json({msg:'doctor added succesfull '})
 }
-async function modifyleaves(req,res) {
-    const {leaveid,message} = req.body;
-    console.log(leaveid + message + "hello");
-    try {
-        const leave = await  Leave.findById({_id:leaveid});
-        if (!leave) {
-            return res.json(404).json({message:"No leave found"})
-        }
-        await Leave.findByIdAndUpdate(leaveid,{status:message});
-        console.log(leave)
-    } catch (error) {
-        
+async function modifyleaves(req, res) {
+  const { leaveid, message } = req.body;
+  console.log(`${leaveid} ${message} hello`);
+
+  try {
+    // Step 1: Find the leave document from DB using leaveid (_id from MongoDB)
+    const leave = await Leave.findById(leaveid);
+
+    if (!leave) {
+      return res.status(404).json({ message: "No leave found" });
     }
+
+    const appointmentid = leave.appointmentId; // Assuming your leave document has this field
+
+    if (!appointmentid) {
+      return res.status(400).json({ message: "Appointment ID missing in leave" });
+    }
+
+    // Step 2: Try to find the leave in cache with key leave:<appointmentid>
+    const cacheKey = `leave:${appointmentid}`;
+    const cachedLeaveString = await redisClient.get(cacheKey);
+
+    if (cachedLeaveString) {
+      // Step 3: Found in cache
+      const cachedLeave = JSON.parse(cachedLeaveString);
+
+      // Step 4: Update status
+      cachedLeave.status = message;
+
+      // Step 5: Update cache
+      await redisClient.set(cacheKey, JSON.stringify(cachedLeave), 'EX', 60 * 60 * 24); // 1 day expiry
+
+      console.log("Leave updated in cache");
+    }
+
+    // Step 6: Update the database anyway
+    leave.status = message;
+    await leave.save();
+
+    console.log("Leave updated in database");
+    return res.status(200).json({ message: "Leave status updated successfully" });
+
+  } catch (error) {
+    console.error("Error updating leave:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
+
+
+  
 module.exports = {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves}

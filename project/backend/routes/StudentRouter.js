@@ -23,4 +23,4 @@ StudentRouter.get('/leaves' , getleaves);
 StudentRouter.get('/leaves2' , getleaves2);
 StudentRouter.get('/fetchcolleges1' , fetchcolleges1)
 StudentRouter.post('/Addstudent' , Addstudent);
-module.exports = StudentRouter;
+module.exports = StudentRouter; 

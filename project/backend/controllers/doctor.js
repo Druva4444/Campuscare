@@ -91,23 +91,51 @@ async function handlelogin(req,res){
         return res.status(500).send("Internal Server Error");
     }
 }
-async function givehomedet(req,res){
+async function givehomedet(req, res) {
     const { email } = req.body;
-    
-    // Example logic to get the number of appointments for the given email
-    // You would fetch this from a database, such as MongoDB, SQL, etc.
-    
-    console.log(email)
-    const total = await accappointment.find({acceptedby:email,date:{$lte:new Date()}})
-    const now = new Date(); // Current UTC date
-    console.log(now); // Debug: Verify the date
-    const upcomi = await accappointment.find({
-      acceptedby: email,
-      date: { $gte: now }
-    }).sort({ date: 1 });
-    console.log(upcomi)
-    return res.json({total,upcomi})
+    console.log("Email:", email);
+
+    try {
+        const now = new Date();
+        console.log("Current DateTime:", now);
+
+        // Create total query
+        const totalQuery = accappointment.find({
+            acceptedby: email,
+            date: { $lte: now }
+        });
+
+        // Explain first
+        const totalExplain = await accappointment.find({
+            acceptedby: email,
+            date: { $lte: now }
+        }).explain("executionStats");
+        console.log("Total Query Explanation:", totalExplain);
+
+        // Then execute separately
+        const total = await totalQuery;
+
+        // Create upcomi query
+        const upcomiQuery = accappointment.find({
+            acceptedby: email,
+            date: { $gte: now }
+        }).sort({ date: 1 });
+
+        const upcomiExplain = await accappointment.find({
+            acceptedby: email,
+            date: { $gte: now }
+        }).sort({ date: 1 }).explain("executionStats");
+        console.log("Upcoming Query Explanation:", upcomiExplain);
+
+        const upcomi = await upcomiQuery;
+
+        return res.json({ total, upcomi });
+    } catch (error) {
+        console.error("Error fetching appointments:", error);
+        return res.status(500).json({ message: "Error fetching appointments", error });
+    }
 }
+
 async function deleteapp(req, res) {
     const { id, acceptedby } = req.body;
 
@@ -178,21 +206,23 @@ async function getpatients(req, res) {
     console.log("Fetching past appointments for:", email);
     
     try {
-        // Use the index on `acceptedby` and filter by date
+        
         const patients = await accappointment.find({
             acceptedby: email,
             date: { $lt: Date.now() }
-        }).explain("executionStats"); // Optionally check index usage
+        });
 
-        // Log the explain output to verify the index usage
-        console.log("Query Explanation:", patients);
+        const explainResult = await accappointment.find({
+            acceptedby: email,
+            date: { $lt: Date.now() }
+        }).explain("executionStats");
+        console.log("Query Explanation:", explainResult);
 
-        // Check if patients are found
         if (!patients.length) {
             return res.status(200).json({ message: "No past appointments found." });
         }
 
-        return res.status(200).json({ patients });
+        return res.status(200).json({ patients }); // <-- notice sending `patients` correctly
     } catch (error) {
         console.error("Error fetching patients:", error);
         return res.status(500).json({ message: "Error fetching past appointments", error });

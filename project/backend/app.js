@@ -15,6 +15,8 @@ const { graphqlHTTP } = require('express-graphql');
 const schema = require('./graphql/schema');
 
 
+const { swaggerUi, swaggerSpec } = require('./swagger');
+
 
 const path =  require('path');
 
@@ -122,6 +124,7 @@ app.use(errorHandler);
 
 app.use(router); 
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 const port = 3020;

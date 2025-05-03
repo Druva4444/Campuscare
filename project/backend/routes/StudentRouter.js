@@ -1,6 +1,7 @@
 const express = require('express');
 const checkAuth = require('../middleware/Student.js');
 const StudentRouter = express.Router();
+
 const {
   handleloginS,
   handlestudenthome,
@@ -19,6 +20,7 @@ const {
   getleaves2
 } = require('../controllers/Student');
 
+// Logging middleware
 StudentRouter.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
   next();

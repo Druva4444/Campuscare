@@ -11,6 +11,32 @@ function StudSch() {
     const [appointment,setappointment] = useState([])
     const [com,setcomi] = useState([]);
 const[email,setEmail]  = useState(null)
+const [filterDate, setFilterDate] = useState('');
+const [filterAcceptedBy, setFilterAcceptedBy] = useState('');
+const [rangeStart, setRangeStart] = useState('');
+const [rangeEnd, setRangeEnd] = useState('');
+const [sortOrder, setSortOrder] = useState('asc'); 
+let filteredCom = com.filter(indi => {
+    const itemDate = new Date(indi.date);
+    const startDate = rangeStart ? new Date(rangeStart) : null;
+    const endDate = rangeEnd ? new Date(rangeEnd) : null;
+
+    return (
+      (!filterDate || itemDate.toISOString().slice(0, 10) === filterDate) &&
+      (!filterAcceptedBy || indi.acceptedby.includes(filterAcceptedBy)) &&
+      (!startDate || itemDate >= startDate) &&
+      (!endDate || itemDate <= endDate)
+    );
+  });
+
+  // Sort the filtered data
+  filteredCom.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+  });
+
+
     useEffect(() => {
         // Set the current date
         const date = new Date();
@@ -126,11 +152,32 @@ const[email,setEmail]  = useState(null)
                         </div>
                     </div>
                 </div>
+        <div className="filteringpart" style={{display: "flex", marginTop: "2%",color:"#0A7273",fontSize:"20px",backgroundColor:"whitesmoke",padding:"10px",borderRadius:"10px",alignItems:"center",justifyContent:"space-between"}}>
+        <p>Based on Date</p>
+        <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} style={{border:'none'}} />
 
-                {/* Example History section */}
-                {console.log(com)}
-                {com.length>0?com.map((indi,index)=><Mainbody key={index} det={indi} email={email}  no={index}/>):<p style={{marginLeft:'40%',marginTop:'25%',fontSize:'40px',color:'#0A7273'}}>No History found</p>}
-                
+        <p>Based on  doctor</p>
+        <input type="text" placeholder="Enter doctor email..." value={filterAcceptedBy} onChange={e => setFilterAcceptedBy(e.target.value)} style={{border:'none'}} />
+
+        <p>From Date Range</p>
+        <input type="date" value={rangeStart} onChange={e => setRangeStart(e.target.value)} style={{border:'none'}} />
+        <input type="date" value={rangeEnd} onChange={e => setRangeEnd(e.target.value)} style={{border:'none'}}/>
+
+        <p>Sort by Date</p>
+        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
+          <option value="asc">Oldest to Newest</option>
+          <option value="desc">Newest to Oldest</option>
+        </select>
+      </div>
+
+     
+
+      {console.log(filteredCom)}
+      {filteredCom.length > 0
+        ? filteredCom.map((indi, index) => (
+            <Mainbody key={index} det={indi} email={email} no={index} />
+          ))
+        : <p style={{marginLeft:'40%',marginTop:'25%',fontSize:'40px',color:'#0A7273'}}>No History found</p>}
              
 
                 {/* More history items can be added here */}

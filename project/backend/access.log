@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [0mGET /getcolleges [36m304[0m 62.601 ms - -[0m
 [0mGET /getcolleges [36m304[0m 53.440 ms - -[0m
 [0mGET /getcolleges [36m304[0m 52.413 ms - -[0m
@@ -1389,3 +1390,5 @@
 [0mGET /api-docs/swagger-ui-bundle.js [36m304[0m 5.795 ms - -[0m
 [0mGET /api-docs/swagger-ui-standalone-preset.js [36m304[0m 3.924 ms - -[0m
 [0mGET /api-docs/favicon-32x32.png [36m304[0m 0.987 ms - -[0m
+=======
+>>>>>>> 19813db067b8ea585f2a782c561d3e10e2c91142

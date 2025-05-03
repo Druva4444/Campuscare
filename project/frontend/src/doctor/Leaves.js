@@ -8,11 +8,34 @@ import { useNavigate } from "react-router-dom";
 function Leaves (){
   const[gmail,setgmail] = useState(null);
   const[leaves,setLeaves] =useState([]);
+  const [filterEmail, setFilterEmail] = useState("");
+  const [filterStartDate, setFilterStartDate] = useState("");
+  const [filterEndDate, setFilterEndDate] = useState("");
+  const [sortOrder, setSortOrder] = useState("newest");
+  const filterLeaves = (leaves) => {
+    const filtered = leaves.filter((leave) => {
+      const matchesEmail = filterEmail === "" || leave.email.includes(filterEmail);
+      const matchesStart =
+        !filterStartDate || new Date(leave.startdate) >= new Date(filterStartDate);
+      const matchesEnd =
+        !filterEndDate || new Date(leave.enddate) <= new Date(filterEndDate);
+      return matchesEmail && matchesStart && matchesEnd;
+    });
+  
+    const sorted = filtered.sort((a, b) => {
+      const dateA = new Date(a.createdAt || a.startdate);  // fallback to startdate
+      const dateB = new Date(b.createdAt || b.startdate);
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
+  
+    return sorted;
+  };
   const navigate = useNavigate();
   useEffect(()=>{
     const fetchleaves = async()=>{
+      console.log("fetching leaves");
         const userdetails = Cookies.get('userdetails');
-        const token = Cookies.get('uid1');
+        const token = Cookies.get('Uid1');
         let email = null;
         if(userdetails){
             const parsedDetails = JSON.parse(userdetails);
@@ -31,6 +54,7 @@ function Leaves (){
         if (email) {
          try {
             console.log(email);
+            console.log("fetching leaves12");
             const response = await axios.get('http://localhost:3020/leaves2' , {params:{email}});
             if (response.status ===200) {
                 setLeaves(response.data)
@@ -42,6 +66,9 @@ function Leaves (){
          } catch (error) {
             console.log("error fetching leave details");
          }
+        }
+        else{
+          console.log("email not found");
         }
     }; fetchleaves();
   },[])
@@ -68,14 +95,44 @@ function Leaves (){
     }
 }
 
-  const pendingLeaves = leaves.filter((leave)=> leave.status ==='pending');
-  const completedLeaves = leaves.filter((leave)=>leave.status==='success');
-  const rejectedLeaves = leaves.filter((leave)=>leave.status === "rejected");
+const pendingLeaves = filterLeaves(leaves.filter((leave) => leave.status === "pending"));
+const completedLeaves = filterLeaves(leaves.filter((leave) => leave.status === "success"));
+const rejectedLeaves = filterLeaves(leaves.filter((leave) => leave.status === "rejected"));
+
   return(
     <div className="leaveSecondPart">
       <h1 className="leaveSecondHeader">Leave Details</h1>
 
       <section className="leaveMainBody">
+      <div className="leaveFilters">
+  <input
+    type="text"
+    placeholder="student Email"
+    value={filterEmail}
+    onChange={(e) => setFilterEmail(e.target.value)}
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <label>start date :</label>
+  <input
+    type="date"
+    value={filterStartDate}
+    onChange={(e) => setFilterStartDate(e.target.value)}
+    placeholder="Start Date"
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <label>end date :</label>
+  <input
+    type="date"
+    value={filterEndDate}
+    onChange={(e) => setFilterEndDate(e.target.value)}
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+  <option value="newest">Newest to Oldest</option>
+  <option value="oldest">Oldest to Newest</option>
+</select>
+
+</div>
         <h2 className="leaveFirstPart">Pending Leaves</h2>
         {pendingLeaves.length > 0 ? (
           <ul className="leaveDescription1">
@@ -122,6 +179,35 @@ function Leaves (){
       </section>
 
       <section className="leaveMainBody">
+      <div className="leaveFilters">
+  <input
+    type="text"
+    placeholder="student Email"
+    value={filterEmail}
+    onChange={(e) => setFilterEmail(e.target.value)}
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <label>start date :</label>
+  <input
+    type="date"
+    value={filterStartDate}
+    onChange={(e) => setFilterStartDate(e.target.value)}
+    placeholder="Start Date"
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <label>end date :</label>
+  <input
+    type="date"
+    value={filterEndDate}
+    onChange={(e) => setFilterEndDate(e.target.value)}
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+  <option value="newest">Newest to Oldest</option>
+  <option value="oldest">Oldest to Newest</option>
+</select>
+
+</div>
         <h2 className="leaveFirstPart">Accepted Leaves</h2>
         {completedLeaves.length > 0 ? (
           <ul className="leaveDescription1">
@@ -164,6 +250,35 @@ function Leaves (){
       </section>
 
       <section className="leaveMainBody">
+      <div className="leaveFilters">
+  <input
+    type="text"
+    placeholder="student Email"
+    value={filterEmail}
+    onChange={(e) => setFilterEmail(e.target.value)}
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <label>start date :</label>
+  <input
+    type="date"
+    value={filterStartDate}
+    onChange={(e) => setFilterStartDate(e.target.value)}
+    placeholder="Start Date"
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <label>end date :</label>
+  <input
+    type="date"
+    value={filterEndDate}
+    onChange={(e) => setFilterEndDate(e.target.value)}
+    style={{color:'#0A7273',border:'none',borderRadius:'50px',padding:'10px',width:'200px',backgroundColor:'whitesmoke'}}
+  />
+  <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+  <option value="newest">Newest to Oldest</option>
+  <option value="oldest">Oldest to Newest</option>
+</select>
+
+</div>
         <h2 className="leaveFirstPart">Rejected Leaves</h2>
         {rejectedLeaves.length > 0 ? (
           <ul className="leaveDescription1">

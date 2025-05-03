@@ -65,8 +65,7 @@ const resetSlotsForDay = async (day) => {
     console.error("Error resetting slots:", error);
   }
 };
-
-cron.schedule('37N 0 * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
   const yesterday = moment().subtract(1, 'day').format('dddd'); 
   console.log(`Resetting slots for ${yesterday}`);
   await resetSlotsForDay(yesterday);

@@ -75,11 +75,10 @@ async function handleloginS(req,res){
     }
 }
 async function handlestudenthome(req, res) {
-  const { email } = req.body;
+  const { email, page = 1, limit = 10 } = req.body;
   console.log(email);
 
   try {
-    // Step 1: Fetch all appointments from Redis
     const keys = await redisClient.keys('appointment:*');
     let appointments = [];
 
@@ -87,37 +86,64 @@ async function handlestudenthome(req, res) {
       const appointmentsData = await redisClient.mGet(keys);
       appointments = appointmentsData
         .map(data => JSON.parse(data))
-        .filter(app => app.createdy === email); // Filter only by student email
+        .filter(app => app.createdy === email);
     }
+
+    const now = new Date();
+    let total = [], comi = [], upcom = [];
 
     if (appointments.length > 0) {
       console.log("Cache hit and filtered appointments");
 
-      const now = new Date();
-      const total = appointments.filter(app => new Date(app.date) >= now);
-      const comi = appointments.filter(app => new Date(app.date) < now);
-      const upcom = appointments.filter(app => new Date(app.date) >= now);
+      total = appointments; // all appointments
+      comi = appointments.filter(app => new Date(app.date) < now);
+      upcom = appointments.filter(app => new Date(app.date) >= now);
 
-      total.sort((a, b) => new Date(a.date) - new Date(b.date));
+      // Sort comi by date
+      comi.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-      return res.json({ total, comi, upcom });
+      // Apply pagination to comi only
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const paginatedComi = comi.slice(startIndex, endIndex);
+
+      return res.json({
+        total,
+        comi: paginatedComi,
+        upcom,
+        comiCount: comi.length,
+        page: Number(page),
+        totalPages: Math.ceil(comi.length / limit)
+      });
     }
 
-    // Step 2: If cache miss, fallback to DB
-    const now = new Date();
-    const total = await accappointment.find({ createdy: email, date: { $gte: now } }).sort({ date: 1 });
-    const comi = await accappointment.find({ createdy: email, date: { $lt: now } }).sort({ date: 1 });
-    const upcom = await accappointment.find({ createdy: email, date: { $gte: now } }).sort({ date: 1 });
+    // DB fallback if Redis miss
+    total = await accappointment.find({ createdy: email }).sort({ date: 1 });
+    comi = await accappointment.find({ createdy: email, date: { $lt: now } }).sort({ date: 1 });
+    upcom = await accappointment.find({ createdy: email, date: { $gte: now } }).sort({ date: 1 });
 
     console.log("DB fallback");
 
-    return res.json({ total, comi, upcom });
+    // Apply pagination to comi
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedComi = comi.slice(startIndex, endIndex);
+
+    return res.json({
+      total,
+      comi: paginatedComi,
+      upcom,
+      comiCount: comi.length,
+      page: Number(page),
+      totalPages: Math.ceil(comi.length / limit)
+    });
 
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 
 async function deletebooking(req,res){
    

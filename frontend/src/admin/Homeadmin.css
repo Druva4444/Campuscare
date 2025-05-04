@@ -1,0 +1,176 @@
+.nonnavbar231 {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    background-color:whitesmoke;
+    border-left: 290px;
+    border-radius:17% 0% 0% 17%;
+    width: '100%';
+    overflow-y: hidden;
+    
+    
+}
+.hornav231{
+    display: flex;
+    height: 2%;
+    margin-left: 15.5%;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+    color: #0A7273;
+    transition: all 0.3s ease;
+    animation: slidedown 1s ease forwards;
+}
+.hornav231 p{
+    font-size: 30px;
+    
+}
+.dates231 {
+    margin-right: 5%;
+    display: flex;
+    flex-direction: column;
+}
+.text231{
+    display: flex;
+    flex-direction: row;
+}
+.text231 svg{ 
+    height:100%;
+    width: 400%;
+}
+.welcome231{
+    width: 80%;
+    height: 280px;
+    margin-left: 17%;
+    margin-right: auto;
+    margin-top: 4%;
+    border: 1px solid black;
+    background-position: center;
+    background-image: url('../../public/bg6.jpeg');
+    background-size: cover;
+    position: relative;
+    border:none;
+    border-radius: 2%;
+    
+}
+
+.welcome231 p{
+    font-size: 2.5rem;
+    margin-top: 3%;
+    margin-left: 4%;
+    color: snow;
+}
+.dashboard231{
+    width: 35%;
+    height: 47%;
+   
+   margin-left: 10%;   margin-top: 3%;
+    border: none;
+    padding-bottom: 20%;
+   animation: slideup 1s ease;
+}
+.dashboard231 p{
+    margin-left: 15%;
+    margin-top: 4%;
+    
+}
+.dashboard231 table{
+    width:125%;
+    margin-left:12.5%;
+    background-color: white;
+    border:none;
+    border-radius: 50px;
+    box-shadow:  20px 20px 60px #bebebe,
+             -20px -20px 60px #ffffff;
+}
+
+.dashboard231 th,td {
+    border-radius:2%;
+}
+.schedule231 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.schedule231 {
+    width: 90%;
+    margin: 0;
+    padding-bottom: 5%;
+    font-size: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+.schedule231 table{
+    margin-top: 8%;
+    width: 100%;
+    border: 2px solid whitesmoke ;
+    padding: 0;
+    border-spacing: 0;
+    background-color: white;
+}
+.nofi231 table{
+    border-radius: 13px;
+background: #ffffff;
+box-shadow:  7px 7px 15px #bebebe,
+             -7px -7px 15px #ffffff;
+}
+
+.schedule231 th{
+    width: 33%;
+}
+.schedule231 th,.schedule231 td{
+text-align: center;
+padding-top:5% ;
+padding-bottom: 5%;
+font-size: 25px;
+border: 2.5px solid whitesmoke;
+}
+.nofi231{
+    width: 35%; 
+    height: 25%;
+    margin-left: 2%;
+    margin-top: 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+   animation: slideup 1s ease ;
+}
+.nofi231 p{
+font-size: 50px;
+font-weight: 200px;
+}
+.sessions231{
+    color: snow;
+    width: 100%;
+    height: 10%;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #0A7273;
+    border-radius: 13px;
+    box-shadow:  10px 10px 10px #bebebe,
+             -7px -7px 15px #ffffff;
+}
+.sessions231 p{
+    margin-top: 5%;
+}
+.textpart1231 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-around;
+    margin-bottom: 10%;
+    border-radius: 13px;
+}
+.imgdiv231 svg{
+    padding-top: 5px;
+height:50px;
+width:70px;
+}
+.dashboard-container31 {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 5%;
+}

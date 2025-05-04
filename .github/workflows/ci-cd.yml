@@ -18,12 +18,12 @@ jobs:
 
     # Backend Install Check
     - name: Install Backend Dependencies
-      working-directory: project/backend
+      working-directory: backend
       run: npm install
 
     # Frontend Install Check
     - name: Install Frontend Dependencies
-      working-directory: project/frontend
+      working-directory: frontend
       run: npm install
 
     # Backend Lint or Build Check (optional)

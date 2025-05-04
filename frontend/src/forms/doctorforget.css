@@ -1,0 +1,101 @@
+
+.doccontainer {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 40%;
+    left: 50%;
+}
+
+.forgetform {
+    background: #efeeee;
+    height: 600px;
+    width: 350px;
+    border-radius: 20px;
+    box-shadow: 10px 10px 16px -2px wheat, -10px -10px 16px -2px #fff;
+    text-align: center;
+    padding: 1.5em;
+}
+
+#forget {
+    color: #777;
+    margin-bottom: 1.5em;
+    font-size: 32px;
+    font-weight: 300;
+}
+  
+#forgetin , #confirm{
+    width: 250px;
+    border: none;
+    border-radius: 5000px;
+    padding: 1.5em;
+    background: #efeeee;
+    box-shadow: inset 4px 4px 6px wheat, inset -4px -4px 6px #fff;
+    margin-bottom: 2em;
+    color: #888;
+    font-family: "Poppins", sans-serif;
+    text-decoration: none;
+    
+}
+
+#confirm{
+    width: 130px;
+    box-shadow: 4px 4px 6px wheat, -4px -4px 6px #fff;
+    margin-top: 2em;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+}
+
+input:hover {
+    cursor: pointer;
+}
+
+input:active {
+    box-shadow: inset 4px 4px 6px wheat, inset -4px -4px 6px #fff;
+}
+
+input:focus {
+    outline: none;
+}
+
+::-moz-placeholder {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    color: #aaa;
+}
+
+::placeholder {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    color: #aaa;
+}
+
+a {
+    text-decoration: none;
+    color:  #aaa;
+    font-size: 15px;
+    transition: all 0.2s ease-in-out;
+}
+
+a:hover {
+    color:#d1cece;
+}
+
+a:active {
+    color: wheat;
+}
+
+a:focus {
+    outline: none;
+}
+.docnew1{
+   
+    margin-top: 5%;
+    width: 100%;
+}
+#su{
+    margin-left: 10px;
+    margin-right: 2px;
+}
+#fp{
+    margin-left: 100px;
+}

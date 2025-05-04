@@ -37,20 +37,20 @@ module.exports = DoctorRouter;
 
 const { createClient } = require('redis');
 
-const {
-  getcolleges,
-  handlelogin,
-  givehomedet,
-  deleteapp,
-  getpatients,
-  addreport,
-  sendotp,
-  handleforget,
-  resetp,
-  getslotsdoc,
-  adddoc,
-  modifyleaves
-} = require('../controllers/doctor');
+// const {
+//   getcolleges,
+//   handlelogin,
+//   givehomedet,
+//   deleteapp,
+//   getpatients,
+//   addreport,
+//   sendotp,
+//   handleforget,
+//   resetp,
+//   getslotsdoc,
+//   adddoc,
+//   modifyleaves
+// } = require('../controllers/doctor');
 
 DoctorRouter.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);

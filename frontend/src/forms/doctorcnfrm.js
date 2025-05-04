@@ -21,7 +21,9 @@ function NewPassword() {
             // Send password update request to the backend
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/resetpassword`, {
                 password: newPassword,email:location.state?.email
-            });
+            }, {
+                withCredentials: true
+              });
            
             alert(response.data.message); // Show success message
             if (response.data.success) {

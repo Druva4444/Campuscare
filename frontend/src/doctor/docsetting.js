@@ -69,7 +69,9 @@ function Docsetting() {
                 report,
                 email,
                 college
-            });
+            }, {
+                withCredentials: true
+              });
     
             if (response.data.msg === 'succesfull') {
                 alert('Report sent');

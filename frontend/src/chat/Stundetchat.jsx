@@ -13,7 +13,9 @@ const Chatd = () => {
   const [selectedUserid,setSelectedUserid]=useState(null)
   useEffect(()=>{
     async function fetchmessages(){
-        const response = await axios.post("http://localhost:3020/sgetMessages",{from:loginuser,to:selectedUserid})
+        const response = await axios.post("http://localhost:3020/sgetMessages",{from:loginuser,to:selectedUserid}, {
+          withCredentials: true
+        })
         console.log(response.data)
         setMessages(response.data)
     }
@@ -29,7 +31,9 @@ const Chatd = () => {
           const parsedDetails = JSON.parse(userDetails);
         
   
-          const response = await axios.post("http://localhost:3020/getstuobj", { email: parsedDetails.gmail });
+          const response = await axios.post("http://localhost:3020/getstuobj", { email: parsedDetails.gmail }, {
+            withCredentials: true
+          });
           
           setloginuser(response.data._id);
         } catch (error) {
@@ -41,7 +45,9 @@ const Chatd = () => {
           const decoded = decodeToken(token);
          
   
-          const response = await axios.post("http://localhost:3020/getstuobj", { email: decoded.gmail });
+          const response = await axios.post("http://localhost:3020/getstuobj", { email: decoded.gmail }, {
+            withCredentials: true
+          });
           
           setloginuser(response.data._id);
         } catch (error) {
@@ -56,7 +62,9 @@ const Chatd = () => {
   }, []);
 useEffect(()=>{
     async function fetchusers(){
-        const response = await axios.post("http://localhost:3020/getdoctors",{college:'nit trichy'})
+        const response = await axios.post("http://localhost:3020/getdoctors",{college:'nit trichy'}, {
+          withCredentials: true
+        })
         console.log(response.data)
         
         setusers(response.data)
@@ -70,7 +78,9 @@ fetchusers()
         to: selectedUserid,
         message: input,
       };
-      const response =await axios.post("http://localhost:3020/screateMessage", {from:loginuser,to:selectedUserid,message:input});
+      const response =await axios.post("http://localhost:3020/screateMessage", {from:loginuser,to:selectedUserid,message:input}, {
+        withCredentials: true
+      });
       console.log(response.data)
       setInput("");
     }

@@ -55,7 +55,9 @@ function Reports() {
         async function fetchReports() {
             if (gmail && college) {  // Ensure that gmail and college are set before making the request
                 try {
-                    const response = await axios.post(`${process.env.REACT_APP_API_URL}/getadminhome`, { gmail, college });
+                    const response = await axios.post(`${process.env.REACT_APP_API_URL}/getadminhome`, { gmail, college }, {
+                        withCredentials: true
+                      });
                     setReports(response.data.report);
                     console.log(response.data.report);
                 } catch (error) {

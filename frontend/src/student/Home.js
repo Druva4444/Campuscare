@@ -39,7 +39,9 @@ function StudHome() {
       // If userDetails cookie exists, parse and set the gmail state
       const parsedDetails = JSON.parse(userDetails);
       console.log(parsedDetails.gmail)
-      axios.post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email: parsedDetails.gmail })
+      axios.post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email: parsedDetails.gmail }, {
+        withCredentials: true
+      })
       .then(response => {
         setappointment(response.data.total);
         setupcomingapp(response.data.upcom);
@@ -56,7 +58,9 @@ function StudHome() {
         // Decode the JWT token
         const decoded = decodeToken(token); // Make sure the secret matches
         console.log(decoded)
-        axios.post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email: decoded.gmail })
+        axios.post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email: decoded.gmail }, {
+          withCredentials: true
+        })
       .then(response => {
         // Assuming the response contains appointments count
         setappointment(response.data.total);

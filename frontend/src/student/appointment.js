@@ -118,7 +118,9 @@
     }, []);
     useEffect(()=>{
       async function z(){
-        const response =await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`,{college})
+        const response =await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`,{college}, {
+          withCredentials: true
+        })
         console.log(response.data.msg)
         setdoctors(response.data.msg)
       }
@@ -132,6 +134,8 @@
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/getslots`, {
               gmail: selectedDoctor,
               date,
+            }, {
+              withCredentials: true
             });
             console.log("Response from getslots:", response.data);
             if (response.data.slots) {
@@ -157,7 +161,9 @@
     useEffect(() => {
       async function fetchDoctors() {
         try {
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`, { college });
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`, { college }, {
+            withCredentials: true
+          });
           console.log("Doctors fetched:", response.data.msg);
           setdoctors(response.data.msg);
         } catch (error) {
@@ -189,6 +195,8 @@
               date:newDate ,
               user:gmail,
               college
+          }, {
+            withCredentials: true
           });
           if (response.status === 200) {
               alert('Slot booked successfully!');

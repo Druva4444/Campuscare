@@ -91,7 +91,9 @@ let filteredCom = com.filter(indi => {
       
           if (email) {
             axios
-              .post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email:email,page:currentPage,limit:5 })
+              .post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email:email,page:currentPage,limit:5 }, {
+                withCredentials: true
+              })
               .then((response) => {
                 console.log()
                 setappointment(response.data.total);

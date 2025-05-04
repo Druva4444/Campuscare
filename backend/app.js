@@ -75,9 +75,9 @@ cron.schedule('0 0 * * *', async () => {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://frontend:3000',
-  'https://campuscare-3.onrender.com',
+  'https://campuscare-2.onrender.com',
   'http://localhost:5000',
-   'https://campuscare-2.onrender.com'
+  'https://campuscare-1.onrender.com'
 ];
 
 app.use(cors({

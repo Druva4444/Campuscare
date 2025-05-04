@@ -2,6 +2,8 @@ import './acccollege.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+
+
 function AccCollege() {
   const [currentDate, setCurrentDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
@@ -41,7 +43,7 @@ function AccCollege() {
       const response = await axios.post(`http://localhost:3020/acceptclgreq/${id}/${email}/${password}/${name}`);
       if (response.status === 200) {
         alert("Accepted Successfully");
-        fetchColleges(); // No need to reload page
+        fetchColleges();
       }
     } catch (error) {
       console.error('Error accepting request:', error);
@@ -114,9 +116,7 @@ function AccCollege() {
               <p>Domain: {college.domain}</p>
               <span>Fields: </span>
               {college.fields.map((field, index) => (
-                <span key={index}>
-                  {field}{index !== college.fields.length - 1 ? ', ' : ''}
-                </span>
+                <span key={index}>{field}{index !== college.fields.length - 1 ? ', ' : ''}</span>
               ))}
             </div>
 

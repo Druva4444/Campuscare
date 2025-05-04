@@ -1,67 +1,77 @@
 import React, { useState, useEffect } from "react";
 import "./docpatients.css";
-import Ptmain from  './ptmain'
+import Ptmain from './ptmain'
 import Cookies from 'js-cookie';
-import { useJwt ,decodeToken} from "react-jwt";
-import axios from 'axios'
+import { decodeToken } from "react-jwt";
+import axios from 'axios';
+
 function Docpatients() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [patients,setpatients] =useState([])
+  const [patients, setPatients] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [filterDate, setFilterDate] = useState("");
   const [filterCreatedy, setFilterCreatedy] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
-  
+
   // Toggle Dropdown Visibility
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
   };
 
-  // Update Date and Time
-  useEffect(()=>{
+  // Fetch data from the backend
+  useEffect(() => {
     const fetchData = () => {
-        const userDetails = Cookies.get('userdetails');
-        const token = Cookies.get('Uid1');
-        let email 
-    
-        if (userDetails) {
-          const parsedDetails = JSON.parse(userDetails);
-          email = parsedDetails.gmail;
-        } else if (token) {
-          try {
-            const decoded = decodeToken(token);
-            email = decoded.gmail;
-          } catch (error) {
-            console.error("Token verification failed:", error);
-          }
-        }
-    
-        if (email) {
-          axios
-            .post('http://localhost:3020/getpatients', { email:email })
-            .then((response) => {
-              setpatients(response.data.patients);
-              console.log(response.data.patients)
+      const userDetails = Cookies.get('userdetails');
+      const token = Cookies.get('Uid1');
+      let email;
 
-            })
-            .catch((error) => {
-              console.error("Error fetching appointments:", error);
-            });
+      if (userDetails) {
+        const parsedDetails = JSON.parse(userDetails);
+        email = parsedDetails.gmail;
+      } else if (token) {
+        try {
+          const decoded = decodeToken(token);
+          email = decoded.gmail;
+        } catch (error) {
+          console.error("Token verification failed:", error);
         }
-      };
-    
-      // Fetch immediately
-      fetchData();
-    
-      // Set up polling
-      const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
-    
-      // Cleanup on unmount
-      return () => clearInterval(interval);
-  },[])
+      }
+
+      if (email) {
+        axios
+          .post('http://localhost:3020/getpatients', {
+            email: email,
+            page: currentPage,
+            limit: 5, // You can adjust this
+          })
+          .then((response) => {
+            setPatients(response.data.patients);
+            if (response.data.totalPages) {
+              setTotalPages(response.data.totalPages); // Only if backend sends this
+            }
+            console.log(response.data.patients);
+          })
+          .catch((error) => {
+            console.error("Error fetching patients:", error);
+          });
+      }
+    };
+
+    // Fetch immediately
+    fetchData();
+
+    // Set up polling
+    const interval = setInterval(fetchData, 5000);
+
+    // Cleanup on unmount
+    return () => clearInterval(interval);
+  }, [currentPage]); // depend on currentPage
+
   useEffect(() => {
     const now = new Date();
     const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
@@ -92,9 +102,15 @@ function Docpatients() {
     console.log(inputData);
   };
 
+  // Pagination handler
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
   return (
     <div>
-     
       <div className="DPnonnavbar" style={{ marginLeft: "0px", zIndex: "-10" }}>
         {/* Header Section */}
         <div className="DPhornav">
@@ -122,8 +138,9 @@ function Docpatients() {
           <div className="DPdates">
             <div className="DPtext">
               <div className="DPdate" style={{ margin: "0", padding: "0" }}>
-                <p id="DPdate" style={{ textAlign: "end", margin: "0",color:"#0A7273",fontSize:"30px" }}>{date} </p>
-                <p id="DPtime" style={{ margin: "0",color:"#0A7273" ,fontSize:"30px"}}>{time}</p></div>
+                <p id="DPdate" style={{ textAlign: "end", margin: "0", color:"#0A7273", fontSize:"30px" }}>{date} </p>
+                <p id="DPtime" style={{ margin: "0", color:"#0A7273", fontSize:"30px"}}>{time}</p>
+              </div>
               <div className="DPicon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -140,75 +157,101 @@ function Docpatients() {
             </div>
           </div>
         </div>
-      
-        <div className="filters"   style={{marginLeft:"17%",display: "flex", marginTop: "2%",color:"#0A7273",fontSize:"20px",backgroundColor:"whitesmoke",padding:"10px",borderRadius:"10px",alignItems:"center"}}>
-  <label>Filter by Date</label>
-  <input
-    type="date"
-    value={filterDate}
-    onChange={(e) => setFilterDate(e.target.value)}
-    placeholder="Filter by Date"
-    style={{ marginLeft: "10px", marginRight: "10px" }}
-  />
-  <label>Filter by patient</label>
-  <input
-    type="text"
-    value={filterCreatedy}
-    onChange={(e) => setFilterCreatedy(e.target.value)}
-    placeholder="Filter by Createdy (name)"
-    style={{ marginLeft: "10px", marginRight: "10px" }}
-  />
-  <label>Filter by Date Range</label>
-  <input
-    type="date"
-    value={startDate}
-    onChange={(e) => setStartDate(e.target.value)}
-    placeholder="Start Range"
-    style={{ marginLeft: "10px", marginRight: "10px" }}
-  />
-  <label>to</label>
-  <input
-    type="date"
-    value={endDate}
-    onChange={(e) => setEndDate(e.target.value)}
-    placeholder="End Range"
-    style={{ marginLeft: "10px", marginRight: "10px" }}
-  />
-  <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{ marginLeft: "10px", marginRight: "10px" }}  >
-    <option value="newest">Newest to Oldest</option>
-    <option value="oldest">Oldest to Newest</option>
-  </select>
+
+        <div className="filters" style={{ marginLeft: "17%", display: "flex", marginTop: "2%", color:"#0A7273", fontSize:"20px", backgroundColor:"whitesmoke", padding:"10px", borderRadius:"10px", alignItems:"center" }}>
+          <label>Filter by Date</label>
+          <input
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            placeholder="Filter by Date"
+            style={{ marginLeft: "10px", marginRight: "10px" }}
+          />
+          <label>Filter by patient</label>
+          <input
+            type="text"
+            value={filterCreatedy}
+            onChange={(e) => setFilterCreatedy(e.target.value)}
+            placeholder="Filter by Createdy (name)"
+            style={{ marginLeft: "10px", marginRight: "10px" }}
+          />
+          <label>Filter by Date Range</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            placeholder="Start Range"
+            style={{ marginLeft: "10px", marginRight: "10px" }}
+          />
+          <label>to</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            placeholder="End Range"
+            style={{ marginLeft: "10px", marginRight: "10px" }}
+          />
+          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{ marginLeft: "10px", marginRight: "10px" }}>
+            <option value="newest">Newest to Oldest</option>
+            <option value="oldest">Oldest to Newest</option>
+          </select>
+        </div>
+
+        {/* Patients List */}
+        {patients
+          .filter((patient) => {
+            const patientDate = new Date(patient.date);
+            const matchesFilterDate =
+              !filterDate ||
+              new Date(patient.date).toISOString().slice(0, 10) === filterDate;
+
+            const matchesCreatedy =
+              !filterCreatedy || patient.createdy.toLowerCase().includes(filterCreatedy.toLowerCase());
+            const matchesDateRange =
+              (!startDate || patientDate >= new Date(startDate)) &&
+              (!endDate || patientDate <= new Date(endDate));
+            return matchesFilterDate && matchesCreatedy && matchesDateRange;
+          })
+          .sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+          })
+          .map((patient, ind) => (
+            <Ptmain det={patient} key={ind} />
+          ))}
+
+        {/* Pagination Buttons */}
+        <div className="pagination" style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px" }}>
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1}
+    style={{ marginRight: "10px" }}
+  >
+    Previous
+  </button>
+  {[...Array(totalPages)].map((_, index) => (
+    <button
+      key={index}
+      onClick={() => handlePageChange(index + 1)}
+      style={{
+        margin: "0 5px",
+        backgroundColor: currentPage === index + 1 ? "#0A7273" : "transparent",
+        color: currentPage === index + 1 ? "white" : "black",
+      }}
+    >
+      {index + 1}
+    </button>
+  ))}
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    style={{ marginLeft: "10px" }}
+  >
+    Next
+  </button>
 </div>
 
-
-        {/* Form Section */}
-        {console.log(patients)}
-        {patients
-  .filter((patient) => {
-    const patientDate = new Date(patient.date);
-    const matchesFilterDate =
-  !filterDate ||
-  new Date(patient.date).toISOString().slice(0, 10)  === filterDate;
-
-
-    const matchesCreatedy =
-      !filterCreatedy || patient.createdy.toLowerCase().includes(filterCreatedy.toLowerCase());
-    const matchesDateRange =
-      (!startDate || patientDate >= new Date(startDate)) &&
-      (!endDate || patientDate <= new Date(endDate));
-    return matchesFilterDate && matchesCreatedy && matchesDateRange;
-  })
-  .sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-  })
-  .map((patient, ind) => (
-    <Ptmain det={patient} key={ind} />
-  ))}
-
-
-        
       </div>
     </div>
   );

@@ -10,10 +10,12 @@ const router = require('./routes/routes');
 const cron = require('node-cron');
 const moment = require('moment'); 
 const accappointment = require('./model/acceptedappointments.js')
-
+const { createClient } = require('redis');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./graphql/schema');
 
+
+const { swaggerUi, swaggerSpec } = require('./swagger');
 
 
 const path =  require('path');
@@ -121,6 +123,7 @@ app.use(errorHandler);
 
 app.use(router); 
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 const port = 3020;

@@ -29,13 +29,21 @@ async function handleadminlogin(req,res){
             "druva123", // Secret key
             { expiresIn: "4d" } // Token valid for 1 day
         );
-        res.cookie("Uid3", token, { maxAge: 24 * 60 * 60 * 1000},{ sameSite: 'None', secure: true });
+        res.cookie("Uid3", token, { maxAge: 24 * 60 * 60 * 1000}, {
+            httpOnly: true,
+            secure: true,        // important if you're using HTTPS
+            sameSite: "None"     // must be 'None' for cross-site cookies
+        });
     }
     res.cookie("userdetails", JSON.stringify({
         gmail: admin.email,
         role:'admin',
         college:admin.college
-    }),{ sameSite: 'None', secure: true });
+    }), {
+        httpOnly: true,
+        secure: true,        // important if you're using HTTPS
+        sameSite: "None"     // must be 'None' for cross-site cookies
+    });
     return res.status(200).json({ message: "Login Succesful" });
 }
 async function adminhome(req,res){

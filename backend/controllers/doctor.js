@@ -89,14 +89,22 @@ async function handlelogin(req,res){
                 "druva123", // Secret key
                 { expiresIn: "4d" } // Token valid for 1 day
             );
-            res.cookie("Uid1", token, { maxAge: 24 * 60 * 60 * 1000},{ sameSite: 'None', secure: true });
+            res.cookie("Uid1", token, { maxAge: 24 * 60 * 60 * 1000}, {
+              httpOnly: true,
+              secure: true,        // important if you're using HTTPS
+              sameSite: "None"     // must be 'None' for cross-site cookies
+          });
         }
 
         // Set user details in cookies
         res.cookie("userdetails", JSON.stringify({
             gmail: specificUser.gmail,
             college: specificUser.college,
-        }),{ sameSite: 'None', secure: true });
+        }), {
+          httpOnly: true,
+          secure: true,        // important if you're using HTTPS
+          sameSite: "None"     // must be 'None' for cross-site cookies
+      });
 
         // Fetch all appointments
         const appointments = await accappointment.find({

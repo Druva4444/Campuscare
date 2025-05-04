@@ -59,13 +59,21 @@ async function handleloginS(req,res){
                 "druva123", 
                 { expiresIn: "4d" } 
             );
-            res.cookie("Uid2", token, { maxAge: 4*24 * 60 * 60 * 1000},{ sameSite: 'None', secure: true });
+            res.cookie("Uid2", token, { maxAge: 4*24 * 60 * 60 * 1000}, {
+              httpOnly: true,
+              secure: true,        // important if you're using HTTPS
+              sameSite: "None"     // must be 'None' for cross-site cookies
+          });
         }
 
         res.cookie("userdetails", JSON.stringify({
             gmail: specificUser.gmail,
             college: specificUser.college,
-        }),{ sameSite: 'None', secure: true });
+        }), {
+          httpOnly: true,
+          secure: true,        // important if you're using HTTPS
+          sameSite: "None"     // must be 'None' for cross-site cookies
+      });
 
      
         return res.status(200).json({ message: "Login Succesful" });

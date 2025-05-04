@@ -34,10 +34,18 @@ async function postloginpage(req, res) {
             }, "venkat");
             console.log('inside if')
             console.log(token)
-            res.cookie("Uid4", token, { maxAge: 2 * 24 * 60 * 60 * 1000  });
+            res.cookie("Uid4", token, { maxAge: 2 * 24 * 60 * 60 * 1000  }, {
+              httpOnly: true,
+              secure: true,        // important if you're using HTTPS
+              sameSite: "None"     // must be 'None' for cross-site cookies
+          });
         }
 
-        res.cookie("userdetails", JSON.stringify({ email: email, role: "superuser" }));
+        res.cookie("userdetails", JSON.stringify({ email: email, role: "superuser" }), {
+          httpOnly: true,
+          secure: true,        // important if you're using HTTPS
+          sameSite: "None"     // must be 'None' for cross-site cookies
+      });
         res.status(200).json({ message: 'Login successful', token });
     } catch (err) {
         console.log(err);

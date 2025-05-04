@@ -119,7 +119,13 @@
     }, []);
     useEffect(()=>{
       async function z(){
-        const response =await axios.post('http://localhost:3020/getdoc',{college})
+
+
+
+        const response =await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`,{college}, {
+          withCredentials: true
+        })
+
         console.log(response.data.msg)
         setdoctors(response.data.msg)
       }
@@ -158,7 +164,12 @@
     useEffect(() => {
       async function fetchDoctors() {
         try {
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`, { college });
+
+
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`, { college }, {
+            withCredentials: true
+          });
+
           console.log("Doctors fetched:", response.data.msg);
           setdoctors(response.data.msg);
         } catch (error) {
@@ -182,7 +193,7 @@
         const [hours, minutes] = starttime.split(':').map(Number);
         const newDate = new Date(date);
         newDate.setHours(hours, minutes, 0, 0)
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/bookslot`, {
+          const response = await axios.post('http://localhost:3020/bookslot', {
               gmail: selectedDoctor,
               day,
               timeSlot: selectedSlot,

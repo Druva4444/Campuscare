@@ -12,20 +12,26 @@ const accappointment = require('../model/acceptedappointments')
 const rejappointment = require('../model/rejectedappointments')
 const {createClient} = require('redis');
 
+const redisClient = createClient({
+    username: 'default',
+    password: 'NPk03ZQIVWR1Tqs4Jv8HdNhuIpFi4qfa',
+    socket: {
+        host: 'redis-16200.c261.us-east-1-4.ec2.redns.redis-cloud.com',
+        port: 16200
+    }
+});
 
-const redisClient = createClient();
-
-async function connectToRedis() {
-  try {
-    await redisClient.connect();
-    console.log('Redis client connected');
-  } catch (err) {
-    console.error('Error connecting to Redis:', err);
-  }
+redisClient.on('error', err => console.log('Redis Client Error', err));
+async function connectRedis() {
+    try {
+        await redisClient.connect();
+        console.log('Connected to Redis');
+    } catch (error) {
+        console.error('Error connecting to Redis:', error);
+    }
 }
+connectRedis();
 
-// Call the function to establish the Redis connection
-connectToRedis();
 async function getcolleges(req, res) {
     try {
       const keys = await redisClient.keys('college:*');

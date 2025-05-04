@@ -44,8 +44,8 @@ import Suserforget from './forms/suserForgot';
 import Addadmin from './forms/Addadmin';
 import LeaveDetails from './student/Leave';
 import Leaves from './doctor/Leaves';  
-
-
+import Chatd from './chat/Stundetchat';
+import Chats from './chat/Doctorchat';
 
 function App() {
   return (
@@ -110,7 +110,8 @@ function App() {
           <Route path='/superuser/forgetpassword' element={<Suserforget/>}/>
           <Route path='/suser/newpassword' element={<SuserNewPassword/>}/>
           <Route path='/admin/signup' element={<Addadmin/>}/>
-        
+          <Route path='/chat' element={<Chatd/>}/>
+          <Route path='/doctorchat' element={<Chats/>}/>
         </Routes>
       </Router>
        

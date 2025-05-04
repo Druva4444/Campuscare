@@ -1,18 +1,15 @@
-# Use official Node.js image
-FROM node:18
+# backend/Dockerfile
 
-# Create app directory
+FROM node:20
+
 WORKDIR /app
 
-# Copy package.json and install dependencies
 COPY package*.json ./
+
 RUN npm install
 
-# Copy the rest of the code
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 3020
+EXPOSE 5000
 
-# Run the applicatio
-CMD ["node", "app.js"]
+CMD ["npm", "start"]

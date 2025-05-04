@@ -58,15 +58,15 @@
     ]
   },
   "devDependencies": {
-<<<<<<< HEAD:project/frontend/package.json
+
     "@babel/preset-env": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
-=======
+
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
->>>>>>> d3bbe7071abea6409f8ec86d1914004014053659:frontend/package.json
+
     "autoprefixer": "^10.4.21",
     "babel-jest": "^29.7.0",
     "jest": "^27.5.1",

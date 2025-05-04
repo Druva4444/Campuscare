@@ -1,28 +1,17 @@
-# Build stage
-FROM node:18 as build
+# Use official Node.js image
+FROM node:18
 
-# Set working directory
+# Create app directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package.json and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the code
 COPY . .
 
-# Production stage
-FROM node:18 as production
-
-# Set working directory for the production image
-WORKDIR /app
-
-# Copy only the necessary files from the build stage (node_modules and app code)
-COPY --from=build /app ./
-
-# Expose the port for the backend app
+# Expose the port your app runs on
 EXPOSE 3020
 
 # Run the application

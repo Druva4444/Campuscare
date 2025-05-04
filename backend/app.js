@@ -72,10 +72,25 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://frontend:3000',
+  'https://campuscare-3.onrender.com',
+  'http://localhost:5000',
+   'https://campuscare-2.onrender.com'
+];
+
 app.use(cors({
-  origin: 'http://localhost:3000', 
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
 }));
+
 getmongoconnect('mongodb+srv://druvadruvs:Druva%402907@cluster0.7eaal.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MongoDB connected");

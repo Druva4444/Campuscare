@@ -90,7 +90,7 @@ async function handlelogin(req,res){
                 { expiresIn: "4d" } // Token valid for 1 day
             );
             res.cookie("Uid1", token, { maxAge: 24 * 60 * 60 * 1000}, {
-              httpOnly: true,
+              httpOnly: false,
               secure: true,        // important if you're using HTTPS
               sameSite: "None"     // must be 'None' for cross-site cookies
           });
@@ -101,7 +101,7 @@ async function handlelogin(req,res){
             gmail: specificUser.gmail,
             college: specificUser.college,
         }), {
-          httpOnly: true,
+          httpOnly: false,
           secure: true,        // important if you're using HTTPS
           sameSite: "None"     // must be 'None' for cross-site cookies
       });

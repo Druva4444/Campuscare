@@ -35,14 +35,14 @@ async function postloginpage(req, res) {
             console.log('inside if')
             console.log(token)
             res.cookie("Uid4", token, { maxAge: 2 * 24 * 60 * 60 * 1000  }, {
-              httpOnly: true,
+              httpOnly: false,
               secure: true,        // important if you're using HTTPS
               sameSite: "None"     // must be 'None' for cross-site cookies
           });
         }
 
         res.cookie("userdetails", JSON.stringify({ email: email, role: "superuser" }), {
-          httpOnly: true,
+          httpOnly: false,
           secure: true,        // important if you're using HTTPS
           sameSite: "None"     // must be 'None' for cross-site cookies
       });
@@ -57,11 +57,11 @@ async function handlelogout(req, res) {
       const { Uid4, userdetails } = req.cookies;
   
       if (Uid4) {
-        res.clearCookie('Uid4', { httpOnly: true });
+        res.clearCookie('Uid4', { httpOnly: false });
       }
   
       if (userdetails) {
-        res.clearCookie('userdetails', { httpOnly: true });
+        res.clearCookie('userdetails', { httpOnly: false });
       }
   
       return res.status(200).json({ message: 'Logged out successfully' });

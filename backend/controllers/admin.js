@@ -30,7 +30,7 @@ async function handleadminlogin(req,res){
             { expiresIn: "4d" } // Token valid for 1 day
         );
         res.cookie("Uid3", token, { maxAge: 24 * 60 * 60 * 1000}, {
-            httpOnly: true,
+            httpOnly: false,
             secure: true,        // important if you're using HTTPS
             sameSite: "None"     // must be 'None' for cross-site cookies
         });
@@ -40,7 +40,7 @@ async function handleadminlogin(req,res){
         role:'admin',
         college:admin.college
     }), {
-        httpOnly: true,
+        httpOnly: false,
         secure: true,        // important if you're using HTTPS
         sameSite: "None"     // must be 'None' for cross-site cookies
     });

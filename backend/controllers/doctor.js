@@ -92,7 +92,8 @@ async function handlelogin(req,res){
             res.cookie("Uid1", token, { maxAge: 24 * 60 * 60 * 1000}, {
               httpOnly: false,
               secure: true,        // important if you're using HTTPS
-              sameSite: "None"     // must be 'None' for cross-site cookies
+              sameSite: "None" ,
+              domain:"https://campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
           });
         }
 
@@ -103,7 +104,8 @@ async function handlelogin(req,res){
         }), {
           httpOnly: false,
           secure: true,        // important if you're using HTTPS
-          sameSite: "None"     // must be 'None' for cross-site cookies
+          sameSite: "None" ,
+          domain:"https://campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
       });
 
         // Fetch all appointments

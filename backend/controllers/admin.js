@@ -32,7 +32,8 @@ async function handleadminlogin(req,res){
         res.cookie("Uid3", token, { maxAge: 24 * 60 * 60 * 1000}, {
             httpOnly: false,
             secure: true,        // important if you're using HTTPS
-            sameSite: "None"     // must be 'None' for cross-site cookies
+            sameSite: "None" ,
+            domain:"https://campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
         });
     }
     res.cookie("userdetails", JSON.stringify({
@@ -42,7 +43,8 @@ async function handleadminlogin(req,res){
     }), {
         httpOnly: false,
         secure: true,        // important if you're using HTTPS
-        sameSite: "None"     // must be 'None' for cross-site cookies
+        sameSite: "None"   ,
+        domain:"https://campuscare-1.onrender.com"  // must be 'None' for cross-site cookies
     });
     return res.status(200).json({ message: "Login Succesful" });
 }

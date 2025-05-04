@@ -16,6 +16,8 @@ const [filterAcceptedBy, setFilterAcceptedBy] = useState('');
 const [rangeStart, setRangeStart] = useState('');
 const [rangeEnd, setRangeEnd] = useState('');
 const [sortOrder, setSortOrder] = useState('asc'); 
+ const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 let filteredCom = com.filter(indi => {
     const itemDate = new Date(indi.date);
     const startDate = rangeStart ? new Date(rangeStart) : null;
@@ -89,11 +91,14 @@ let filteredCom = com.filter(indi => {
       
           if (email) {
             axios
-              .post('http://localhost:3020/getStuhome', { email })
+              .post('http://localhost:3020/getStuhome', { email:email,page:currentPage,limit:5 })
               .then((response) => {
                 console.log()
                 setappointment(response.data.total);
                 setcomi(response.data.comi);
+                if (response.data.totalPages) {
+                  setTotalPages(response.data.totalPages); // Only if backend sends this
+                }
               })
               .catch((error) => {
                 console.error("Error fetching appointments:", error);
@@ -109,7 +114,7 @@ let filteredCom = com.filter(indi => {
       
         // Cleanup on unmount
         return () => clearInterval(interval);
-      }, []);
+      }, [currentPage]);
 
     // Toggle dropdown visibility
     const toggleDropdown = () => {
@@ -127,7 +132,12 @@ let filteredCom = com.filter(indi => {
         window.addEventListener("click", handleClickOutside);
         return () => window.removeEventListener("click", handleClickOutside);
     }, []);
-
+    const handlePageChange = (pageNumber) => {
+      if (pageNumber >= 1 && pageNumber <= totalPages) {
+        setCurrentPage(pageNumber);
+      }
+    };
+  
     return (
         <div >
            
@@ -185,6 +195,35 @@ let filteredCom = com.filter(indi => {
                 <div className="SCHmarginpart">
                     <pre style={{marginTop: "40px"}}>   </pre>
                 </div>
+                <div className="pagination" style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px" }}>
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1}
+    style={{ marginRight: "10px" }}
+  >
+    Previous
+  </button>
+  {[...Array(totalPages)].map((_, index) => (
+    <button
+      key={index}
+      onClick={() => handlePageChange(index + 1)}
+      style={{
+        margin: "0 5px",
+        backgroundColor: currentPage === index + 1 ? "#0A7273" : "transparent",
+        color: currentPage === index + 1 ? "white" : "black",
+      }}
+    >
+      {index + 1}
+    </button>
+  ))}
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    style={{ marginLeft: "10px" }}
+  >
+    Next
+  </button>
+</div>
             </div>
         </div>
     );

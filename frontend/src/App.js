@@ -1,4 +1,4 @@
-import './App.css';
+
 import Vernav from './superadmin/Vernav';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './superadmin/Dashboard';

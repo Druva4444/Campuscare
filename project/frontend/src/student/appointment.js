@@ -246,11 +246,12 @@
           style={{ marginLeft: "20px", marginBottom: "0px" }}
           onChange={(e) => setSelectedDoctor(e.target.value)}
         >
-          {doctors.map((doctor, index) => (
-            <option key={index} value={doctor.gmail}>
-              {doctor.gmail.split("@")[0]} ({doctor.fields})
-            </option>
-          ))}
+{(doctors || []).map((doctor, index) => (
+  <option key={index} value={doctor.gmail}>
+    {doctor.gmail.split("@")[0]} ({doctor.fields})
+  </option>
+))}
+
         </select>
         </div>
 

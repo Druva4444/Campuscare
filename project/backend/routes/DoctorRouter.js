@@ -1,7 +1,7 @@
 const express = require('express');
 const DoctorRouter = express.Router();
 const checkAuth = require('../middleware/Doctor.js');
-
+const { createClient } = require('redis');
 
 const {
   getcolleges,
@@ -178,6 +178,4 @@ DoctorRouter.post('/adddoc', adddoc);
  */
 DoctorRouter.post('/modifyleaves', modifyleaves);
 
-module.exports = DoctorRouter;
-
-
+module.exports = DoctorRouter

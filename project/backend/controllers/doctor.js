@@ -119,51 +119,6 @@ async function handlelogin(req,res){
 }
 async function givehomedet(req, res) {
     const { email } = req.body;
-
-    console.log("Email:", email);
-
-    try {
-        const now = new Date();
-        console.log("Current DateTime:", now);
-
-        // Create total query
-        const totalQuery = accappointment.find({
-            acceptedby: email,
-            date: { $lte: now }
-        });
-
-        // Explain first
-        const totalExplain = await accappointment.find({
-            acceptedby: email,
-            date: { $lte: now }
-        }).explain("executionStats");
-        console.log("Total Query Explanation:", totalExplain);
-
-        // Then execute separately
-        const total = await totalQuery;
-
-        // Create upcomi query
-        const upcomiQuery = accappointment.find({
-            acceptedby: email,
-            date: { $gte: now }
-        }).sort({ date: 1 });
-
-        const upcomiExplain = await accappointment.find({
-            acceptedby: email,
-            date: { $gte: now }
-        }).sort({ date: 1 }).explain("executionStats");
-        console.log("Upcoming Query Explanation:", upcomiExplain);
-
-        const upcomi = await upcomiQuery;
-
-        return res.json({ total, upcomi });
-    } catch (error) {
-        console.error("Error fetching appointments:", error);
-        return res.status(500).json({ message: "Error fetching appointments", error });
-    }
-}
-
-
     console.log(email);
   
     try {
@@ -212,8 +167,8 @@ async function givehomedet(req, res) {
       console.error(error);
       return res.status(500).json({ message: 'Internal server error' });
     }
+  }
   
-
 async function deleteapp(req, res) {
     const { id, acceptedby } = req.body;
 
@@ -285,69 +240,81 @@ async function deleteapp(req, res) {
 }
 
 async function getpatients(req, res) {
-    const { email } = req.body;
-    console.log(email);
+  const { email, page = 1, limit = 10 } = req.body;
 
-    try {
-        const now = new Date();
-        let patients = [];
+  console.log(email);
 
-        // Step 1: Check Redis for appointments
-        const keys = await redisClient.keys('appointment:*');
-        let appointments = [];
+  try {
+    // Step 1: Check Redis for appointments
+    const keys = await redisClient.keys('appointment:*');
+    let appointments = [];
 
-        if (keys.length > 0) {
-            // Fetch all appointments from Redis
-            const appointmentsData = await redisClient.mGet(keys);
-            appointments = appointmentsData
-                .map(data => JSON.parse(data))
-                .filter(app => app.acceptedby === email);
-
-            // Filter by past/current date
-            patients = appointments.filter(app => new Date(app.date) <= now);
-
-            if (patients.length > 0) {
-                console.log("Cache hit and filtered appointments");
-                return res.status(200).json({ patients });
-            }
-        }
-
-        // Step 2: Cache miss - Fetch from DB
-        patients = await accappointment.find({
-            acceptedby: email,
-            date: { $lt: now }
-        }).sort({ date: 1 });
-
-        console.log("Cache miss - Fetching from DB");
-
-        if (!patients.length) {
-            return res.status(200).json({ message: "No past appointments found." });
-        }
-
-        // Step 3: Cache results in Redis
-        const pipeline = redisClient.multi();
-        patients.forEach(patient => {
-            pipeline.set(`appointment:${patient._id}`, JSON.stringify(patient));
-        });
-        await pipeline.exec();
-        console.log("Appointments cached in Redis");
-
-        // Optional: Query explanation for performance debugging
-        const explainResult = await accappointment.find({
-            acceptedby: email,
-            date: { $lt: now }
-        }).explain("executionStats");
-        console.log("Query Explanation:", explainResult);
-
-        return res.status(200).json({ patients });
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Internal server error' });
+    if (keys.length > 0) {
+      // Fetch all appointments from Redis
+      const appointmentsData = await redisClient.mGet(keys);
+      appointments = appointmentsData
+        .map(data => JSON.parse(data))
+        .filter(app => app.acceptedby === email);
     }
+
+    // Step 2: Filter by date (only past and current appointments)
+    const now = new Date();
+    let patients = [];
+
+    if (appointments.length > 0) {
+      console.log("Cache hit and filtered appointments");
+      patients = appointments.filter(app => new Date(app.date) <= now);
+
+      // Sort by date ascending
+      patients.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Apply pagination
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const paginatedPatients = patients.slice(startIndex, endIndex);
+
+      return res.json({
+        patients: paginatedPatients,
+        total: patients.length,
+        page: Number(page),
+        totalPages: Math.ceil(patients.length / limit)
+      });
+    }
+
+    // Step 3: Cache miss - Fetch appointments from DB
+    patients = await accappointment.find({
+      acceptedby: email,
+      date: { $lte: now }
+    }).sort({ date: 1 });
+
+    console.log("Cache miss - Fetching from DB");
+
+    // Step 4: Cache the DB results in Redis for future use
+    const pipeline = redisClient.multi();
+    patients.forEach(patient => {
+      pipeline.set(`appointment:${patient._id}`, JSON.stringify(patient));
+    });
+    await pipeline.exec();
+    console.log("Appointments cached in Redis");
+
+    // Apply pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedPatients = patients.slice(startIndex, endIndex);
+
+    return res.status(200).json({
+      patients: paginatedPatients,
+      total: patients.length,
+      page: Number(page),
+      totalPages: Math.ceil(patients.length / limit)
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
-  
 async function addreport(req,res){
     const {report,email,college} = req.body
     console.log(report,email,college)

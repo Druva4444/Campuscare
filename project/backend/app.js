@@ -10,7 +10,7 @@ const router = require('./routes/routes');
 const cron = require('node-cron');
 const moment = require('moment'); 
 const accappointment = require('./model/acceptedappointments.js')
-
+const { createClient } = require('redis');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./graphql/schema');
 

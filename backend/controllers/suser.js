@@ -38,7 +38,7 @@ async function postloginpage(req, res) {
               httpOnly: false,
               secure: true,        // important if you're using HTTPS
               sameSite: "None",
-              domain:"https://campuscare-1.onrender.com"     // must be 'None' for cross-site cookies
+              domain:"campuscare-1.onrender.com"     // must be 'None' for cross-site cookies
           });
         }
 
@@ -46,7 +46,7 @@ async function postloginpage(req, res) {
           httpOnly: false,
           secure: true,        // important if you're using HTTPS
           sameSite: "None" ,
-          domain:"https://campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
+          domain:"campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
       });
         res.status(200).json({ message: 'Login successful', token });
     } catch (err) {

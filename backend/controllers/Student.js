@@ -63,7 +63,7 @@ async function handleloginS(req,res){
               httpOnly: false,
               secure: true,        // important if you're using HTTPS
               sameSite: "None",
-              domain:"https://campuscare-1.onrender.com"     // must be 'None' for cross-site cookies
+              domain:"campuscare-1.onrender.com"     // must be 'None' for cross-site cookies
           });
         }
 
@@ -74,7 +74,7 @@ async function handleloginS(req,res){
           httpOnly: false,
           secure: true,        // important if you're using HTTPS
           sameSite: "None" ,
-          domain:"https://campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
+          domain:"campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
       });
 
      

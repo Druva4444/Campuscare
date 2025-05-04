@@ -13,7 +13,9 @@ function Docforget() {
     const handleSendOtp = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/sendotp`, { email });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/sendotp`, { email }, {
+                withCredentials: true
+              });
             alert(response.data.message); // Show success message
             setStep(2); // Move to OTP input step
         } catch (error) {
@@ -26,7 +28,9 @@ function Docforget() {
     const handleVerifyOtp = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/handleforget`, { email, otp });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/handleforget`, { email, otp }, {
+                withCredentials: true
+              });
             alert(response.data.message);
             if(response.data.message==='OTP verified successfully'){
                 navigate("/newpassword",{ state: { email } });

@@ -72,7 +72,9 @@ function Doctorsadmin() {
       async function fetchData() {
         if (gmail && college) { // Ensure gmail and college are set before making the API call
           try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/getadminhome`, { gmail, college });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/getadminhome`, { gmail, college }, {
+              withCredentials: true
+            });
             setDoctorsCount(response.data.doctor || []);
             setStudentsCount(response.data.students || []);
             setupcomig(response.data.upcomiapp1)
@@ -97,7 +99,9 @@ function Doctorsadmin() {
       formData.append('college', college);
   
       try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/doctorupload`, formData  );
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/doctorupload`, formData, {
+          withCredentials: true
+        }  );
         setMessage(response.data.message);
       } catch (error) {
         console.error('Error uploading file:', error);

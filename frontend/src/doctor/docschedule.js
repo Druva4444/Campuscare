@@ -34,7 +34,9 @@ useEffect(() => {
 
     if (email) {
       axios
-        .post(`${process.env.REACT_APP_API_URL}/gethome`, { email })
+        .post(`${process.env.REACT_APP_API_URL}/gethome`, { email }, {
+          withCredentials: true
+        })
         .then((response) => {
           setappointment(response.data.total);
           setupcomi(response.data.upcomi);

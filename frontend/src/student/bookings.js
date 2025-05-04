@@ -83,7 +83,9 @@ function StudBook() {
       
           if (email) {
             axios
-              .post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email })
+              .post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email }, {
+                withCredentials: true
+              })
               .then((response) => {
                 console.log()
                 setappointment(response.data.total);

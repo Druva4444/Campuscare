@@ -40,7 +40,9 @@ function AccCollege() {
   const handleAccept = async (id, email, password, name) => {
     console.log(id, email);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/acceptclgreq/${id}/${email}/${password}/${name}`);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/acceptclgreq/${id}/${email}/${password}/${name}`, {
+        withCredentials: true
+      });
       if (response.status === 200) {
         alert("Accepted Successfully");
         fetchColleges();
@@ -53,7 +55,9 @@ function AccCollege() {
   const handleDelete = async (id, email) => {
     console.log(id, email);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/deleteclgreq/${id}/${email}`);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/deleteclgreq/${id}/${email}` , {
+        withCredentials: true
+      });
       if (response.status === 200) {
         alert("Deleted Successfully");
         fetchColleges();

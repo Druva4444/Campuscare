@@ -48,6 +48,8 @@ function Docpatients() {
             email: email,
             page: currentPage,
             limit: 5, // You can adjust this
+          }, {
+            withCredentials: true
           })
           .then((response) => {
             setPatients(response.data.patients);

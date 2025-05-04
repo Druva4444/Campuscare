@@ -15,6 +15,8 @@ function Mainbody(props) {
     await axios.post(`${process.env.REACT_APP_API_URL}/deletepd`, {
       id: props.std._id,
       role: props.role
+    }, {
+      withCredentials: true
     }).then((response) => {
       setmsg(response.data.msg);
       alert(response.data.msg);

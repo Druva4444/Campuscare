@@ -5,7 +5,7 @@ function Mainbody1(props) {
     event.preventDefault(); // Fix capitalization
     try {
       console.log("Canceling appointment with ID:", props.det._id);
-      const response = await axios.post('http://localhost:3020/deletebooking', { id: props.det._id });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/deletebooking`, { id: props.det._id });
       alert(response.data.msg);
       window.location.href='/studentbooking'
     } catch (error) {

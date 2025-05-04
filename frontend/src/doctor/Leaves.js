@@ -55,7 +55,7 @@ function Leaves (){
          try {
             console.log(email);
             console.log("fetching leaves12");
-            const response = await axios.get('http://localhost:3020/leaves2' , {params:{email}});
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/leaves2` , {params:{email}});
             if (response.status ===200) {
                 setLeaves(response.data)
                 console.log(response.data)
@@ -77,7 +77,7 @@ function Leaves (){
     console.log(gmail);
 
     try {
-        const response = await axios.post("http://localhost:3020/modifyleaves", { leaveid, message });
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/modifyleaves`, { leaveid, message });
         if (response.status === 200) {
             console.log(response.data);
             

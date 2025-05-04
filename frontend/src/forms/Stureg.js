@@ -69,7 +69,7 @@ const navigate =useNavigate()
     };
 
     try {
-      const response = await axios.post("http://localhost:3020/addstu", { email,
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/addstu`, { email,
         password: password1,
         
     college:location.state});

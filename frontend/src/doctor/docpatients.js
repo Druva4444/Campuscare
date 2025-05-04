@@ -44,7 +44,7 @@ function Docpatients() {
 
       if (email) {
         axios
-          .post('http://localhost:3020/getpatients', {
+          .post(`${process.env.REACT_APP_API_URL}/getpatients`, {
             email: email,
             page: currentPage,
             limit: 5, // You can adjust this

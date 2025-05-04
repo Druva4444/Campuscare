@@ -35,7 +35,7 @@ useEffect(()=>{
         if (email) {
        try {
         console.log(email)
-        const response = await axios.get("http://localhost:3020/leaves" , {params:{email}} );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/leaves` , {params:{email}} );
         if(response.status ==200){
             setLeaves(response.data)
             console.log(response.data)

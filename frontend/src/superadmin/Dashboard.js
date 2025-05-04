@@ -24,7 +24,7 @@ function NonNavbar() {
   useEffect(() => {
     const fetchhomedata = async () => {
         try {
-            const response = await axios.get('http://localhost:3020/gethomedata' , { withCredentials: true }); 
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/gethomedata` , { withCredentials: true }); 
             setColleges(response.data.clgs.length);
             setAdmins(response.data.admins.length);
             setCompletedBookings(response.data.completedapp.length);

@@ -13,7 +13,7 @@ function Vernav() {
     const fetchGmail = async () => {
       try {
         
-        const response = await axios.get('http://localhost:3020/getGmail', {withCredentials:'true'}); 
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getGmail`, {withCredentials:'true'}); 
         setgmail(response.data.mail); 
       } catch (error) {
         console.error('Error fetching Gmail:', error);
@@ -25,7 +25,7 @@ function Vernav() {
 async function handleButton(e){
   e.preventDefault();
     try {
-     await axios.post('http://localhost:3020/logoutsuser', {
+     await axios.post(`${process.env.REACT_APP_API_URL}/logoutsuser`, {
     }, { withCredentials: true });
     window.location.href='/';
     console.log("logged out")

@@ -72,7 +72,7 @@ export default function Addclgs() {
     
  
     try {
-      const response = await axios.post("http://localhost:3020/addnewclg", requestData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/addnewclg`, requestData);
       console.log("request registered successfully:", response.data);
       alert("Request registered successfully! tou will be notified");
       navigate('/')

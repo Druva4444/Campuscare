@@ -72,7 +72,7 @@ function Docbooking() {
             try {
                 console.log("Fetching slots for doctor:", gmail);
     
-                const response = await axios.post('http://localhost:3020/getslotsdoc', { gmail });
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/getslotsdoc`, { gmail });
                 
                 if (response.data && response.data.slots) {
                     setslots(response.data.slots); // Assuming setSlots sets the slots in state

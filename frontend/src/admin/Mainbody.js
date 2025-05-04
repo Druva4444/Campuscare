@@ -12,7 +12,7 @@ function Mainbody(props) {
 
   async function handledelete(event) {
     event.preventDefault();
-    await axios.post('http://localhost:3020/deletepd', {
+    await axios.post(`${process.env.REACT_APP_API_URL}/deletepd`, {
       id: props.std._id,
       role: props.role
     }).then((response) => {

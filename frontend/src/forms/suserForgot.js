@@ -13,7 +13,7 @@ function Suserforget() {
     const handleSendOtp = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3020/superuser/sendotp", { email });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/superuser/sendotp`, { email });
             alert(response.data.message); // Show success message
             setStep(2); // Move to OTP input step
         } catch (error) {
@@ -26,7 +26,7 @@ function Suserforget() {
     const handleVerifyOtp = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3020/superuser/handleforget", { email, otp });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/superuser/handleforget`, { email, otp });
             alert(response.data.message);
             if(response.data.message==='OTP verified successfully'){
                 navigate("/suser/newpassword",{ state: { email } });

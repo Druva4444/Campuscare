@@ -2,7 +2,7 @@ import axios from 'axios'
 function Scmain(props){
    async function handledelete(event){
     event.preventDefault(); 
-     await   axios.post('http://localhost:3020/dltapp',{id:props.det._id,acceptedby:props.det.acceptedby}).then((response)=>{
+     await   axios.post(`${process.env.REACT_APP_API_URL}/dltapp`,{id:props.det._id,acceptedby:props.det.acceptedby}).then((response)=>{
         alert(response.data)
      })
     }

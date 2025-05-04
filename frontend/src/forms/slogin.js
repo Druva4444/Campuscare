@@ -21,7 +21,7 @@ function Slogin() {
     useEffect(() => {
         const fetchColleges = async () => {
             try {
-                const response = await fetch("http://localhost:3020/getcolleges");
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/getcolleges`);
                 const data = await response.json();
                 setColleges(data);
                 if (data.length > 0) {
@@ -42,7 +42,7 @@ function Slogin() {
         event.preventDefault();
         try {
         
-            await axios.post('http://localhost:3020/slogin' , {
+            await axios.post(`${process.env.REACT_APP_API_URL}/slogin` , {
                 email,
                 password1:password,
                 college: selectedCollege,

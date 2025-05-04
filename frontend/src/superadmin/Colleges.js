@@ -13,7 +13,7 @@ function Colleges() {
   useEffect(() => {
     const fetchCollegeData = async () => {
       try {
-        const response = await axios.get('http://localhost:3020/getcollege', { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getcollege`, { withCredentials: true });
         console.log(response.data);
         setCollegesData(response.data.colleges);
       } catch (error) {
@@ -46,7 +46,7 @@ function Colleges() {
     event.preventDefault();
     console.log(collegeId);
     try {
-      const response = await axios.post('http://localhost:3020/deletecollege', { collegeId }, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/deletecollege`, { collegeId }, {
         headers: {
           'Content-Type': 'application/json',
         },

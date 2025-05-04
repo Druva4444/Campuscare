@@ -25,7 +25,7 @@ function Students() {
 
   const fetchAllStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:3020/getstudents', { withCredentials: true });
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/getstudents`, { withCredentials: true });
       setStudentsData(response.data.students);
     } catch (error) {
       console.error('Error fetching students data:', error);
@@ -38,7 +38,7 @@ function Students() {
         fetchAllStudents();
         return;
       }
-      const response = await axios.get(`http://localhost:3020/searchstudent?query=${query}`, { withCredentials: true });
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/searchstudent?query=${query}`, { withCredentials: true });
       setStudentsData(response.data.students);
     } catch (error) {
       console.error('Error searching students:', error);
@@ -62,7 +62,7 @@ function Students() {
       setSelectedStudentAppointments(null);
     } else {
       try {
-        const response = await axios.get(`http://localhost:3020/getappointments?email=${email}`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getappointments?email=${email}`, { withCredentials: true });
         const appointments = response.data; // assume this is an array of appointments
         console.log(appointments)
         const now = new Date();

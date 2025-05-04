@@ -13,7 +13,7 @@ function Stuforget() {
     const handleSendOtp = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3020/sendotps", { email });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/sendotps`, { email });
             alert(response.data.message); // Show success message
             setStep(2); // Move to OTP input step
         } catch (error) {
@@ -26,7 +26,7 @@ function Stuforget() {
     const handleVerifyOtp = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3020/handleforgetstu", { email, otp });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/handleforgetstu`, { email, otp });
             alert(response.data.message);
             if(response.data.message==='OTP verified successfully'){
                 navigate("/newpasswordstu",{ state: { email } });

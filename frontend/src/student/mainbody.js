@@ -14,7 +14,7 @@ function Mainbody(props) {
     async function handleApply(e) {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3020/applyleave", {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/applyleave`, {
                 email: props.email,
                 data: props.det,
                 startDate: startDate,

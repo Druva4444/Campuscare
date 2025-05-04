@@ -16,7 +16,7 @@ function Set() {
         event.preventDefault();
         console.log(report)
         try {
-            const response = await axios.post('http://localhost:3020/postreport', {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/postreport`, {
                 report,
                 email,
                 college

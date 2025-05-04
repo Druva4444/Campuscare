@@ -54,7 +54,7 @@ useEffect(() => {
   async function fetchData() {
     if (gmail && college) { // Ensure gmail and college are set before making the API call
       try {
-        const response = await axios.post('http://localhost:3020/getadminhome', { gmail, college });
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/getadminhome`, { gmail, college });
         setDoctorsCount(response.data.doctor || []);
         setStudentsCount(response.data.students || []);
         setupcomig(response.data.upcomingapp)

@@ -18,7 +18,7 @@ function Addadmin() {
   useEffect(() => {
     const fetchColleges = async () => {
       try {
-        const response = await axios.get("http://localhost:3020/fetchcolleges", {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetchcolleges`, {
           withCredentials: true, 
         });
         if (response.status === 200) {
@@ -41,7 +41,7 @@ function Addadmin() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3020/Addadmin",
+        `${process.env.REACT_APP_API_URL}/Addadmin`,
         {
           emailId: email,
           password,

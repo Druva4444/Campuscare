@@ -5,7 +5,7 @@ function Subbody(props){
     async function handle_cancel(event) {
       event.preventDefault(); 
       try {
-        const response = await axios.post('http://localhost:3020/deletebooking', { id: props.app._id });
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/deletebooking`, { id: props.app._id });
         alert(response.data.msg);
         window.localStorage.href='/admindoctors'
       } catch (error) {

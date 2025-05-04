@@ -10,7 +10,7 @@ const AdminList = () => {
   useEffect(() => {
     const fetchadmindata = async () => {
         try {
-            const response = await axios.get('http://localhost:3020/getadmin' , { withCredentials: true }); 
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/getadmin` , { withCredentials: true }); 
             setAdmins(response.data.admins);
             
         } catch (error) {
@@ -44,7 +44,7 @@ const AdminList = () => {
     event.preventDefault(); 
     console.log(adminId)
     try {
-        const response = await axios.post('http://localhost:3020/deleteadmins', { adminId: adminId }, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/deleteadmins`, { adminId: adminId }, {
           headers: {
               'Content-Type': 'application/json',
           },withCredentials:true

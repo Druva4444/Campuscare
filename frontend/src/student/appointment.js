@@ -118,7 +118,7 @@
     }, []);
     useEffect(()=>{
       async function z(){
-        const response =await axios.post('http://localhost:3020/getdoc',{college})
+        const response =await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`,{college})
         console.log(response.data.msg)
         setdoctors(response.data.msg)
       }
@@ -129,7 +129,7 @@
         if (selectedDoctor) {
           console.log("Fetching slots for doctor:", selectedDoctor, "on day:", day);
           try {
-            const response = await axios.post("http://localhost:3020/getslots", {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/getslots`, {
               gmail: selectedDoctor,
               date,
             });
@@ -157,7 +157,7 @@
     useEffect(() => {
       async function fetchDoctors() {
         try {
-          const response = await axios.post('http://localhost:3020/getdoc', { college });
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoc`, { college });
           console.log("Doctors fetched:", response.data.msg);
           setdoctors(response.data.msg);
         } catch (error) {
@@ -181,7 +181,7 @@
         const [hours, minutes] = starttime.split(':').map(Number);
         const newDate = new Date(date);
         newDate.setHours(hours, minutes, 0, 0)
-          const response = await axios.post('http://localhost:3020/bookslot', {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/bookslot`, {
               gmail: selectedDoctor,
               day,
               timeSlot: selectedSlot,

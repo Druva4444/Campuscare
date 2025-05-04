@@ -88,6 +88,7 @@ function App() {
           <Route path="/doctorschedule" element={<><Docvernav></Docvernav><Docschedule></Docschedule></>} /> 
           <Route path="/doctorpatients" element={<><Docvernav></Docvernav><Docpatients></Docpatients></>} /> 
           <Route path="/doctorsetting" element={<><Docvernav></Docvernav><Docsetting></Docsetting></>} /> 
+          <Route path="/Doctorchat" element={<><Docvernav></Docvernav><Chats></Chats></>} />
           <Route path="/doctorleaves" element={<><Docvernav></Docvernav><Leaves></Leaves></>} /> 
           <Route path='/aboutus' element={<Aboutus></Aboutus>}></Route>
           <Route path='/a' element={<A/>}></Route>

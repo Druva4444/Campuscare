@@ -15,7 +15,7 @@ function Signup() {
   useEffect(() => {
     const fetchColleges = async () => {
       try {
-        const response = await axios.get("http://localhost:3020/fetchcolleges1", {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetchcolleges1`, {
           withCredentials: true, 
         });
         if (response.status === 200) {
@@ -36,7 +36,7 @@ function Signup() {
   
     try {
       const response = await axios.post(
-        "http://localhost:3020/Addstudent",
+        `${process.env.REACT_APP_API_URL}/Addstudent`,
         {
           email: email,
           password: password1,

@@ -21,7 +21,7 @@ function Adminlogin() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post('http://localhost:3020/adminlogin', {
+            await axios.post(`${process.env.REACT_APP_API_URL}/adminlogin`, {
                 email,
                 password1: password,
                 checkbox: rememberMe

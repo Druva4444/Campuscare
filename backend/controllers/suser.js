@@ -55,7 +55,7 @@ async function postloginpage(req, res) {
   }
 }
 
-async function handleLogout(req, res) {
+async function handlelogout(req, res) {
   try {
     // Clear cross-site cookies
     res.clearCookie('Uid4', {

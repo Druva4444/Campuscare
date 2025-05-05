@@ -43,6 +43,8 @@ async function handleButton(e){
     try {
      await axios.post(`${process.env.REACT_APP_API_URL}/logoutsuser`, {
     }, { withCredentials: true });
+    Cookies.remove('Uid4');
+    Cookies.remove('userdetails');
     window.location.href='/';
     console.log("logged out")
     } catch (error) {

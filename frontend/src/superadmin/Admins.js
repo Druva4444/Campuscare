@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './Admins.css';
 import {useNavigate}from 'react-router-dom';
 import axios from 'axios';
-
+import { useJwt ,decodeToken} from "react-jwt";
 import Cookies from 'js-cookie';
-import jwt_decode from 'jwt-decode'; 
 const AdminList = () => {
   const [currentDate, setCurrentDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
@@ -23,7 +22,7 @@ const AdminList = () => {
           } else {
             const token = Cookies.get('Uid4');
             if (token) {
-              const decoded = jwt_decode(token); // decode without verification
+              const decoded = decodeToken(token); // decode without verification
               if (decoded && decoded.email) {
                 setgmail(decoded.email);
               } else {

@@ -3,6 +3,8 @@ import './Dashboard.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode'; 
+
+import { useJwt ,decodeToken} from "react-jwt";
 function NonNavbar() {
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
@@ -35,7 +37,7 @@ function NonNavbar() {
         } else {
           const token = Cookies.get('Uid4');
           if (token) {
-            const decoded = jwt_decode(token); // decode without verification
+            const decoded = decodeToken(token); // decode without verification
             if (decoded && decoded.email) {
               setgmail(decoded.email);
             } else {

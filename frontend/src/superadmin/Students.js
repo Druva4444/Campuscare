@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import jwt_decode from 'jwt-decode';
+import { useJwt ,decodeToken} from "react-jwt";
 function Students() {
   const [studentsData, setStudentsData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,7 +34,7 @@ function Students() {
         } else {
           const token = Cookies.get('Uid4');
           if (token) {
-            const decoded = jwt_decode(token); // decode without verification
+            const decoded = decodeToken(token); // decode without verification
             if (decoded && decoded.email) {
               setgmail(decoded.email);
             } else {

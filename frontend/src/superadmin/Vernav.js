@@ -3,8 +3,9 @@ import "./Vernav.css";
 import { Link , useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import Cookies from 'js-cookie';
-import jwt_decode from 'jwt-decode'; 
+import Cookies from 'js-cookie';; 
+
+import { useJwt ,decodeToken} from "react-jwt";
 function Vernav() {
   const [gmail,setgmail] =useState('');
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function Vernav() {
         } else {
           const token = Cookies.get('Uid4');
           if (token) {
-            const decoded = jwt_decode(token); // decode without verification
+            const decoded = decodeToken(token); // decode without verification
             if (decoded && decoded.email) {
               setgmail(decoded.email);
             } else {

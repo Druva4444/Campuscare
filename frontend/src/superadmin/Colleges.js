@@ -3,7 +3,8 @@ import './Colleges.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import jwt_decode from 'jwt-decode'; 
+
+import { useJwt ,decodeToken} from "react-jwt";
 function Colleges() {
   const [collegesData, setCollegesData] = useState([]);
   const [time, setTime] = useState('');
@@ -38,7 +39,7 @@ function Colleges() {
         } else {
           const token = Cookies.get('Uid4');
           if (token) {
-            const decoded = jwt_decode(token); // decode without verification
+            const decoded = decodeToken(token); // decode without verification
             if (decoded && decoded.email) {
               setgmail(decoded.email);
             } else {

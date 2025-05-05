@@ -88,7 +88,7 @@ function StudBook() {
               })
               .then((response) => {
                 console.log()
-                setappointment(response.data.total);
+                setappointment(response.data.upcom);
                 setcomi(response.data.comi);
               })
               .catch((error) => {

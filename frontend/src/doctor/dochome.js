@@ -39,43 +39,54 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 useEffect(() => {
-  const checkCookies = setInterval(() => {
+  const checkCookies = setInterval(async () => {
       const userDetails = Cookies.get('userdetails');
       const token = Cookies.get('Uid1');
+
       if (userDetails || token) {
-          clearInterval(checkCookies); // Stop checking once we have the cookie
-          
+          clearInterval(checkCookies); // Stop checking once we have cookies
+
           if (userDetails) {
-              const parsedDetails = JSON.parse(userDetails);
-              axios.post(`${process.env.REACT_APP_API_URL}/getStuhome`, { email: parsedDetails.gmail }, {
-                  withCredentials: true
-              })
-              .then(response => {
-                  setappointment(response.data.total);
-                  setupcomi(response.data.upcomi);
-              })
-              .catch(error => {
-                  console.error("Error fetching appointment count:", error);
-              });
+              try {
+                  const parsedDetails = JSON.parse(userDetails);
+                  if (parsedDetails && parsedDetails.gmail) {
+                      await axios.post(`${process.env.REACT_APP_API_URL}/getStuhome`, {
+                          email: parsedDetails.gmail
+                      }, {
+                          withCredentials: true
+                      }).then(response => {
+                          setappointment(response.data.total);
+                          setupcomi(response.data.upcomi);
+                      }).catch(error => {
+                          console.error("Error fetching appointment count:", error);
+                      });
+                  }
+              } catch (err) {
+                  console.error("Failed to parse userdetails cookie:", err);
+              }
           } else if (token) {
               try {
                   const decoded = decodeToken(token);
-                  axios.post(`${process.env.REACT_APP_API_URL}/gethome`, { email: decoded.gmail }, {
-                      withCredentials: true
-                  })
-                  .then(response => {
-                      setappointment(response.data.total);
-                      setupcomi(response.data.upcomi);
-                  });
+                  if (decoded && decoded.gmail) {
+                      await axios.post(`${process.env.REACT_APP_API_URL}/gethome`, {
+                          email: decoded.gmail
+                      }, {
+                          withCredentials: true
+                      }).then(response => {
+                          setappointment(response.data.total);
+                          setupcomi(response.data.upcomi);
+                      });
+                  }
               } catch (error) {
                   console.error("Token verification failed:", error);
               }
           }
       }
-  }, 1000); // Check every second for the cookie
-  
-  return () => clearInterval(checkCookies); // Cleanup the interval when component unmounts
+  }, 1000); // Check every second
+
+  return () => clearInterval(checkCookies); // Cleanup
 }, []);
+
 
     return(
         <div>

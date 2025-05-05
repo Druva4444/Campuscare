@@ -37,53 +37,56 @@ connectRedis();
 
 
 
-async function handleloginS(req,res){
-    try {
-        const { email, password1, college, checkbox } = req.body;
-        console.log(req.body);
-        const specificUser = await Students.findOne({ gmail: email, password: password1, college });
-        if (!specificUser) {
-            console.log("No user found");
-            
-            
-            return res.status(200).json({ message: "Invalid credentials. Please try again." });
-            
-        }
-        if (checkbox) {
-            const token = jwt.sign(
-                {
-                    gmail: specificUser.gmail,
-                    password: specificUser.password,
-                    clg: specificUser.college,
-                },
-                "druva123", 
-                { expiresIn: "4d" } 
-            );
-            res.cookie("Uid2", token, { maxAge: 4*24 * 60 * 60 * 1000}, {
-              httpOnly: false,
-              secure: true,        // important if you're using HTTPS
-              sameSite: "None",
-              domain:"campuscare-1.onrender.com"     // must be 'None' for cross-site cookies
-          });
-        }
+async function handleloginS(req, res) {
+  try {
+      const { email, password1, college, checkbox } = req.body;
+      console.log(req.body);
 
-        res.cookie("userdetails", JSON.stringify({
-            gmail: specificUser.gmail,
-            college: specificUser.college,
-        }), {
-          httpOnly: false,
-          secure: true,        // important if you're using HTTPS
-          sameSite: "None" ,
-          domain:"campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
+      const specificUser = await Students.findOne({ gmail: email, password: password1, college });
+
+      if (!specificUser) {
+          console.log("No user found");
+          return res.status(200).json({ message: "Invalid credentials. Please try again." });
+      }
+
+      // If "Remember Me" is checked, generate a JWT token
+      let token = null;
+      if (checkbox) {
+          token = jwt.sign(
+              {
+                  gmail: specificUser.gmail,
+                  password: specificUser.password,
+                  clg: specificUser.college,
+              },
+              "druva123",
+              { expiresIn: "4d" }
+          );
+      }
+
+      const userdetails = {
+          gmail: specificUser.gmail,
+          college: specificUser.college,
+      };
+
+      // Optional: You can log today's appointments or other actions here if needed
+      // For example:
+      // const today = new Date();
+      // ... (appointment queries)
+
+      // Send token and userdetails to frontend; frontend will store them as cookies
+      return res.status(200).json({
+          message: "Login Succesful",
+          token: token || null,
+          userdetails
       });
 
-     
-        return res.status(200).json({ message: "Login Succesful" });
-    } catch (error) {
-        console.error("Error processing doctor login:", error);
-        return res.status(500).send("Internal Server Error");
-    }
+  } catch (error) {
+      console.error("Error processing student login:", error);
+      return res.status(500).send("Internal Server Error");
+  }
 }
+
+
 async function handlestudenthome(req, res) {
   const { email, page = 1, limit = 10 } = req.body;
   console.log(email);

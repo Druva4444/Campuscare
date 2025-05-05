@@ -12,17 +12,42 @@ function Suserlg(){
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
-    async function handleSubmit(e){
+    async function handleSubmit(e) {
         e.preventDefault();
-          try {
-          await axios.post(`${process.env.REACT_APP_API_URL}/getsuserhome`, {
-            email:email,password:password , rememberMe:rememberMe
-          }, { withCredentials: true });
-          navigate('/superadmin');
-          } catch (error) {
-            console.log(error)
-          }
+      
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/postloginpage`, {
+                email: email,
+                password: password,
+                rememberMe: rememberMe
+            }, { 
+                withCredentials: true 
+            });
+    
+            // Check if login is successful
+            if (response.data.message === "Login successful") {
+                const { token, userdetails } = response.data;
+    
+                // Set the cookies in the frontend (using document.cookie)
+                document.cookie = `userdetails=${JSON.stringify(userdetails)}; path=/; secure; SameSite=None`;
+                
+                // If there's a token, set it as 'Uid4'
+                if (token) {
+                    document.cookie = `Uid4=${token}; path=/; secure; SameSite=None`;
+                }
+    
+                // Redirect to superadmin page
+                navigate('/superadmin');
+            } else {
+                console.error("Login failed:", response.data.message);
+                alert("Invalid credentials. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error during login:", error);
+            alert("An error occurred. Please try again later.");
         }
+    }
+    
     return(
         <div>
 

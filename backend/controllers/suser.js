@@ -12,48 +12,49 @@ const WaitingClgs = require('../model/pendingclgs')
 const admin = require('../model/admin')
 const nodemailer = require('nodemailer')
 async function postloginpage(req, res) {
-    const { email, password, rememberMe } = req.body;
-    console.log(email,password,rememberMe)
-    try {
-        const isuser = await suser.findOne({
-            email: email
-        });
-        if (!isuser) {
-            return res.status(400).json({ message: "Invalid email, please signup!" });
-        }
-        if (isuser.password !== password) {
-            return res.status(400).json({ message: "Invalid password" });
-        }
+  const { email, password, rememberMe } = req.body;
+  console.log(email, password, rememberMe);
 
-        let token = null; 
+  try {
+      const isuser = await suser.findOne({ email: email });
+      
+      if (!isuser) {
+          return res.status(400).json({ message: "Invalid email, please signup!" });
+      }
 
-        if (rememberMe) {
-            token = jwt.sign({
-                email: email,
-                role: "superuser"
-            }, "venkat");
-            console.log('inside if')
-            console.log(token)
-            res.cookie("Uid4", token, { maxAge: 2 * 24 * 60 * 60 * 1000  }, {
-              httpOnly: false,
-              secure: true,        // important if you're using HTTPS
-              sameSite: "None",
-              domain:"campuscare-1.onrender.com"     // must be 'None' for cross-site cookies
-          });
-        }
+      if (isuser.password !== password) {
+          return res.status(400).json({ message: "Invalid password" });
+      }
 
-        res.cookie("userdetails", JSON.stringify({ email: email, role: "superuser" }), {
-          httpOnly: false,
-          secure: true,        // important if you're using HTTPS
-          sameSite: "None" ,
-          domain:"campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
+      let token = null;
+
+      if (rememberMe) {
+          token = jwt.sign({
+              email: email,
+              role: "superuser"
+          }, "venkat");
+          console.log('inside if');
+          console.log(token);
+      }
+
+      const userdetails = {
+          email: email,
+          role: "superuser"
+      };
+
+      // Send the token and user details to the frontend instead of setting cookies
+      return res.status(200).json({
+          message: 'Login successful',
+          token: token || null,
+          userdetails: userdetails
       });
-        res.status(200).json({ message: 'Login successful', token });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+
+  } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'Internal server error' });
+  }
 }
+
 async function handlelogout(req, res) {
     try {
       const { Uid4, userdetails } = req.cookies;

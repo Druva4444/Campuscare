@@ -49,6 +49,7 @@ useEffect(() => {
           if (userDetails) {
               try {
                   const parsedDetails = JSON.parse(userDetails);
+                  console.log(parsedDetails)
                   if (parsedDetails && parsedDetails.gmail) {
                       await axios.post(`${process.env.REACT_APP_API_URL}/getStuhome`, {
                           email: parsedDetails.gmail

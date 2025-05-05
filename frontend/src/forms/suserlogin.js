@@ -16,7 +16,7 @@ function Suserlg(){
         e.preventDefault();
       
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/postloginpage`, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/getsuserhome`, {
                 email: email,
                 password: password,
                 rememberMe: rememberMe

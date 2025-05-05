@@ -37,27 +37,39 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/dlogin`, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/dlogin`, {
                 email,
                 password1: password,
                 college: selectedCollege,
                 checkbox: rememberMe
             }, {
-                withCredentials: true,
-            }).then((response) => {
-                if (response.data.message === "Login Succesful") {
-                    navigate("/doctorhome");
-                    console.log("Login successful:", response);
-                } else {
-                    console.error("Login failed:", response.message);
-                    alert("Invalid credentials. Please try again.");
-                }
+                withCredentials: false, // backend is no longer setting cookies
             });
+    
+            const { message, token, userdetails } = response.data;
+    
+            if (message === "Login Succesful") {
+                // Set cookies on frontend
+                if (token) {
+                    document.cookie = `Uid1=${token}; max-age=${4 * 24 * 60 * 60}; Secure; SameSite=None; path=/`;
+                }
+    
+                if (userdetails) {
+                    document.cookie = `userdetails=${encodeURIComponent(JSON.stringify(userdetails))}; Secure; SameSite=None; path=/`;
+                }
+    
+                navigate("/doctorhome");
+                console.log("Login successful:", response);
+            } else {
+                console.error("Login failed:", response.message);
+                alert("Invalid credentials. Please try again.");
+            }
         } catch (error) {
             console.error("Error during login:", error);
             alert("An error occurred. Please try again later.");
         }
     };
+    
 
     return (
         <div>

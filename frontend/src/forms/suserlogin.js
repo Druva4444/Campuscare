@@ -12,17 +12,36 @@ function Suserlg(){
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
-    async function handleSubmit(e){
+    async function handleSubmit(e) {
         e.preventDefault();
-          try {
-          await axios.post(`${process.env.REACT_APP_API_URL}/getsuserhome`, {
-            email:email,password:password , rememberMe:rememberMe
-          }, { withCredentials: true });
-          navigate('/superadmin');
-          } catch (error) {
-            console.log(error)
-          }
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/getsuserhome`, {
+                email: email,
+                password: password,
+                rememberMe: rememberMe
+            }, { withCredentials: true });
+    
+            if (response.data.message === "Login Succesful") {
+                // ✅ Set userdetails cookie manually
+                document.cookie = `userdetails=${encodeURIComponent(JSON.stringify(response.data.userdetails))}; path=/; secure; SameSite=None`;
+    
+                // ✅ Set token as Uid3 if present
+                if (response.data.token) {
+                    document.cookie = `Uid3=${response.data.token}; path=/; secure; SameSite=None`;
+                }
+    
+                // Navigate to the super admin dashboard
+                navigate('/superadmin');
+            } else {
+                console.error("Login failed:", response.data.message);
+                alert("Invalid credentials. Please try again.");
+            }
+        } catch (error) {
+            console.log(error);
+            alert("An error occurred. Please try again later.");
         }
+    }
+    
     return(
         <div>
 

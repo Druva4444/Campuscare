@@ -12,42 +12,38 @@ const Admins = require('../model/admin')
 const reports = require('../model/report');
 const User = require('../model/user');
 
-async function handleadminlogin(req,res){
-    const {email,password1,checkbox}  =req.body;
-    const admin = await Admins.findOne({email,password1})
-    if(!admin){
-        return res.status(200).json({message:'incorrect details'})
+async function handleadminlogin(req, res) {
+    const { email, password1, checkbox } = req.body;
+
+    const admin = await Admins.findOne({ email, password1 });
+    if (!admin) {
+        return res.status(200).json({ message: 'incorrect details' });
     }
-    if(checkbox){
-        const token = jwt.sign(
-            {
-                gmail: admin.email,
-                password: admin.password1,
-                college:admin.college
-                
-            },
-            "druva123", // Secret key
-            { expiresIn: "4d" } // Token valid for 1 day
-        );
-        res.cookie("Uid3", token, { maxAge: 24 * 60 * 60 * 1000}, {
-            httpOnly: false,
-            secure: true,        // important if you're using HTTPS
-            sameSite: "None" ,
-            domain:"campuscare-1.onrender.com"    // must be 'None' for cross-site cookies
-        });
-    }
-    res.cookie("userdetails", JSON.stringify({
+
+    // Prepare cookie data to be sent to frontend
+    const userDetails = {
         gmail: admin.email,
-        role:'admin',
-        college:admin.college
-    }), {
-        httpOnly: false,
-        secure: true,        // important if you're using HTTPS
-        sameSite: "None"   ,
-        domain:"campuscare-1.onrender.com"  // must be 'None' for cross-site cookies
+        role: 'admin',
+        college: admin.college
+    };
+
+    let token = null;
+    if (checkbox) {
+        token = jwt.sign({
+            gmail: admin.email,
+            password: admin.password1,
+            college: admin.college
+        }, "druva123", { expiresIn: "4d" });
+    }
+
+    // Send the cookie values to frontend to set manually
+    return res.status(200).json({
+        message: "Login Succesful",
+        userdetails: userDetails,
+        token: token // Only present if rememberMe was checked
     });
-    return res.status(200).json({ message: "Login Succesful" });
 }
+
 async function adminhome(req,res){
     console.log(req.body)
     const {gmail,college} = req.body

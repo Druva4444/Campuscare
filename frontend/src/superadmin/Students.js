@@ -55,6 +55,8 @@ function Students() {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/getstudents`, { withCredentials: true });
       setStudentsData(response.data.students);
+      console.log('inside fetching')
+      console.log(response.data.students)
     } catch (error) {
       console.error('Error fetching students data:', error);
     }

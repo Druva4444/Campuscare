@@ -76,17 +76,7 @@ async function handlelogout(req, res) {
   
   
 async function gethome(req,res) {
-    const token = req.cookies.Uid4
-        const userdetails = req.cookies.userdetails
-        let mail
-        if(token){
-            const detoken = jwt.verify(token,"venkat")
-             mail = detoken.email
-        }
-        else{
-           const  {email,role} = JSON.parse(userdetails)
-           mail= email
-        }
+    const {mail}=req.body
         
         const upcominapp = await accappointment.find({date:{$gte:new Date()}})
         const completedapp = await accappointment.find({date:{$lte: new Date()}})
@@ -99,37 +89,16 @@ async function gethome(req,res) {
         res.json({upcominapp,completedapp,clgs,admins,amount});
 }
 async function getadminpage(req,res) {
-    const token = req.cookies.Uid4
-        const userdetails = req.cookies.userdetails
-        let mail
-        if(token){
-            const detoken = jwt.verify(token,"venkat")
-             mail = detoken.email
-        }
-        else{
-           const  {email,role} = JSON.parse(userdetails)
-           mail= email
-        }
+   
         const admins = await admin.find({})
         console.log(admins)
         res.json({admins})
 }
 async function deleteadmins(req,res){
  try {
-  const {adminId} =req.body;
+  const {mail,adminId} =req.body;
   console.log(adminId)
-  const token = req.cookies.Uid4
-  const userdetails = req.cookies.userdetails
-  let mail
-  if(token){
-      const detoken = jwt.verify(token,"venkat")
-       mail = detoken.email
-       console.log(mail)
-  }
-  else{
-     const  {email,role} = JSON.parse(userdetails)
-     mail= email
-  }
+  
   if (!adminId) {
     return res.status(400).json({ message: 'User ID is required' });
 }
@@ -155,18 +124,7 @@ async function handledeletecollege(req,res){
     try {
      const {collegeId} =req.body;
      console.log(collegeId)
-     const token = req.cookies.Uid4
-     const userdetails = req.cookies.userdetails
-     let mail
-     if(token){
-         const detoken = jwt.verify(token,"venkat")
-          mail = detoken.email
-          console.log(mail)
-     }
-     else{
-        const  {email,role} = JSON.parse(userdetails)
-        mail= email
-     }
+   const {mail}=req.body;
      if (!collegeId) {
        return res.status(400).json({ message: 'User ID is required' });
    }

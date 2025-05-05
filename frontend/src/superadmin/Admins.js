@@ -3,10 +3,43 @@ import './Admins.css';
 import {useNavigate}from 'react-router-dom';
 import axios from 'axios';
 
+import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode'; 
 const AdminList = () => {
   const [currentDate, setCurrentDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
+  
+    
+    const [gmail,setgmail] =useState('');
   const [admins, setAdmins] = useState([]);
+   useEffect(() => {
+      const fetchEmail = () => {
+        try {
+          const userDetails = Cookies.get('userdetails');
+    
+          if (userDetails) {
+            const parsed = JSON.parse(userDetails);
+            setgmail(parsed.email);
+          } else {
+            const token = Cookies.get('Uid4');
+            if (token) {
+              const decoded = jwt_decode(token); // decode without verification
+              if (decoded && decoded.email) {
+                setgmail(decoded.email);
+              } else {
+                console.warn("Invalid token structure");
+              }
+            } else {
+              console.warn("No userdetails or token cookie found");
+            }
+          }
+        } catch (err) {
+          console.error("Error reading cookies:", err);
+        }
+      };
+    
+      fetchEmail();
+    }, []);
   useEffect(() => {
     const fetchadmindata = async () => {
         try {
@@ -44,7 +77,7 @@ const AdminList = () => {
     event.preventDefault(); 
     console.log(adminId)
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/deleteadmins`, { adminId: adminId }, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/deleteadmins`,{mail:gmail}, { adminId: adminId }, {
           headers: {
               'Content-Type': 'application/json',
           },withCredentials:true

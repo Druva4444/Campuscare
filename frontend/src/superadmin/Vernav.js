@@ -3,25 +3,41 @@ import "./Vernav.css";
 import { Link , useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from "react";
-
+import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode'; 
 function Vernav() {
   const [gmail,setgmail] =useState('');
   const navigate = useNavigate();
   const [activeLink, setActiveLink] = useState("/superadmin"); // Set the default active link here.
 
   useEffect(() => {
-    const fetchGmail = async () => {
+    const fetchEmail = () => {
       try {
-        
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getGmail`, {withCredentials:'true'}); 
-        setgmail(response.data.mail); 
-      } catch (error) {
-        console.error('Error fetching Gmail:', error);
+        const userDetails = Cookies.get('userdetails');
+  
+        if (userDetails) {
+          const parsed = JSON.parse(userDetails);
+          setgmail(parsed.email);
+        } else {
+          const token = Cookies.get('Uid4');
+          if (token) {
+            const decoded = jwt_decode(token); // decode without verification
+            if (decoded && decoded.email) {
+              setgmail(decoded.email);
+            } else {
+              console.warn("Invalid token structure");
+            }
+          } else {
+            console.warn("No userdetails or token cookie found");
+          }
+        }
+      } catch (err) {
+        console.error("Error reading cookies:", err);
       }
     };
-
-    fetchGmail();
-  }, []); 
+  
+    fetchEmail();
+  }, []);
 async function handleButton(e){
   e.preventDefault();
     try {

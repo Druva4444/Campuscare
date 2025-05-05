@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode';
 function Students() {
   const [studentsData, setStudentsData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -9,7 +10,7 @@ function Students() {
   const [date, setDate] = useState('');
   const [selectedStudentAppointments, setSelectedStudentAppointments] = useState(null);
   const [selectedStudentEmail, setSelectedStudentEmail] = useState(null);
-
+  const [gmail,setgmail] =useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +23,34 @@ function Students() {
     const timer = setInterval(updateTime, 1000);
     return () => clearInterval(timer);
   }, []);
-
+ useEffect(() => {
+    const fetchEmail = () => {
+      try {
+        const userDetails = Cookies.get('userdetails');
+  
+        if (userDetails) {
+          const parsed = JSON.parse(userDetails);
+          setgmail(parsed.email);
+        } else {
+          const token = Cookies.get('Uid4');
+          if (token) {
+            const decoded = jwt_decode(token); // decode without verification
+            if (decoded && decoded.email) {
+              setgmail(decoded.email);
+            } else {
+              console.warn("Invalid token structure");
+            }
+          } else {
+            console.warn("No userdetails or token cookie found");
+          }
+        }
+      } catch (err) {
+        console.error("Error reading cookies:", err);
+      }
+    };
+  
+    fetchEmail();
+  }, []);
   const fetchAllStudents = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/getstudents`, { withCredentials: true });

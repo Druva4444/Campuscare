@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode'; 
 function NonNavbar() {
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
@@ -9,7 +11,8 @@ function NonNavbar() {
   const [colleges, setColleges] = useState(0);
   const [admins, setAdmins] = useState(0);
   const [amount,setAmount]=useState(5000);
-
+  
+  const [gmail,setgmail] =useState('');
 
   useEffect(() => {
     function handletime() {
@@ -22,9 +25,37 @@ function NonNavbar() {
     return () => clearInterval(timer);
   }, []);
   useEffect(() => {
+    const fetchEmail = () => {
+      try {
+        const userDetails = Cookies.get('userdetails');
+  
+        if (userDetails) {
+          const parsed = JSON.parse(userDetails);
+          setgmail(parsed.email);
+        } else {
+          const token = Cookies.get('Uid4');
+          if (token) {
+            const decoded = jwt_decode(token); // decode without verification
+            if (decoded && decoded.email) {
+              setgmail(decoded.email);
+            } else {
+              console.warn("Invalid token structure");
+            }
+          } else {
+            console.warn("No userdetails or token cookie found");
+          }
+        }
+      } catch (err) {
+        console.error("Error reading cookies:", err);
+      }
+    };
+  
+    fetchEmail();
+  }, []);
+  useEffect(() => {
     const fetchhomedata = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/gethomedata` , { withCredentials: true }); 
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/gethomedata` ,{mail:gmail}, { withCredentials: true }); 
             setColleges(response.data.clgs.length);
             setAdmins(response.data.admins.length);
             setCompletedBookings(response.data.completedapp.length);

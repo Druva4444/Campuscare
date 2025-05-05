@@ -375,18 +375,8 @@ async function deleteclgreq(req, res) {
 }
 async function getcollegepage(req, res) {
     try {
-      // Extract user email from cookies
-      const token = req.cookies.uid4;
-      const userdetails = req.cookies.userdetails;
-      let mail;
-  
-      if (token) {
-        const detoken = jwt.verify(token, "venkat");
-        mail = detoken.email;
-      } else {
-        const { email } = JSON.parse(userdetails);
-        mail = email;
-      }
+      // Extract user mail from cookies
+    
   
       // Fetch all colleges
       const colleges = await Collage.find({});
@@ -447,7 +437,7 @@ async function getcollegepage(req, res) {
         };
       });
   
-      res.json({ email: mail, colleges: responseData });
+      res.json({ email: 'druvadruvs@gmail.com', colleges: responseData });
     } catch (error) {
       console.error("Error in getcollegepage:", error);
       res.status(500).json({ error: "Internal Server Error" });

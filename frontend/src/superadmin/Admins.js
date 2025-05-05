@@ -76,7 +76,7 @@ const AdminList = () => {
     event.preventDefault(); 
     console.log(adminId)
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/deleteadmins`,{mail:gmail}, { adminId: adminId }, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/deleteadmins`, { adminId: adminId }, {
           headers: {
               'Content-Type': 'application/json',
           },withCredentials:true

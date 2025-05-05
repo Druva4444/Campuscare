@@ -37,7 +37,7 @@ function Adminlogin() {
               }
   
               // Navigate to the super admin dashboard
-              navigate('/superadmin');
+              navigate('/admin');
           } else {
               console.error("Login failed:", response.data.message);
               alert("Invalid credentials. Please try again.");

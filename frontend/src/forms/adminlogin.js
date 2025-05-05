@@ -23,8 +23,8 @@ function Adminlogin() {
       try {
           const response = await axios.post(`${process.env.REACT_APP_API_URL}/adminlogin`, {
               email: email,
-              password: password,
-              rememberMe: rememberMe
+              password1: password,
+              checkbox : rememberMe
           }, { withCredentials: true });
   
           if (response.data.message === "Login Succesful") {

@@ -3,8 +3,7 @@ import "./Vernav.css";
 import { Link , useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import Cookies from 'js-cookie';; 
-
+import Cookies from 'js-cookie';
 import { useJwt ,decodeToken} from "react-jwt";
 function Vernav() {
   const [gmail,setgmail] =useState('');

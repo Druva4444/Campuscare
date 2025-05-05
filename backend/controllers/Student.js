@@ -122,7 +122,7 @@ async function handlestudenthome(req, res) {
 
       return res.json({
         total,
-        comi: paginatedComi,
+        comi,
         upcom,
         comiCount: comi.length,
         page: Number(page),

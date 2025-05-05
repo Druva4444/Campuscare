@@ -145,18 +145,7 @@ async function handledeletecollege(req,res){
    }
 async function getcolleges1(req, res) {
   try {
-    const token = req.cookies.Uid4
-    const userdetails = req.cookies.userdetails
-    let mail
-    if(token){
-        const detoken = jwt.verify(token,"venkat")
-         mail = detoken.email
-         console.log(mail)
-    }
-    else{
-       const  {email,role} = JSON.parse(userdetails)
-       mail= email
-    }
+
 
     const colleges = await Collage.find(); 
     console.log(colleges)
@@ -169,19 +158,10 @@ async function getcolleges1(req, res) {
 }
 async function Addadmin(req,res){
 try {
-    const token = req.cookies.Uid4
-    const userdetails = req.cookies.userdetails
+    
     let createduser = null;
     let mail
-    if(token){
-        const detoken = jwt.verify(token,"venkat")
-         mail = detoken.email
-         console.log(mail)
-    }
-    else{
-       const  {email,role} = JSON.parse(userdetails)
-       mail= email
-    } 
+  
     const { emailId, password, confirmpassword, collegeId}= req.body
     if(!collegeId){
         return res.status(400).json({ message: "College ID is required" });

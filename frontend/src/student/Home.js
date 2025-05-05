@@ -127,7 +127,7 @@ function StudHome() {
               </tr>
             </thead>
             <tbody>
-            {appointment.length > 0 ? (
+            {upcomingappointment.length > 0 ? (
   appointment.map((appointment, index) => {
     // Ensure appointment.date is parsed into a Date object
     const appointmentDate = new Date(appointment.date);

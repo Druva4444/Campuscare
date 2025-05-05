@@ -55,24 +55,28 @@ async function postloginpage(req, res) {
   }
 }
 
-async function handlelogout(req, res) {
-    try {
-      const { Uid4, userdetails } = req.cookies;
-  
-      if (Uid4) {
-        res.clearCookie('Uid4', { httpOnly: false });
-      }
-  
-      if (userdetails) {
-        res.clearCookie('userdetails', { httpOnly: false });
-      }
-  
-      return res.status(200).json({ message: 'Logged out successfully' });
-    } catch (err) {
-      console.error('Error during logout:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
+async function handleLogout(req, res) {
+  try {
+    // Clear cross-site cookies
+    res.clearCookie('Uid4', {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true
+    });
+
+    res.clearCookie('userdetails', {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true
+    });
+
+    return res.status(200).json({ message: 'Logged out successfully' });
+  } catch (err) {
+    console.error('Error during logout:', err);
+    return res.status(500).json({ message: 'Internal server error' });
   }
+}
+
   
   
 async function gethome(req,res) {

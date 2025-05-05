@@ -3,7 +3,7 @@ import "./dslogin.css";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
-
+import {Cookies} from 
 function Slogin() {
     const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState("");
@@ -40,46 +40,42 @@ function Slogin() {
  
    // Ensure this is imported
 
-const handleSubmit = async (event) => {
+   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        await axios.post(`${process.env.REACT_APP_API_URL}/slogin`, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/slogin`, {
             email,
             password1: password,
             college: selectedCollege,
             checkbox: rememberMe
         }, {
             withCredentials: true,
-        }).then((response) => {
-            console.log(response.data.message);
-
-            if (response.data.message === "Login Succesful") {
-                // ✅ Set userdetails cookie
-                Cookies.set('userdetails', JSON.stringify(response.data.userdetails), {
-                    secure: true,
-                    sameSite: 'None'
-                });
-
-                // ✅ Set token as Uid2 if present
-                if (response.data.token) {
-                    Cookies.set('Uid2', response.data.token, {
-                        secure: true,
-                        sameSite: 'None'
-                    });
-                }
-
-                console.log("Login successful:", response);
-                navigate("/studenthome");
-            } else {
-                console.error("Login failed:", response.message);
-                alert("Invalid credentials. Please try again.");
-            }
         });
+
+        console.log(response.data.message);
+
+        if (response.data.message === "Login Succesful") {
+            // Set userdetails cookie
+            const userdetailsString = encodeURIComponent(JSON.stringify(response.data.userdetails));
+            document.cookie = `userdetails=${userdetailsString}; path=/; secure; samesite=None`;
+
+            // Set token as Uid2 if present
+            if (response.data.token) {
+                document.cookie = `Uid2=${response.data.token}; path=/; secure; samesite=None`;
+            }
+
+            console.log("Login successful:", response);
+            navigate("/studenthome");
+        } else {
+            console.error("Login failed:", response.message);
+            alert("Invalid credentials. Please try again.");
+        }
     } catch (error) {
         console.error("Error during login:", error);
         alert("An error occurred. Please try again later.");
     }
 };
+
 
     return (
         <div>

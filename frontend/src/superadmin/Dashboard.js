@@ -27,19 +27,21 @@ function NonNavbar() {
     return () => clearInterval(timer);
   }, []);
   useEffect(() => {
-    const fetchEmail = () => {
+    const fetchEmailAndHomeData = async () => {
       try {
+        // Get email from cookies or token
         const userDetails = Cookies.get('userdetails');
+        let email = null;
   
         if (userDetails) {
           const parsed = JSON.parse(userDetails);
-          setgmail(parsed.email);
+          email = parsed.email;
         } else {
           const token = Cookies.get('Uid4');
           if (token) {
             const decoded = decodeToken(token); // decode without verification
             if (decoded && decoded.email) {
-              setgmail(decoded.email);
+              email = decoded.email;
             } else {
               console.warn("Invalid token structure");
             }
@@ -47,29 +49,33 @@ function NonNavbar() {
             console.warn("No userdetails or token cookie found");
           }
         }
+  
+        // Set email state
+        if (email) {
+          setgmail(email);
+  
+          // Now fetch home data
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/gethomedata`,
+            {
+              params: { mail: email },
+              withCredentials: true
+            }
+          );
+          setColleges(response.data.clgs.length);
+          setAdmins(response.data.admins.length);
+          setCompletedBookings(response.data.completedapp.length);
+          setUpcomingBookings(response.data.upcominapp.length);
+          setAmount(response.data.amount);
+        }
       } catch (err) {
-        console.error("Error reading cookies:", err);
+        console.error("Error:", err);
       }
     };
   
-    fetchEmail();
+    fetchEmailAndHomeData();
   }, []);
-  useEffect(() => {
-    const fetchhomedata = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/gethomedata` ,{mail:gmail}, { withCredentials: true }); 
-            setColleges(response.data.clgs.length);
-            setAdmins(response.data.admins.length);
-            setCompletedBookings(response.data.completedapp.length);
-            setUpcomingBookings(response.data.upcominapp.length);
-            setAmount(response.data.amount);
-        } catch (error) {
-            console.error('Error fetching college count:', error);
-        }
-    };
-
-    fetchhomedata();
-}, []);
+  
 
 
   const welcomeStyle = {

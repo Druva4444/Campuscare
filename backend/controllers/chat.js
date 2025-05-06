@@ -52,6 +52,7 @@ async function screateMessage(req, res) {
       let sendmail = await Doctor.findById(to);
       formail=frommail.gmail
       sendmail=sendmail.gmail
+      console.log(frommail+senmail)
       await newMessage.save();
       console.log(newMessage)
       const receiverSocketId = getReceiverSocketId(sendmail);
@@ -60,7 +61,7 @@ async function screateMessage(req, res) {
       }
       const sender = getReceiverSocketId(frommail)
       console.log(sender)
-      console.log(from)
+      console.log(receiverSocketId)
       io.to(sender).emit('newMessage',newMessage)
       res.status(201).json(newMessage);
   } catch (error) {

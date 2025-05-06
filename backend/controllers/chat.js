@@ -52,7 +52,7 @@ async function screateMessage(req, res) {
       let sendmail = await Doctor.findById(to);
       formail=frommail.gmail
       sendmail=sendmail.gmail
-      console.log(frommail+senmail)
+      console.log(frommail+sendmail)
       await newMessage.save();
       console.log(newMessage)
       const receiverSocketId = getReceiverSocketId(sendmail);

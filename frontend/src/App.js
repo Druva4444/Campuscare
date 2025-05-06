@@ -114,8 +114,8 @@ function App() {
           <Route path='/superuser/forgetpassword' element={<Suserforget/>}/>
           <Route path='/suser/newpassword' element={<SuserNewPassword/>}/>
           <Route path='/admin/signup' element={<Addadmin/>}/>
-          <Route path='/chat' element={<Chatd/>}/>
-          <Route path='/doctorchat' element={<Chats/>}/>
+          <Route path='/chat' element={<Chats/>}/>
+          <Route path='/doctorchat' element={<Chatd/>}/>
         </Routes>
       </Router>
        

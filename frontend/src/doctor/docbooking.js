@@ -234,7 +234,7 @@ function Docbooking() {
                 <div className="dbmainbody1" style={{position:'relative'}}>
                 <TimeTable availableSlots={slots}/>
                 </div>
-                <div className="DHblockdates" style={{ marginTop: "%", padding: "20px", marginLeft:'20%' }}>
+                <div className="DHblockdates" style={{ marginTop: "32%", padding: "20px", marginLeft:'22%' }}>
     <h3 style={{ color: "#0A7273" }}>Block Unavailable Date</h3>
     <input
       type="date"
@@ -267,7 +267,7 @@ function Docbooking() {
       Block Date
     </button>
   </div>
-  <div>
+  <div style={{marginLeft:'22%'}}>
       <h2>Block Time Slots</h2>
 
       <form onSubmit={handleSubmit}>

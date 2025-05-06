@@ -126,11 +126,12 @@ const Chatd = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      if (!loginUser) return; // Skip if loginUser is null
       try {
-        console.log(loginUser)
+        console.log(loginUser);
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}/getstudents`,
-          { id:loginUser  },
+          { id: loginUser },
           { withCredentials: true }
         );
         setUsers(response.data);
@@ -139,7 +140,7 @@ const Chatd = () => {
       }
     };
     fetchUsers();
-  }, []);
+  }, [loginUser]);
 
   const sendMessage = async () => {
     if (input.trim() && loginUser && selectedUserId) {

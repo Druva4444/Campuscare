@@ -65,65 +65,53 @@ async function getcolleges(req, res) {
   
 
 
-async function handlelogin(req,res){
-    try {
-        const { email, password1, college, checkbox } = req.body;
-        console.log(req.body);
-        const specificUser = await Doctor.findOne({ gmail: email, password: password1, college });
-        if (!specificUser) {
-            console.log("No user found");
+  const jwt = require("jsonwebtoken");
 
-         
-            
-            return res.status(200).json({ message: "Invalid credentials. Please try again." });
-            
-        }
-
-        // Handle "Remember Me" and create a persistent JWT token
-        if (checkbox) {
-            const token = jwt.sign(
-                {
-                    gmail: specificUser.gmail,
-                    password: specificUser.password,
-                    clg: specificUser.college,
-                },
-                "druva123", // Secret key
-                { expiresIn: "4d" } // Token valid for 1 day
-            );
-            res.cookie("Uid1", token, { maxAge: 24 * 60 * 60 * 1000},{ sameSite: 'None', secure: true });
-        }
-
-        // Set user details in cookies
-        res.cookie("userdetails", JSON.stringify({
-            gmail: specificUser.gmail,
-            college: specificUser.college,
-        }),{ sameSite: 'None', secure: true });
-
-        // Fetch all appointments
-        const appointments = await accappointment.find({
-            date: { $gte: new Date() },
-        }).sort({ date: 1, time: 1 });
-
-        // Fetch today's appointments
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Start of today
-        const todayAppointments = await accappointment.find({
-            date: {
-                $gte: today, // Start of today
-                $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000), // Start of tomorrow
-            },
-        }).sort({ date: 1, time: 1 });
-
-        console.log("Today's Appointments:", todayAppointments);
-        // Redirect to the doctor's home page
-        return res.status(200).json({ message: "Login Succesful" });
-    } catch (error) {
-        console.error("Error processing doctor login:", error);
-
-        // Return a 500 error for internal server errors
-        return res.status(500).send("Internal Server Error");
-    }
-}
+  async function handlelogin(req, res) {
+      try {
+          const { email, password1, college, checkbox } = req.body;
+          console.log("Login Request:", req.body);
+  
+          const specificUser = await Doctor.findOne({ gmail: email, password: password1, college });
+  
+          if (!specificUser) {
+              console.log("No user found");
+              return res.status(200).json({ message: "Invalid credentials. Please try again." });
+          }
+  
+          // Prepare response data
+          let token = null;
+          if (checkbox) {
+              token = jwt.sign(
+                  {
+                      gmail: specificUser.gmail,
+                      password: specificUser.password,
+                      clg: specificUser.college,
+                  },
+                  "druva123", // Secret key
+                  { expiresIn: "4d" }
+              );
+          }
+  
+          const userdetails = {
+              gmail: specificUser.gmail,
+              college: specificUser.college,
+          };
+  
+          console.log("Login successful:", userdetails);
+  
+          // Send token and user details to frontend
+          return res.status(200).json({
+              message: "Login Succesful",
+              token,
+              userdetails,
+          });
+      } catch (error) {
+          console.error("Error processing doctor login:", error);
+          return res.status(500).send("Internal Server Error");
+      }
+  }
+  
 async function givehomedet(req, res) {
     const { email } = req.body;
     console.log(email);

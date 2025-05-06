@@ -12,7 +12,6 @@ const[currentTime , setCurrentTime] = useState("");
 const [appointment,setappointment] = useState([])
 const [upcom,setupcomi] = useState([]);
 const [blockedDate, setBlockedDate] = useState("");
-const socket = io();
 
 useEffect(() => {
   // Update date

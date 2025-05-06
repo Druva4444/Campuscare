@@ -6,10 +6,7 @@ const checkAuth = require('../middleware/Doctor.js');
 
 
 
-<<<<<<< HEAD:project/backend/routes/DoctorRouter.js
 const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves,blockdate,blockslotset} = require('../controllers/doctor')
-=======
->>>>>>> ef9dbd2d95e994bb90753e4ae8d186708e2e860f:backend/routes/DoctorRouter.js
 const {getstudents,dcreateMessage,dgetMessages,getdoctors,screateMessage,sgetMessages,getstuobj,getdocobj} = require('../controllers/chat')
 DoctorRouter.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);

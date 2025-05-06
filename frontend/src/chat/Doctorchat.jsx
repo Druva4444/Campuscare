@@ -69,7 +69,7 @@ const Chatd = () => {
         }
 
         if (email) {
-          const response = await axios.post(getdocobj`${process.env.REACT_APP_API_URL}/getdocobj`, { email }, {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdocobj`, { email }, {
             withCredentials: true
           });
           setLoginUser(response.data._id);

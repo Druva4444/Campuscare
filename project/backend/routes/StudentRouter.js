@@ -17,7 +17,10 @@ const {
   Addstudent,
   applyleave,
   getleaves,
-  getleaves2
+  getleaves2,
+  getBlockedDates,
+  getslotsset
+
 } = require('../controllers/Student');
 
 // Logging middleware
@@ -216,5 +219,7 @@ StudentRouter.get('/fetchcolleges1', fetchcolleges1);
  *         description: Student registration success
  */
 StudentRouter.post('/Addstudent', Addstudent);
+StudentRouter.get('/getblockeddates/:selectedDoctor', getBlockedDates);
+StudentRouter.get('/getslots/:email', getslotsset);
 
 module.exports = StudentRouter;

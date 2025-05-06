@@ -8,7 +8,9 @@ function Dochome(){
 const [currentDate , setCurrentDate] = useState("");
 const[currentTime , setCurrentTime] = useState("");
 const [appointment,setappointment] = useState([])
-const [upcom,setupcomi] = useState([])
+const [upcom,setupcomi] = useState([]);
+const [blockedDate, setBlockedDate] = useState("");
+
 
 useEffect(() => {
   // Update date
@@ -77,6 +79,8 @@ useEffect(()=>{
     console.log("No user details or token found");
   }
 },[])
+
+
     return(
         <div>
             
@@ -122,6 +126,8 @@ useEffect(()=>{
         </p >
         
       </div>
+
+
 
       <div className="DHnofi">
         <p id="DH">Dashboard</p>

@@ -485,5 +485,79 @@ async function modifyleaves(req, res) {
 }
 
 
+
+async function blockdate(req, res) {
+    try {
+        const { email, date } = req.body;
+        console.log(email ,date,) ;
+        if (!email || !date) {
+            return res.status(400).json({ message: 'Email and date are required.' });
+        }
+
+        // Find doctor by email
+        const doctor = await Doctor.findOne({ gmail:email });
+
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found.' });
+        }
+       console.log(doctor);
+        // Check if the date is already in the unavailableDates array
+        const isAlreadyBlocked = doctor.unavailableDates.includes(date);
+
+        if (isAlreadyBlocked) {
+            return res.status(409).json({ message: 'Date is already blocked.' });
+        }
+
+        // Add date to unavailableDates
+        doctor.unavailableDates.push(date);
+        await doctor.save();
+
+        return res.status(200).json({ message: 'Date successfully blocked.',});
+    } catch (error) {
+        console.error('Error blocking date:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+}
+
+const blockslotset= async (req, res) => {
+  try {
+    const {email, date, blockedSlots } = req.body; 
+
+    // Find the doctor by Gmail (or any other identifier)
+    const doctor = await Doctor.findOne({ gmail: email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    // Get the day of the week (e.g., 'Monday', 'Tuesday')
+    const dayOfWeek = new Date(date).toLocaleString('en-us', { weekday: 'long' });
+
+    // Check if the day is valid
+    if (!doctor.slots[dayOfWeek]) {
+      return res.status(400).json({ error: 'Invalid day of the week' });
+    }
+
+    // Check if the provided blocked slots are available on that day
+    const unavailableSlots = doctor.blockedSlots.get(dayOfWeek) || [];
+
+    // Add new slots to the blockedSlots array if not already blocked
+    const newBlockedSlots = [...new Set([...unavailableSlots, ...blockedSlots])];
+
+    // Update the doctor’s blockedSlots map
+    doctor.blockedSlots.set(dayOfWeek, newBlockedSlots);
+
+    // Save the updated doctor record
+    await doctor.save();
+
+    res.status(200).json({ message: 'Slots blocked successfully' });
+  } catch (err) {
+    console.error('Error blocking slots:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
   
-module.exports = {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves}
+module.exports = {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves,blockdate,blockslotset};

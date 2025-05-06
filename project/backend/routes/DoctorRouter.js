@@ -6,7 +6,7 @@ const checkAuth = require('../middleware/Doctor.js');
 
 
 
-const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves} = require('../controllers/doctor')
+const {getcolleges,handlelogin,givehomedet,deleteapp,getpatients,addreport,sendotp,handleforget,resetp,getslotsdoc,adddoc,modifyleaves,blockdate,blockslotset} = require('../controllers/doctor')
 const {getstudents,dcreateMessage,dgetMessages,getdoctors,screateMessage,sgetMessages,getstuobj,getdocobj} = require('../controllers/chat')
 DoctorRouter.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
@@ -36,6 +36,7 @@ DoctorRouter.post('/getdocobj', getdocobj);
 module.exports = DoctorRouter;
 
 const { createClient } = require('redis');
+const Doctor = require('../model/doctor.js');
 
 // const {
 //   getcolleges,
@@ -211,5 +212,6 @@ DoctorRouter.post('/adddoc', adddoc);
  *         description: Leaves updated
  */
 DoctorRouter.post('/modifyleaves', modifyleaves);
-
+DoctorRouter.post('/blockdate', blockdate);
+DoctorRouter.post('/blockslotsset' ,  blockslotset)
 module.exports = DoctorRouter

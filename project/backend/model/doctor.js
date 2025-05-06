@@ -54,7 +54,16 @@ const doctorschema = new mongoose.Schema({
   },
   lastUpdated:{
     type:Date
-  }
+  },
+  unavailableDates: {
+    type: [String], // Store as 'YYYY-MM-DD'
+    default: []
+  },
+  blockedSlots: {
+    type: Map,
+    of: [String], // Keyed by day of the week with blocked time slots as values
+    default: {}
+  },
 });
 
 const Doctor = mongoose.model('doctor', doctorschema);

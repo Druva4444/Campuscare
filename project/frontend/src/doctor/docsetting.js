@@ -11,6 +11,11 @@ function Docsetting() {
     const [report,setreport] = useState('')
     const [email,setemail] = useState('')
     const [college,setclg] = useState('')
+    const [blockedDate, setBlockedDate] = useState("");
+    const [availableSlots, setAvailableSlots] = useState([]);
+  const [blockedSlots, setBlockedSlots] = useState([]);
+  const [selectedDate, setSelectedDate] = useState('');
+    
     const navigate = useNavigate()
     useEffect(() => {
         // Set Date
@@ -54,6 +59,46 @@ function Docsetting() {
             console.error("Token verification failed:", error);
           }
         }},[])
+        const handleBlockDate = () => {
+            const userDetails = Cookies.get('userdetails');
+            const token = Cookies.get('Uid1');
+          
+            let email = null;
+          
+            if (userDetails) {
+              const parsedDetails = JSON.parse(userDetails);
+              email = parsedDetails.gmail;
+              console.log(email)
+            } else if (token) {
+              try {
+                const decoded = decodeToken(token);
+                email = decoded.gmail;
+                console.log(email)
+              } catch (error) {
+                console.error("Token decoding failed:", error);
+                alert("Invalid token. Please log in again.");
+                return;
+              }
+            }
+          
+            if (!email || !blockedDate) {
+              alert("Please select a date and ensure you're logged in.");
+              return;
+            }
+          
+            axios.post("http://localhost:3020/blockdate", {
+              email: email,
+              date: blockedDate,
+            })
+            .then((res) => {
+              alert("Date successfully blocked!");
+              setBlockedDate("");
+            })
+            .catch((err) => {
+              console.error("Error blocking date:", err);
+              alert("Failed to block date.");
+            });
+          };
     const handleReportClick = () => {
         setShowReportInput(!showReportInput);
     };
@@ -88,7 +133,50 @@ function Docsetting() {
             alert('Failed to submit the report. Please try again.');
         }
     };
-    
+
+    useEffect(() => {
+      // Fetch the available slots when the component is mounted
+      // This assumes you have an endpoint to get the doctor's available slots for a specific date
+      const fetchAvailableSlots = async () => {
+        try {
+          console.log(email,selectedDate)
+          // Assuming you have a GET endpoint to fetch the slots based on the doctor and date
+          const response = await axios.get(`http://localhost:3020/getslots/${email}?date=${selectedDate}`);
+          setAvailableSlots(response.data.slots);
+        } catch (err) {
+          console.error('Error fetching available slots:', err);
+        }
+      };
+  
+      if (email && selectedDate) {
+        fetchAvailableSlots();
+      }
+    }, [email, selectedDate]);
+  
+    const handleSlotToggle = (slot) => {
+      if (blockedSlots.includes(slot)) {
+        setBlockedSlots(blockedSlots.filter((item) => item !== slot)); // Remove the slot from blocked
+      } else {
+        setBlockedSlots([...blockedSlots, slot]); // Add the slot to blocked
+      }
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+      try {
+        const response = await axios.post('http://localhost:3020/blockslotsset', {
+          email,
+          date: selectedDate,
+          blockedSlots,
+        });
+  
+        alert(response.data.message); 
+      } catch (err) {
+        console.error('Error blocking slots:', err);
+        alert('Error blocking slots');
+      }
+    };
     return (
         <div>
            
@@ -132,6 +220,82 @@ function Docsetting() {
                                 <button id="send" style={{marginLeft:"15%",height:'40px'}}type="submit"  onClick={submit}>Send</button>
                             </form>
                         )}
+                          <div className="DHblockdates" style={{ marginTop: "30px", padding: "20px", marginLeft:'20%' }}>
+    <h3 style={{ color: "#0A7273" }}>Block Unavailable Date</h3>
+    <input
+      type="date"
+      value={blockedDate}
+      min={new Date().toISOString().split("T")[0]}
+      max={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+      onChange={(e) => setBlockedDate(e.target.value)}
+      placeholder="Block Date"
+      style={{
+        padding: "5px",
+        position: "relative",
+        zIndex: 11,
+      }}
+    />
+
+    <button
+      onClick={handleBlockDate}
+      style={{
+        width: '120px',
+        backgroundColor: "#0A7273",
+        color: "white",
+        padding: "6px 12px",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        position: "relative",
+        zIndex: 11,
+      }}
+    >
+      Block Date
+    </button>
+  </div>
+  <div>
+      <h2>Block Time Slots</h2>
+
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="date">Select Date:</label>
+          <input
+      type="date"
+      value={selectedDate}
+      min={new Date().toISOString().split("T")[0]}
+      max={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+      onChange={(e) => setSelectedDate(e.target.value)}
+      placeholder="Block Date"
+      style={{
+        padding: "5px",
+        position: "relative",
+        zIndex: 11,
+      }}
+    />
+        </div>
+
+        <div>
+          <h3>Select Slots to Block</h3>
+          <div className="slots-container">
+            {availableSlots.map((slot) => (
+              <div key={slot}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={blockedSlots.includes(slot)}
+                    onChange={() => handleSlotToggle(slot)}
+                  />
+                  {slot}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button type="submit">Block Selected Slots</button>
+      </form>
+    </div>
+
                     </div>
                 </div>
             </div>

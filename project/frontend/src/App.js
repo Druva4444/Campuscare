@@ -44,8 +44,8 @@ import Suserforget from './forms/suserForgot';
 import Addadmin from './forms/Addadmin';
 import LeaveDetails from './student/Leave';
 import Leaves from './doctor/Leaves';  
-import Chatd from './chat/Stundetchat';
-import Chats from './chat/Doctorchat';
+import Chats from './chat/Stundetchat';
+import Chatd from './chat/Doctorchat';
 
 function App() {
   return (
@@ -90,7 +90,8 @@ function App() {
           <Route path="/doctorsetting" element={<><Docvernav></Docvernav><Docsetting></Docsetting></>} /> 
           <Route path="/doctorleaves" element={<><Docvernav></Docvernav><Leaves></Leaves></>} /> 
           <Route path='/aboutus' element={<Aboutus></Aboutus>}></Route>
-          <Route path="/chat" element={<><Docvernav></Docvernav><Chatd></Chatd></>} /> 
+          <Route path="/Doctorchat" element={<><Docvernav></Docvernav><Chatd></Chatd></>} /> 
+          <Route path="/Stundetchat" element={<><Vernavstud></Vernavstud><Chats></Chats></>} /> 
 
           <Route path='/a' element={<A/>}></Route>
           <Route path='/suserlogin' element={<Suserlg/>}></Route>

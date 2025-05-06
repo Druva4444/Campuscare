@@ -319,25 +319,36 @@ async function handle_appointments(req, res) {
 }
 
 
-async function getslots(req,res){
-    const { gmail, date } = req.body;
-    console.log(gmail,date)
-    try {
-      const doctor = await Doctor.findOne({ gmail });
-      if (!doctor) {
-        return res.status(404).json({ message: 'Doctor not found' });
-      }
-       const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      const selectedDate = new Date(date);
-      const dayOfWeek = daysOfWeek[selectedDate.getDay()];
-      const availableSlots = doctor.slots[dayOfWeek];
+async function getslots(req, res) {
+  const { gmail, date } = req.body; // No blockedSlots from the request now
+  console.log(gmail, date);
 
-      return res.json({ slots: availableSlots });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Error fetching slots' });
+  try {
+    const doctor = await Doctor.findOne({ gmail });
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
     }
+
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const selectedDate = new Date(date);
+    const dayOfWeek = daysOfWeek[selectedDate.getDay()];
+    let availableSlots = doctor.slots[dayOfWeek];
+
+    // Fetch blocked slots for the selected day from the doctor's blockedSlots Map
+    const blockedSlots = doctor.blockedSlots.get(dayOfWeek) || [];  // Get blocked slots for the day, default to empty array if none
+
+    // Filter out the blocked slots from available slots
+    availableSlots = availableSlots.filter(slot => !blockedSlots.includes(slot));
+
+    return res.json({ slots: availableSlots });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error fetching slots' });
+  }
 }
+
+
+
 async function  bookslot(req,res){
     const { gmail, timeSlot, description, date, user, college } = req.body;
     
@@ -583,5 +594,36 @@ async function fetchcolleges1(req, res) {
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
+  const getBlockedDates = async (req, res) => { 
+
+    try {
+      const {selectedDoctor} = req.params
+      console.log(selectedDoctor);
+      const doctor = await Doctor.findOne({ gmail:selectedDoctor });
+      if (!doctor) return res.status(404).json({ error: 'Doctor not found' });
+      res.json(doctor.unavailableDates); // assumed format: ['2025-05-07', ...]
+    } catch (err) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  const getslotsset = async (req, res) => {
+    try {
+      const { email } = req.params;
+const { date } = req.query;
+     console.log(email,date , 602)
+      const doctor = await Doctor.findOne({ gmail:email });
   
-module.exports = {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2}
+      if (!doctor) return res.status(404).json({ error: 'Doctor not found' });
+  
+      const dayOfWeek = new Date(date).toLocaleString('en-us', { weekday: 'long' });
+  
+      // Return the available slots for that day
+      res.json({ slots: doctor.slots[dayOfWeek] });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+  
+  
+module.exports = {handleloginS,handlestudenthome,deletebooking,handleverify,sendotps,resetps,handle_appointments,getslots,bookslot,addstu,fetchcolleges1,Addstudent,applyleave,getleaves,getleaves2,getBlockedDates,getslotsset}

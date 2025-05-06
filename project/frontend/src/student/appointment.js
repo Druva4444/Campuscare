@@ -1,5 +1,7 @@
   import React, { useState, useEffect } from "react";
   import "./appointment.css";
+  import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
   import Cookies from 'js-cookie';
   import { useJwt ,decodeToken} from "react-jwt";
   import axios from "axios";
@@ -12,6 +14,7 @@
     const [doctors,setdoctors] =useState([])
     const [date,setdate] = useState()
     const [description,setdescription] = useState('')
+    const [unavailableDates, setUnavailableDates] = useState([]);
     const [gmail,setgmail] = useState('')
       const [college,setclg] = useState('')
       const [selectedSlot, setSelectedSlot] = useState(""); 
@@ -72,7 +75,21 @@
       // Cleanup interval on component unmount
       return () => clearInterval(timer);
     }, []);
-
+    useEffect(() => {
+      const fetchBlockedDates = async () => {
+        try {
+         console.log(selectedDoctor)
+    
+          const res = await axios.get(`http://localhost:3020/getblockeddates/${selectedDoctor}`)
+          
+          const blocked = res.data.map(d => new Date(d));
+          setUnavailableDates(blocked);
+        } catch (err) {
+          console.error("Failed to fetch blocked dates", err);
+        }
+      };
+      fetchBlockedDates();
+    }, [doctors,selectedDoctor]);
     useEffect(() => {
       const today = new Date();
       const nextSevenDays = new Date(today);
@@ -116,6 +133,7 @@
 
       generateTimeSlots();
     }, []);
+
     useEffect(()=>{
       async function z(){
         const response =await axios.post('http://localhost:3020/getdoc',{college})
@@ -136,6 +154,7 @@
             console.log("Response from getslots:", response.data);
             if (response.data.slots) {
               setTimeSlots(response.data.slots);
+             
             } else {
               console.error("No slots provided for the selected doctor.");
               setTimeSlots([]);
@@ -200,8 +219,9 @@
           alert('Failed to book slot. Please try again.'+error);
       }
   };
-
+  console.log(timeSlots)
   const filteredSlots = timeSlots.filter((slot) => {
+
     const [start] = slot.split(' - '); // Extract start time (e.g., "9:00")
     const [hours, minutes] = start.split(':').map(Number); // Split hours and minutes
   
@@ -214,7 +234,7 @@
     
     return (
       <div className="body">
-        <div className="APPnonnavbar">
+        <div className="APPnonnavbar" >
           <div className="APPheader">
             <div className="APPheading">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="APPbi bi-clipboard2-plus" viewBox="0 0 16 16">
@@ -251,12 +271,24 @@
               {doctor.gmail.split("@")[0]} ({doctor.fields})
             </option>
           ))}
-        </select>
+        </select>x
         </div>
 
               <div className="APPSt">
                 <label style={{ marginLeft: "50px", fontSize: "120%" }}>Schedule Date:</label>
-                <input id="APPin" type="date" style={{ marginLeft: "20px", marginBottom: "0px" }} name="date" min={minDate} max={maxDate} onChange={(event)=>{setdate(event.target.value)}}/>
+                <div>
+      <label htmlFor="datepicker">Choose Appointment Date:</label>
+      <DatePicker
+        id="datepicker"
+        selected={date}
+        onChange={(val) => setdate(val)}
+        minDate={minDate}
+        maxDate={maxDate}
+        excludeDates={unavailableDates}
+        placeholderText="Select a date"
+        dateFormat="yyyy-MM-dd"
+      />
+    </div>
               </div>
               <div className="APPSt">
     <label style={{ marginLeft: "50px", fontSize: "120%" }}>Schedule Time:</label>

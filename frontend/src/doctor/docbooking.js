@@ -11,8 +11,13 @@ function Docbooking() {
     const [currentTime, setCurrentTime] = useState("");
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [gmail,setgmail] = useState('')
+    const [email,setemail] = useState('')
     const [college,setclg] = useState('')
     const [slots,setslots] = useState([])
+    const [blockedDate, setBlockedDate] = useState("");
+    const [availableSlots, setAvailableSlots] = useState([]);
+      const [blockedSlots, setBlockedSlots] = useState([]);
+      const [selectedDate, setSelectedDate] = useState('');
     useEffect(() => {
         // Set current date
         const date = new Date();
@@ -48,6 +53,7 @@ function Docbooking() {
           const parsedDetails = JSON.parse(userDetails);
           console.log(parsedDetails.gmail)
           setgmail(parsedDetails.gmail);
+          setemail(parsedDetails.gmail);
           setclg(parsedDetails.college)
         } else if (token) {
           try {
@@ -103,7 +109,50 @@ function Docbooking() {
         window.addEventListener("click", handleClickOutside);
         return () => window.removeEventListener("click", handleClickOutside);
     }, []);
-
+    useEffect(() => {
+        // Fetch the available slots when the component is mounted
+        // This assumes you have an endpoint to get the doctor's available slots for a specific date
+        const fetchAvailableSlots = async () => {
+          try {
+            console.log(email,selectedDate)
+            // Assuming you have a GET endpoint to fetch the slots based on the doctor and date
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/getslots/${email}?date=${selectedDate}`);
+            setAvailableSlots(response.data.slots);
+          } catch (err) {
+            console.error('Error fetching available slots:', err);
+          }
+        };
+    
+        if (email && selectedDate) {
+          fetchAvailableSlots();
+        }
+      }, [email, selectedDate]);
+    
+      const handleSlotToggle = (slot) => {
+        if (blockedSlots.includes(slot)) {
+          setBlockedSlots(blockedSlots.filter((item) => item !== slot)); // Remove the slot from blocked
+        } else {
+          setBlockedSlots([...blockedSlots, slot]); // Add the slot to blocked
+        }
+      };
+    
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        try {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/blockslotsset`
+  , {
+            email,
+            date: selectedDate,
+            blockedSlots,
+          });
+    
+          alert(response.data.message); 
+        } catch (err) {
+          console.error('Error blocking slots:', err);
+          alert('Error blocking slots');
+        }
+      };
     return (
         <div >
             <div className="dbnonnavbar" style={{ marginLeft: "0%", zIndex: "-20" }}>
@@ -145,6 +194,81 @@ function Docbooking() {
                 <div className="dbmainbody1" style={{position:'relative'}}>
                 <TimeTable availableSlots={slots}/>
                 </div>
+                <div className="DHblockdates" style={{ marginTop: "30px", padding: "20px", marginLeft:'20%' }}>
+    <h3 style={{ color: "#0A7273" }}>Block Unavailable Date</h3>
+    <input
+      type="date"
+      value={blockedDate}
+      min={new Date().toISOString().split("T")[0]}
+      max={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+      onChange={(e) => setBlockedDate(e.target.value)}
+      placeholder="Block Date"
+      style={{
+        padding: "5px",
+        position: "relative",
+        zIndex: 11,
+      }}
+    />
+
+    <button
+      onClick={handleBlockDate}
+      style={{
+        width: '120px',
+        backgroundColor: "#0A7273",
+        color: "white",
+        padding: "6px 12px",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        position: "relative",
+        zIndex: 11,
+      }}
+    >
+      Block Date
+    </button>
+  </div>
+  <div>
+      <h2>Block Time Slots</h2>
+
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="date">Select Date:</label>
+          <input
+      type="date"
+      value={selectedDate}
+      min={new Date().toISOString().split("T")[0]}
+      max={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+      onChange={(e) => setSelectedDate(e.target.value)}
+      placeholder="Block Date"
+      style={{
+        padding: "5px",
+        position: "relative",
+        zIndex: 11,
+      }}
+    />
+        </div>
+
+        <div>
+          <h3>Select Slots to Block</h3>
+          <div className="slots-container">
+            {availableSlots.map((slot) => (
+              <div key={slot}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={blockedSlots.includes(slot)}
+                    onChange={() => handleSlotToggle(slot)}
+                  />
+                  {slot}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button type="submit">Block Selected Slots</button>
+      </form>
+    </div>
             </div>
         </div>
     );

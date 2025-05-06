@@ -127,6 +127,7 @@ const Chatd = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        console.log(loginUser)
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}/getstudents`,
           { id:loginUser  },

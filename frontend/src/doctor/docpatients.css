@@ -1,0 +1,297 @@
+/* body{
+    display: flex;
+    overflow: hidden;
+    background-color: #0A7273;
+} */
+.DPnonnavbar{  
+    margin-left: 15%;
+    width: 100%;
+    background-color: white;
+    border-radius: 5% 0% 0% 5%;
+    width: 100vw;
+    height: 100vh;
+    margin-left: 0;
+}
+
+.DPdate{
+  
+    padding-right: 50px;
+    position: relative;
+}
+.DPcalendar{
+    position: absolute;
+    top: 20%;
+    right: 0%;
+}
+
+.DPtextpart1{
+    display: flex;
+    border: 1px solid black;
+    padding: 0px 10px;
+    align-items: center;
+}
+.DPtextpart1 img{
+    width: 50px;
+    margin-left: 10px;
+    border: 1px solid black;
+}
+.DPsecondheader{
+    height: 8%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 5%;
+    width: 80%;
+    margin-left: 15%;
+    
+}
+
+.DPsecondheader input:focus{
+    outline: none;
+}
+.DPname{
+    width: 10%;
+    height: 60%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border:none;
+    
+}
+.DPname #DP{
+    width: 100%;
+    height: 100%;
+    padding-left: 50px;
+    font-size: 15px;
+    border:none;
+}
+.DPlogo1{
+    position: absolute;
+    top: 0;
+    width: 30px;
+    
+}
+.DPlogo1 svg{
+    margin-top: 5px;
+    height: 30px;
+   width: 45px;
+}
+.DPname p{
+    padding-left: 40%;
+    font-size: 32px;
+    width: 100%;
+    
+}
+.DPmainbody{
+    width: 80%;
+    height: 9%;
+    margin-left: 18%;
+    margin-right: auto;
+    margin-top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 120px ;
+    background-color: whitesmoke;
+    color: #0A7273;
+    position: relative;
+    box-shadow:  10px 10px 36px #bebebe,
+    -10px -10px 36px #ffffff;
+}
+.DPdropdown{
+    position: absolute;
+    width: 80%;
+    height: 40%;
+    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+    top:100px;
+   
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 0;
+    background-color: whitesmoke;
+    color: #0A7273;
+    box-shadow:  10px 10px 36px #bebebe,
+    -10px -10px 36px #ffffff;
+}
+#DPtable{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-top: -20px;
+}
+#DPtable td {
+    padding: 5px; 
+    text-align: left; 
+    height: 100%;
+    
+  }
+  #DPtable input {
+    width: 90%; 
+    padding: 6px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    font-size: 10px;
+  }
+.DPsno{
+width: 100%;
+height: 100%;
+font-size: 15px;
+}
+.DPmedicine{
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+}
+.DPtimings{
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+}
+#formsubmit{
+    width: 20%;
+}
+.DPmainbody:hover {
+    background-color: #0A7273;
+    color:whitesmoke;
+}
+.DPuserdet{
+    height: 100%;
+    display: flex;
+   align-items: center;
+   margin-left: -5%;
+   border-right: 10px soild gainsboro;
+}
+.DPuserdet #DP{
+font-size: 20px;
+padding-left: 10px;
+}
+.DPuserdet svg{
+    height: 50px;
+    width: 40px;
+    border-radius: 50%;
+}
+.DPug{
+    text-align: center;
+    font-size: 25px;
+    width: 40%;
+    margin-left: 1%;
+    padding-left:10%;
+    padding-right: 10%;
+    border-right: 1px solid gainsboro;
+    border-left: 1px solid gainsboro;
+}
+.DPhistory #DP{
+    font-size: 20px;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+
+.DPhornav{
+    
+    display: flex;
+    height: 10%;
+    margin-left: 15%;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    color: #0A7273;
+    margin-top: 0px;
+}
+
+
+.DPsessions{
+    width: 38%;
+    height: 100%;
+    margin-top: 50px;
+    margin-left: 3%;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    height: 135%;
+    width: 38%;
+
+}
+.DPsessions p{
+    margin-top: 0;
+}
+.DPtextpart1 {
+    border: none;
+    margin-bottom: 5%; 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-around;
+    background-color: #0A7273 ;
+    border-radius: 13px;
+    box-shadow:  15px 15px 15px #d9d9d9,
+             -7px -7px 15px #ffffff;
+    color: white;
+    height: 100%;
+    width: 90%;
+}
+
+.DPimgdiv svg{
+    padding-top: 5%;
+   height:50px;
+   width:70px;
+}
+
+.DPtext{
+    display: flex;
+    flex-direction: row;
+}
+.DPtext svg{
+    height:100%;
+    width: 400%;
+
+}
+.DPhornav{
+    animation: slideDown7 1s ease forwards;
+}
+.DPmainbody{
+    animation: slideup7 1s ease forwards;
+}
+@keyframes slideDown7 {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+@keyframes slideup7{
+    0%{
+        transform: translateY(100px);
+    }
+    100%{
+        transform: translateY(0%);
+    }
+}
+.DPmainbody1{
+    margin: 250px 600px;
+    color: #0A7273;
+    font-size: 40px;
+}
+#DPform{
+    height: 270%;
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Arrange elements vertically */
+    align-items: stretch; /* Stretch elements to fill the container */
+    gap: 1px;
+}
+#DPbtn{
+    height: 30px;
+    border-radius: 5px;
+    font-size: 19px;
+    background-color: #48d7d9;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+}

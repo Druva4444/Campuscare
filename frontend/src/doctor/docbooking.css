@@ -1,0 +1,240 @@
+.dbnonnavbar{
+    flex: 1;
+    margin-left: 15%;
+    width: 100%;
+    background-color: white;
+    border-radius: 5% 0% 0% 5%;
+    overflow-y: scroll; 
+    width: 99vw;
+    height: 100vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+.dbheader #db{  
+    font-size: 25px;
+    font-size: 25px;
+    font-size: 25px;
+}
+.dbdate{
+    margin-top: 2%;
+}
+.dbform{
+    height: 100%;
+    width: 100%;
+    padding: 0;
+
+}
+
+.dbcalendar{
+    position: absolute;
+    top: 20%;
+    right: 0%;
+}
+.dbcalendar img{
+    width: 40px;
+}
+.dbmain{
+    width: 70%;
+    height: 60%;
+    background-color: whitesmoke;
+    border: 1px solid whitesmoke;
+    margin-left: 20%;
+    margin-right: auto;
+    margin-top: 8%;
+    font-size: 15px;
+    border-radius: 37px;
+    box-shadow:  23px 23px 36px #bebebe,
+             -23px -23px 36px #ffffff;
+             animation: slideup 1s ease forwards;
+}
+.dbmainbody1{
+    margin: 50px 500px;
+    color: #0A7273;
+    font-size: 20px;
+    width:100%;
+    margin-left: 0;
+}
+.dbmainbody p{
+    color: #0A7273;
+}
+
+.dbSt{
+    display: flex;
+    align-items: center;
+    height: 15%;
+    font-size: 15px;
+    color: #0A7273;
+}
+.dbSt img{
+    margin-left: 20px;
+    width: 40px;
+}
+.dbSt input{
+    font-size: 20px;
+    width: 10%;
+    
+    
+}
+.dbdesc #db{
+    font-size: 15px;
+}
+.dbdesc{
+    height: 15%;
+    display: flex;
+    align-items: center;
+}
+.dbin {
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dbin input {
+    border: none;
+    border-radius: 20px;
+    width: 90%;
+    padding-top: 5px;
+height: 100%;
+   text-align: start;
+   font-size: 15px;
+  overflow:visible;
+  color:#888;
+  box-shadow: inset 4px 4px 6px wheat, inset -4px -4px 6px #fff
+
+  
+}
+.dbbutt{
+   height: 20%  ;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 10px;
+}
+.dbbutt button{
+    width: 10%;
+    /* padding: 20px 0; */
+    font-size: 25px;
+    border: none;
+    background-color: #0A7273;
+    border-radius: 10px;
+   
+    color: white;
+}
+.dbbutt button:hover{
+    background-color: white;
+    color: #0A7273;
+    border: 1px solid #0A7273;
+}
+.dbbin .dbdropdown{
+    margin-top: -12%;
+}
+.dbdropdown button{
+    margin: 0;
+    width: 100%;
+    margin-top: -5%;
+    padding-left: 10px;
+    padding-right:10px;
+    
+}
+.dbdates{
+    margin-top: 2%;
+}
+
+.dbi{
+    width: 100%;
+   margin-bottom: 10px;
+    
+}
+
+.dbi input {
+    margin-bottom: 100px;
+}
+.dbtextpart1{
+    display: flex;
+    border: 1px solid black;
+    padding: 0px 10px;
+    align-items: center;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+.dbtext{
+    display: flex;
+    flex-direction: row;
+}
+.dbtext svg{
+    height:100%;
+    width: 400%;
+
+}
+
+.dbhornav{
+    
+    display: flex;
+    height: 10%;
+    margin-left: 5%;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    color: #0A7273;
+    animation: slideDown 1s ease forwards;
+   
+}
+.dbhornav #db{
+    font-size: 20px;
+    
+}
+
+.dbsessions{
+    width: 38%;
+    height: 100%;
+    margin-top: 100%;
+    margin-left: 14%;
+    margin-right: auto;
+    border: 1px solid whitesmoke;
+    
+}
+.dbsessions #db{     
+    margin-top: 0;
+}
+.dbtextpart1 {
+    margin-bottom: 5%; 
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-around;
+    border: 1px solid white;
+    background-color: #0A7273 ;
+    border-radius: 13px;
+    box-shadow:  7px 7px 15px #d9d9d9,
+             -7px -7px 15px #ffffff;
+    color: white;
+    height: 110%;
+    width: 90%;
+}
+
+.dbimgdiv svg{
+    padding-top: 5%;
+   height:60px;
+   width:70px;
+}
+@keyframes slideDown5 {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+@keyframes slideup5{
+    0%{
+        transform: translateY(100px);
+    }
+    100%{
+        transform: translateY(0%);
+    }
+}

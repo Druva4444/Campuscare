@@ -3,6 +3,7 @@ const Doctor = require('../model/doctor');
 const dmessege = require('../model/dmessege');
 const smessege = require('../model/Smessege');
 const User = require('../model/user');
+const {getReceiverSocketId,io} = require('../socket.js')
  async function getstudents(req, res) {
   try {
     const { college } = req.body;
@@ -22,6 +23,10 @@ const User = require('../model/user');
     const { from, to, message } = req.body;
     const newMessage = new dmessege({ from, to, message });
     await newMessage.save();
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
     res.status(201).json(newMessage);
   } catch (error) {
     console.error('Error creating message:', error);
@@ -76,6 +81,10 @@ async function screateMessage(req, res) {
         const newMessage = new smessege({ from, to, message });
         await newMessage.save();
         console.log(newMessage)
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
         res.status(201).json(newMessage);
     } catch (error) {
         console.error('Error creating message:', error);

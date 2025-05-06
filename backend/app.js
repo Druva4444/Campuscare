@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose =require('mongoose');
-const app = express();
+const { app, server } =  require("./socket.js");
 const morgan = require('morgan');
 const Doctor = require('./model/doctor.js')
 const cookieParser = require('cookie-parser');
@@ -142,6 +142,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 const port = 3020;
-app.listen(port,()=>{
+server.listen(port,()=>{
     console.log('server is listening on port' + port)
 })

@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import "./Dchat.css";
 import { decodeToken } from "react-jwt";
+import { io } from "socket.io-client";
+
+const socket = io(process.env.REACT_APP_API_URL, {
+  query: { email: null },
+});
 
 const Chatd = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -18,7 +23,9 @@ const Chatd = () => {
     const date = new Date();
     const month = date.getMonth() + 1;
     setCurrentDate(
-      `${date.getFullYear()}-${month < 10 ? "0" : ""}${month}-${date.getDate() < 10 ? "0" : ""}${date.getDate()}`
+      `${date.getFullYear()}-${month < 10 ? "0" : ""}${month}-${
+        date.getDate() < 10 ? "0" : ""
+      }${date.getDate()}`
     );
 
     const updateTime = () => {
@@ -28,7 +35,9 @@ const Chatd = () => {
       const seconds = now.getSeconds();
       const meridiem = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12;
-      const timeString = `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds} ${meridiem}`;
+      const timeString = `${hours < 10 ? "0" : ""}${hours}:${
+        minutes < 10 ? "0" : ""
+      }${minutes}:${seconds < 10 ? "0" : ""}${seconds} ${meridiem}`;
       setCurrentTime(timeString);
     };
 
@@ -39,24 +48,9 @@ const Chatd = () => {
   }, []);
 
   useEffect(() => {
-    async function fetchMessages() {
-      if (loginUser && selectedUserId) {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/dgetMessages`, {
-          from: loginUser,
-          to: selectedUserId
-        }, {
-          withCredentials: true
-        });
-        setMessages(response.data);
-      }
-    }
-    fetchMessages();
-  }, [loginUser, selectedUserId]);
-
-  useEffect(() => {
     const fetchUser = async () => {
-      const userDetails = Cookies.get('userdetails');
-      const token = Cookies.get('Uid1');
+      const userDetails = Cookies.get("userdetails");
+      const token = Cookies.get("Uid1");
 
       try {
         let email = null;
@@ -69,9 +63,14 @@ const Chatd = () => {
         }
 
         if (email) {
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdocobj`, { email }, {
-            withCredentials: true
-          });
+          socket.io.opts.query = { email };
+          socket.disconnect().connect();
+
+          const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/getdocobj`,
+            { email },
+            { withCredentials: true }
+          );
           setLoginUser(response.data._id);
         }
       } catch (error) {
@@ -83,27 +82,86 @@ const Chatd = () => {
   }, []);
 
   useEffect(() => {
-    async function fetchUsers() {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/getstudents`, {
-        college: 'nit trichy'
-      }, {
-        withCredentials: true
-      });
-      setUsers(response.data);
-    }
+    const fetchMessages = async () => {
+      if (loginUser && selectedUserId) {
+        try {
+          const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/dgetMessages`,
+            { from: loginUser, to: selectedUserId },
+            { withCredentials: true }
+          );
+          setMessages(response.data);
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      }
+    };
+    fetchMessages();
+  }, [selectedUserId]);
+
+  useEffect(() => {
+    socket.on("newMessage", (data) => {
+      setMessages((messages) => [...messages, data]);
+    });
+
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from Socket.IO server");
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    return () => {
+      socket.off("newMessage");
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("connect_error");
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/getstudents`,
+          { college: "nit trichy" },
+          { withCredentials: true }
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
     fetchUsers();
   }, []);
 
   const sendMessage = async () => {
-    if (input.trim()) {
-      await axios.post(`${process.env.REACT_APP_API_URL}/dcreateMessage`, {
+    if (input.trim() && loginUser && selectedUserId) {
+      const messageData = {
         from: loginUser,
         to: selectedUserId,
-        message: input
-      }, {
-        withCredentials: true
-      });
-      setInput("");
+        message: input,
+        timestamp: new Date().toISOString(),
+      };
+
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/dcreateMessage`,
+          messageData,
+          { withCredentials: true }
+        );
+
+        socket.emit("sendMessage", messageData);
+        setMessages((messages) => [...messages, messageData]);
+        setInput("");
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
 
@@ -111,17 +169,35 @@ const Chatd = () => {
     <div className="APPnonnavbar">
       <div className="APPheader">
         <div className="APPheading">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chat-left-text" viewBox="0 0 16 16">
-            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-chat-left-text"
+            viewBox="0 0 16 16"
+          >
+            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
           </svg>
           <p style={{ fontSize: "40px", marginLeft: "10px" }}>Chat</p>
         </div>
         <div className="APPdate" style={{ marginTop: "5%", margin: "0", padding: "0" }}>
-          <p id="APPdate" style={{ textAlign: "end", margin: "0", marginRight: "40px" }}>{currentDate}</p>
-          <p id="APPtime" style={{ margin: "0", marginRight: "40px" }}>{currentTime}</p>
+          <p id="APPdate" style={{ textAlign: "end", margin: "0", marginRight: "40px" }}>
+            {currentDate}
+          </p>
+          <p id="APPtime" style={{ margin: "0", marginRight: "40px" }}>
+            {currentTime}
+          </p>
           <div className="APPcalendar">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="APPbi bi-calendar-check" viewBox="0 0 16 16">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="APPbi bi-calendar-check"
+              viewBox="0 0 16 16"
+            >
               <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0" />
               <path d="M3.5 0a.5.5 0 0 1 .5-.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
             </svg>
@@ -157,7 +233,8 @@ const Chatd = () => {
                   key={idx}
                   className={`message ${msg.from === loginUser ? "sent" : "received"}`}
                 >
-                  {msg.message}
+                  <span>{msg.message}</span>
+                  <small>{new Date(msg.timestamp).toLocaleTimeString()}</small>
                 </div>
               ))}
             </div>

@@ -153,6 +153,46 @@ function Docbooking() {
           alert('Error blocking slots');
         }
       };
+      const handleBlockDate = () => {
+        const userDetails = Cookies.get('userdetails');
+        const token = Cookies.get('Uid1');
+      
+        let email = null;
+      
+        if (userDetails) {
+          const parsedDetails = JSON.parse(userDetails);
+          email = parsedDetails.gmail;
+          console.log(email)
+        } else if (token) {
+          try {
+            const decoded = decodeToken(token);
+            email = decoded.gmail;
+            console.log(email)
+          } catch (error) {
+            console.error("Token decoding failed:", error);
+            alert("Invalid token. Please log in again.");
+            return;
+          }
+        }
+      
+        if (!email || !blockedDate) {
+          alert("Please select a date and ensure you're logged in.");
+          return;
+        }
+      
+        axios.post(`${process.env.REACT_APP_API_URL}/blockdate`, {
+          email: email,
+          date: blockedDate,
+        })
+        .then((res) => {
+          alert("Date successfully blocked!");
+          setBlockedDate("");
+        })
+        .catch((err) => {
+          console.error("Error blocking date:", err);
+          alert("Failed to block date.");
+        });
+      };
     return (
         <div >
             <div className="dbnonnavbar" style={{ marginLeft: "0%", zIndex: "-20" }}>

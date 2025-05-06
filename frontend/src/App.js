@@ -88,10 +88,9 @@ function App() {
           <Route path="/doctorschedule" element={<><Docvernav></Docvernav><Docschedule></Docschedule></>} /> 
           <Route path="/doctorpatients" element={<><Docvernav></Docvernav><Docpatients></Docpatients></>} /> 
           <Route path="/doctorsetting" element={<><Docvernav></Docvernav><Docsetting></Docsetting></>} /> 
-          <Route path="/Doctorchat" element={<><Docvernav></Docvernav><Chats></Chats></>} />
+          <Route path="/Doctorchat" element={<><Docvernav></Docvernav><Chatd></Chatd></>} />
           <Route path="/doctorleaves" element={<><Docvernav></Docvernav><Leaves></Leaves></>} /> 
-          <Route path='/aboutus' element={<Aboutus></Aboutus>}></Route>
-          <Route path="/Doctorchat" element={<><Docvernav></Docvernav><Chatd></Chatd></>} /> 
+          <Route path='/aboutus' element={<Aboutus></Aboutus>}></Route> 
           <Route path="/Stundetchat" element={<><Vernavstud></Vernavstud><Chats></Chats></>} /> 
 
           <Route path='/a' element={<A/>}></Route>

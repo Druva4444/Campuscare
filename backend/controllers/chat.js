@@ -28,10 +28,12 @@ const {getReceiverSocketId,io} = require('../socket.js')
     const { from, to, message } = req.body;
     const newMessage = new dmessege({ from, to, message });
     await newMessage.save();
-    const receiverSocketId = getReceiverSocketId(receiverId);
+    const receiverSocketId = getReceiverSocketId(to);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
+    const sender = getReceiverSocketId(from)
+    io.to(sender).emit('newMessege',newMessage);
     res.status(201).json(newMessage);
   } catch (error) {
     console.error('Error creating message:', error);

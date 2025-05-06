@@ -236,7 +236,6 @@ const Chatd = () => {
                   className={`message ${msg.from === loginUser ? "sent" : "received"}`}
                 >
                   <span>{msg.message}</span>
-                  <small>{new Date(msg.timestamp).toLocaleTimeString()}</small>
                 </div>
               ))}
             </div>

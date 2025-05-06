@@ -65,7 +65,6 @@ async function getcolleges(req, res) {
   
 
 
-  const jwt = require("jsonwebtoken");
 
   async function handlelogin(req, res) {
       try {

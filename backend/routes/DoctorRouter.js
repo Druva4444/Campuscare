@@ -21,6 +21,7 @@ DoctorRouter.post('/getdocobj',getdocobj)
 DoctorRouter.post('/getdoctors',getdoctors)
 DoctorRouter.post('/screateMessage',screateMessage)
 DoctorRouter.post('/getstuobj',getstuobj)
+DoctorRouter.post('/sgetMessages',sgetMessages)
 DoctorRouter.post('')
 const { createClient } = require('redis');
 const Doctor = require('../model/doctor.js');

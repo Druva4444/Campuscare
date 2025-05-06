@@ -9,7 +9,7 @@ const Chats = () => {
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-<<<<<<< HEAD:project/frontend/src/chat/Stundetchat.jsx
+
   const [loginUser, setLoginUser] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [currentDate, setCurrentDate] = useState("");
@@ -39,26 +39,17 @@ const Chats = () => {
   
         return () => clearInterval(timer);
       }, []);
+      
   useEffect(() => {
     async function fetchMessages() {
       if (loginUser && selectedUserId) {
-        const response = await axios.post("http://localhost:3020/sgetMessages", {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/sgetMessages`, {
           from: loginUser,
           to: selectedUserId
         });
         setMessages(response.data);
       }
-=======
-  const [loginuser,setloginuser]=useState(null)
-  const [selectedUserid,setSelectedUserid]=useState(null)
-  useEffect(()=>{
-    async function fetchmessages(){
-        const response = await axios.post("http://localhost:3020/sgetMessages",{from:loginuser,to:selectedUserid}, {
-          withCredentials: true
-        })
-        console.log(response.data)
-        setMessages(response.data)
->>>>>>> ef9dbd2d95e994bb90753e4ae8d186708e2e860f:frontend/src/chat/Stundetchat.jsx
+
     }
     fetchMessages();
   }, [loginUser, selectedUserId]);
@@ -67,7 +58,6 @@ const Chats = () => {
     const fetchUser = async () => {
       const userDetails = Cookies.get('userdetails');
       const token = Cookies.get('Uid2');
-<<<<<<< HEAD:project/frontend/src/chat/Stundetchat.jsx
 
       try {
         let email = null;
@@ -76,39 +66,11 @@ const Chats = () => {
         } else if (token) {
           const decoded = decodeToken(token);
           email = decoded.gmail;
-=======
-  
-      if (userDetails) {
-        try {
-          const parsedDetails = JSON.parse(userDetails);
-        
-  
-          const response = await axios.post("http://localhost:3020/getstuobj", { email: parsedDetails.gmail }, {
-            withCredentials: true
-          });
-          
-          setloginuser(response.data._id);
-        } catch (error) {
-          console.error("Error fetching user with userDetails:", error);
-        }
-      } else if (token) {
-        console.log('inside token');
-        try {
-          const decoded = decodeToken(token);
-         
-  
-          const response = await axios.post("http://localhost:3020/getstuobj", { email: decoded.gmail }, {
-            withCredentials: true
-          });
-          
-          setloginuser(response.data._id);
-        } catch (error) {
-          console.error("Token verification or fetching failed:", error);
->>>>>>> ef9dbd2d95e994bb90753e4ae8d186708e2e860f:frontend/src/chat/Stundetchat.jsx
+
         }
 
         if (email) {
-          const response = await axios.post("http://localhost:3020/getstuobj", { email });
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/getstuobj`, { email });
           setLoginUser(response.data._id);
         }
       } catch (error) {
@@ -118,41 +80,24 @@ const Chats = () => {
 
     fetchUser();
   }, []);
-<<<<<<< HEAD:project/frontend/src/chat/Stundetchat.jsx
 
   useEffect(() => {
     async function fetchUsers() {
-      const response = await axios.post("http://localhost:3020/getdoctors", { college: 'nit trichy' });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoctors`, { college: 'nit trichy' });
       setUsers(response.data);
-=======
-useEffect(()=>{
-    async function fetchusers(){
-        const response = await axios.post("http://localhost:3020/getdoctors",{college:'nit trichy'}, {
-          withCredentials: true
-        })
-        console.log(response.data)
-        
-        setusers(response.data)
->>>>>>> ef9dbd2d95e994bb90753e4ae8d186708e2e860f:frontend/src/chat/Stundetchat.jsx
+
     }
     fetchUsers();
   }, []);
 
   const sendMessage = async () => {
     if (input.trim()) {
-      await axios.post("http://localhost:3020/screateMessage", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/screateMessage`, {
         from: loginUser,
         to: selectedUserId,
         message: input,
-<<<<<<< HEAD:project/frontend/src/chat/Stundetchat.jsx
       });
-=======
-      };
-      const response =await axios.post("http://localhost:3020/screateMessage", {from:loginuser,to:selectedUserid,message:input}, {
-        withCredentials: true
-      });
-      console.log(response.data)
->>>>>>> ef9dbd2d95e994bb90753e4ae8d186708e2e860f:frontend/src/chat/Stundetchat.jsx
+
       setInput("");
     }
   };

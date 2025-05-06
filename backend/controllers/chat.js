@@ -6,7 +6,10 @@ const User = require('../model/user');
 const {getReceiverSocketId,io} = require('../socket.js')
  async function getstudents(req, res) {
   try {
-    const { college } = req.body;
+    const { id } = req.body;
+    const user = Doctor.findById(id);
+    const college=user.college;
+    console.log(college)
     if (!college) {
       return res.status(400).json({ message: 'College ID is required' });
     }

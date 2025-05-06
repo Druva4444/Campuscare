@@ -14,7 +14,11 @@ DoctorRouter.use((req, res, next) => {
   });
   
 
-
+DoctorRouter.post('/getstudents',getstudents)
+DoctorRouter.post('/dgetMessages',dgetMessages)
+DoctorRouter.post('/dcreateMessage',dcreateMessage)
+DoctorRouter.post('/getdocobj',getdocobj)
+DoctorRouter.post('')
 const { createClient } = require('redis');
 const Doctor = require('../model/doctor.js');
 

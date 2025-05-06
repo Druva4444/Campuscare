@@ -95,6 +95,8 @@ async function screateMessage(req, res) {
           io.to(receiverSocketId).emit("newMessage", newMessage);
         }
         const sender = getReceiverSocketId(from)
+        console.log(sender)
+        console.log(from)
         io.to(sender).emit('newMessage',newMessage)
         res.status(201).json(newMessage);
     } catch (error) {

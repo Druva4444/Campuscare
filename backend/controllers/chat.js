@@ -28,11 +28,13 @@ const {getReceiverSocketId,io} = require('../socket.js')
     const { from, to, message } = req.body;
     const newMessage = new dmessege({ from, to, message });
     await newMessage.save();
-    const receiverSocketId = getReceiverSocketId(to);
+    const frommail =await User.findById(to)
+    const sendmail = await Doctor.findById(from);
+    const receiverSocketId = getReceiverSocketId(frommail);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
-    const sender = getReceiverSocketId(from)
+    const sender = getReceiverSocketId(sendmail)
     io.to(sender).emit('newMessege',newMessage);
     res.status(201).json(newMessage);
   } catch (error) {
@@ -44,13 +46,15 @@ async function screateMessage(req, res) {
   try {
       const { from, to, message } = req.body;
       const newMessage = new smessege({ from, to, message });
+      const frommail =await User.findById(from)
+      const sendmail = await Doctor.findById(to);
       await newMessage.save();
       console.log(newMessage)
-      const receiverSocketId = getReceiverSocketId(to);
+      const receiverSocketId = getReceiverSocketId(sendmail);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("newMessage", newMessage);
       }
-      const sender = getReceiverSocketId(from)
+      const sender = getReceiverSocketId(frommail)
       console.log(sender)
       console.log(from)
       io.to(sender).emit('newMessage',newMessage)

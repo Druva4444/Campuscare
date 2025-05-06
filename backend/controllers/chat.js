@@ -8,10 +8,11 @@ const {getReceiverSocketId,io} = require('../socket.js')
   try {
     const { id } = req.body;
     const user = Doctor.findById(id);
+    
     const college=user.college;
     console.log(college)
     if (!college) {
-      return res.status(400).json({ message: 'College ID is required' });
+      return res.status(400).json({ message: 'College ID is required',user:user });
     }
     const students = await User.find({ college });
     res.status(200).json(students);

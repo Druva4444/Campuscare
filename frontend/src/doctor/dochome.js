@@ -48,7 +48,7 @@ useEffect(()=>{
     // If userDetails cookie exists, parse and set the gmail state
     const parsedDetails = JSON.parse(userDetails);
     console.log(parsedDetails.gmail)
-    axios.post('http://localhost:3020/gethome', { email: parsedDetails.gmail })
+    axios.post(`${process.env.REACT_APP_API_URL}/gethome`, { email: parsedDetails.gmail })
     .then(response => {
       // Assuming the response contains appointments count
       setappointment(response.data.total);
@@ -65,7 +65,7 @@ useEffect(()=>{
       // Decode the JWT token
       const decoded = decodeToken(token); // Make sure the secret matches
       console.log(decoded)
-      axios.post('http://localhost:3020/gethome', { email: decoded.gmail })
+      axios.post(`${process.env.REACT_APP_API_URL}/gethome`, { email: decoded.gmail })
     .then(response => {
       // Assuming the response contains appointments count
       setappointment(response.data.total);

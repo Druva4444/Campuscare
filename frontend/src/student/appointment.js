@@ -81,7 +81,8 @@ import "react-datepicker/dist/react-datepicker.css";
         try {
          console.log(selectedDoctor)
     
-          const res = await axios.get(`http://localhost:3020/getblockeddates/${selectedDoctor}`)
+          const res = await axios.get(`${process.env.REACT_APP_API_URL}/getblockeddates/${selectedDoctor}`
+)
           
           const blocked = res.data.map(d => new Date(d));
           setUnavailableDates(blocked);

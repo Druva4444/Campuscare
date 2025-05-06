@@ -28,8 +28,10 @@ const {getReceiverSocketId,io} = require('../socket.js')
     const { from, to, message } = req.body;
     const newMessage = new dmessege({ from, to, message });
     await newMessage.save();
-    const frommail =await User.findById(to)
-    const sendmail = await Doctor.findById(from);
+    let frommail =await User.findById(to)
+    let sendmail = await Doctor.findById(from);
+    ormail=frommail.gmail
+      sendmail=sendmail.gmail
     const receiverSocketId = getReceiverSocketId(frommail);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
@@ -46,8 +48,10 @@ async function screateMessage(req, res) {
   try {
       const { from, to, message } = req.body;
       const newMessage = new smessege({ from, to, message });
-      const frommail =await User.findById(from)
-      const sendmail = await Doctor.findById(to);
+      let frommail =await User.findById(from)
+      let sendmail = await Doctor.findById(to);
+      formail=frommail.gmail
+      sendmail=sendmail.gmail
       await newMessage.save();
       console.log(newMessage)
       const receiverSocketId = getReceiverSocketId(sendmail);

@@ -4,6 +4,10 @@ import Cookies from 'js-cookie';
 import { decodeToken } from "react-jwt";
 import "./Schat.css"; // Add this line for CSS
 
+import { io } from "socket.io-client";
+const socket = io(process.env.REACT_APP_API_URL, {
+  query: { email: null },
+});
 const Chats = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
@@ -70,6 +74,8 @@ const Chats = () => {
         }
 
         if (email) {
+          socket.io.opts.query = { email };
+                    socket.disconnect().connect();
           const response = await axios.post(`${process.env.REACT_APP_API_URL}/getstuobj`, { email });
           setLoginUser(response.data._id);
         }
@@ -80,7 +86,30 @@ const Chats = () => {
 
     fetchUser();
   }, []);
-
+  useEffect(() => {
+     socket.on("newMessage", (data) => {
+       setMessages((messages) => [...messages, data]);
+     });
+ 
+     socket.on("connect", () => {
+       console.log("Connected to Socket.IO server");
+     });
+ 
+     socket.on("disconnect", () => {
+       console.log("Disconnected from Socket.IO server");
+     });
+ 
+     socket.on("connect_error", (error) => {
+       console.error("Socket connection error:", error);
+     });
+ 
+     return () => {
+       socket.off("newMessage");
+       socket.off("connect");
+       socket.off("disconnect");
+       socket.off("connect_error");
+     };
+   }, []);
   useEffect(() => {
     async function fetchUsers() {
       if(!loginUser) return 

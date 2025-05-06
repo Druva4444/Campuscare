@@ -83,12 +83,13 @@ const Chats = () => {
 
   useEffect(() => {
     async function fetchUsers() {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoctors`, { college: 'nit trichy' });
+      if(!loginUser) return 
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/getdoctors`, { id: loginUser });
       setUsers(response.data);
 
     }
     fetchUsers();
-  }, []);
+  }, [loginUser]);
 
   const sendMessage = async () => {
     if (input.trim()) {

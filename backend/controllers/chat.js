@@ -71,7 +71,9 @@ async function dgetMessages(req, res) {
   
 async function getdoctors(req, res) {
         try {
-            const { college } = req.body;
+            const { id } = req.body;
+            const user =await User.findById(id);
+            const college = user.college
             if (!college) {
                 return res.status(400).json({ message: 'College ID is required' });
             }
@@ -88,10 +90,12 @@ async function screateMessage(req, res) {
         const newMessage = new smessege({ from, to, message });
         await newMessage.save();
         console.log(newMessage)
-        const receiverSocketId = getReceiverSocketId(receiverId);
+        const receiverSocketId = getReceiverSocketId(to);
         if (receiverSocketId) {
           io.to(receiverSocketId).emit("newMessage", newMessage);
         }
+        const sender = getReceiverSocketId(from)
+        io.to(sender).emit('newMessage',newMessage)
         res.status(201).json(newMessage);
     } catch (error) {
         console.error('Error creating message:', error);

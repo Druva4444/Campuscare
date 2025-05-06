@@ -40,7 +40,26 @@ const {getReceiverSocketId,io} = require('../socket.js')
     res.status(500).json({ message: 'Internal server error' });
   }
 }
-
+async function screateMessage(req, res) {
+  try {
+      const { from, to, message } = req.body;
+      const newMessage = new smessege({ from, to, message });
+      await newMessage.save();
+      console.log(newMessage)
+      const receiverSocketId = getReceiverSocketId(to);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessage", newMessage);
+      }
+      const sender = getReceiverSocketId(from)
+      console.log(sender)
+      console.log(from)
+      io.to(sender).emit('newMessage',newMessage)
+      res.status(201).json(newMessage);
+  } catch (error) {
+      console.error('Error creating message:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
 async function dgetMessages(req, res) {
     try {
       const { from, to } = req.body;
@@ -84,26 +103,7 @@ async function getdoctors(req, res) {
             res.status(500).json({ message: 'Internal server error' });
         }
     }
-async function screateMessage(req, res) {
-    try {
-        const { from, to, message } = req.body;
-        const newMessage = new smessege({ from, to, message });
-        await newMessage.save();
-        console.log(newMessage)
-        const receiverSocketId = getReceiverSocketId(to);
-        if (receiverSocketId) {
-          io.to(receiverSocketId).emit("newMessage", newMessage);
-        }
-        const sender = getReceiverSocketId(from)
-        console.log(sender)
-        console.log(from)
-        io.to(sender).emit('newMessage',newMessage)
-        res.status(201).json(newMessage);
-    } catch (error) {
-        console.error('Error creating message:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-}
+
 async function sgetMessages(req, res) {  
     try {
         const { from, to } = req.body;

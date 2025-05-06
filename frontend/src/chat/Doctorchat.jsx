@@ -147,8 +147,7 @@ const Chatd = () => {
       const messageData = {
         from: loginUser,
         to: selectedUserId,
-        message: input,
-        timestamp: new Date().toISOString(),
+        message: input
       };
 
       try {

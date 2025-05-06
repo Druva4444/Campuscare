@@ -121,14 +121,26 @@ const Chats = () => {
   }, [loginUser]);
 
   const sendMessage = async () => {
-    if (input.trim()) {
-      await axios.post(`${process.env.REACT_APP_API_URL}/screateMessage`, {
+    if (input.trim() && loginUser && selectedUserId) {
+      const messageData = {
         from: loginUser,
         to: selectedUserId,
-        message: input,
-      });
+        message: input
+      };
 
-      setInput("");
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/screateMessage`,
+          messageData,
+          { withCredentials: true }
+        );
+
+        socket.emit("sendMessage", messageData);
+        setMessages((messages) => [...messages, messageData]);
+        setInput("");
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
 

@@ -1,12 +1,57 @@
 import { useState } from "react";
 import axios from 'axios';
+import { useEffect } from "react";
+
 
 function Mainbody(props) {
     const [showDropdown, setShowDropdown] = useState(false);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [isLeaveApplied, setIsLeaveApplied] = useState(false); 
+     const [leaves, setLeaves] = useState([]);
+     const [email, setEmail] = useState('');
 
+    useEffect(()=>{
+        const fetchleaves = async()=>{
+            const userDetails = Cookies.get('userdetails');
+            const token = Cookies.get('Uid2');
+            let email = null;
+            if(userDetails){
+                const parsedDetails = JSON.parse(userDetails);
+                email = parsedDetails.gmail;
+                setEmail(email)
+            }
+            else if (token) {
+               try {
+                const decoded = decodeToken(token);
+                email = decoded.gmail;
+                setEmail(email)
+               } catch (error) {
+                console.log("token validation failed" , error)
+               }
+            }
+            if (email) {
+           try {
+            console.log(email)
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/leaves` , {params:{email}}, {
+              withCredentials: true
+            } );
+            if(response.status ==200){
+                setLeaves(response.data)
+                console.log(response.data)
+            }
+             else{
+                console.log(response.data.message)
+             }
+            } 
+           catch (error) {
+         console.log("error fetching leave details");
+     
+        }            
+            }
+        };
+        fetchleaves();
+    },[]);
     const handleButtonClick = () => {
         setShowDropdown(!showDropdown);
     };
@@ -14,6 +59,7 @@ function Mainbody(props) {
     async function handleApply(e) {
         e.preventDefault();
         try {
+            console.log(email,data,startDate,endDate)
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/applyleave`, {
                 email: props.email,
                 data: props.det,
@@ -46,7 +92,7 @@ function Mainbody(props) {
                     <p style={{ fontSize: "20px", marginBottom: "0", marginTop: "0", paddingLeft: '20px' }}>Description by student: {props.det.description}</p>
                     <p style={{ fontSize: "20px", marginBottom: "0", marginTop: "0", paddingLeft: '20px' }}>Doctor: {props.det.acceptedby}</p>
                     <div>
-                        {!isLeaveApplied && ( 
+                        {!isLeaveApplied &&   !leaves.some(leave => leave.appointmentId === props.det._id) && ( 
                             <button 
                                 style={{ width: '210px', fontSize: '22px', cursor: 'pointer', backgroundColor: '#0A7273', color: 'white', borderRadius: '10px' }} 
                                 onClick={handleButtonClick}

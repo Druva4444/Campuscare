@@ -7,7 +7,8 @@ const {getReceiverSocketId,io} = require('../socket.js')
  async function getstudents(req, res) {
   try {
     const { id } = req.body;
-    const user = Doctor.findById(id);
+    console.log(id)
+    const user =await  Doctor.findById(id);
     
     const college=user.college;
     console.log(college)

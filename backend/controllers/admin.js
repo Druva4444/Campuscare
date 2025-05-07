@@ -13,7 +13,7 @@ const reports = require('../model/report');
 const User = require('../model/user');
 async function getappsclg(req,res){
     try{
-        const {email} = req.body;
+        const {college} = req.body;
         const apps = await accappointment.find({college:college})
         return res.status(200).json({apps:apps})
     }

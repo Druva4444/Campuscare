@@ -4,7 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useJwt, decodeToken } from "react-jwt";
 
-function Students() {
+function Appointments() {
   const [appointments, setAppointments] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -205,4 +205,4 @@ function Students() {
   );
 }
 
-export default Students;
+export default Appointments;

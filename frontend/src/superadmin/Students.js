@@ -93,7 +93,7 @@ function Students() {
     } else {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/getappointments?email=${gmail}`, { withCredentials: true });
-        const appointments = response.data; // assume this is an array of appointments
+        const appointments = response.data.data; // assume this is an array of appointments
         console.log(appointments)
         const now = new Date();
   

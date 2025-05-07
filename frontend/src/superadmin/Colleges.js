@@ -254,6 +254,10 @@ function Colleges() {
                   }}>
                     <p>Date: {new Date(appointment.date).toLocaleDateString()}</p>
                     <p>Description: {appointment.description}</p>
+                    <p> student : {appointment.createdy} </p>
+                    <p> doctor :{appointment.acceptedby}
+            
+                    </p>
                   </div>
                 ))}
 

@@ -205,9 +205,9 @@ function Students() {
                     {selectedStudentAppointments.upcoming && selectedStudentAppointments.upcoming.length > 0 ? (
                       selectedStudentAppointments.upcoming.map((appt, index) => (
                         <div key={index} style={{ padding: '10px', border: '1px solid #0A7273', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#E9F7EF' }}>
-                          <p><strong>Date:</strong> {appt.date}</p>
+                          <p><strong>Date:</strong> {appt.date.toLocaleTimeString()}</p>
                           <p><strong>Time:</strong> {appt.time}</p>
-                          <p><strong>Doctor:</strong> {appt.doctor}</p>
+                          <p><strong>Doctor:</strong> {appt.acceptedby}</p>
                         </div>
                       ))
                     ) : (
@@ -221,8 +221,9 @@ function Students() {
                     {selectedStudentAppointments.completed && selectedStudentAppointments.completed.length > 0 ? (
                       selectedStudentAppointments.completed.map((appt, index) => (
                         <div key={index} style={{ padding: '10px', border: '1px solid #0A7273', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#F9EBEA' }}>
-                          <p><strong>Date:</strong> {appt.date}</p>
-                          <p><strong>Doctor:</strong> {appt.doctor}</p>
+                          <p><strong>Date:</strong> {appt.date.toLocaleTimeString()}</p>
+                          <p><strong>Time:</strong> {appt.time}</p>
+                          <p><strong>Doctor:</strong> {appt.acceptedby}</p>
                         </div>
                       ))
                     ) : (

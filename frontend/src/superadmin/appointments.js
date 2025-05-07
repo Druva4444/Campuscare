@@ -190,7 +190,7 @@ function Appointments() {
       {/* Appointment List */}
       {filteredAppointments && filteredAppointments.length > 0 ? (
         filteredAppointments.map((appt, index) => (
-          <div key={index} style={{ margin: '10px 0', padding: '10px', border: '1px solid #ccc' }}>
+          <div key={index} style={{ margin: '10px 22%', padding: '10px', border: '1px solid #ccc' }}>
             <p><strong>Date:</strong> {new Date(appt.date).toLocaleDateString()}</p>
             <p><strong>Student:</strong> {appt.createdy}</p>
             <p><strong>Doctor:</strong> {appt.acceptedby}</p>

@@ -488,7 +488,7 @@ async function getcollegepage(req, res) {
   async function getapp(req,res){
     try{
       const app = await accappointment.find();
-      return res.status(200).json(app)
+      return res.status(200).json({app:app})
     }
     catch(error){
       console.log('error in ', error)

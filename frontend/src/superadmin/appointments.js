@@ -2,13 +2,22 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useJwt ,decodeToken} from "react-jwt";
+import { useJwt, decodeToken } from "react-jwt";
+
 function Students() {
-  const [appointments, setappointments] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
-  
+  const [filters, setFilters] = useState({
+    createdBy: '',
+    acceptedBy: '',
+    college: '',
+    sortOrder: 'newToOld',
+    dateRange: { start: '', end: '' }
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,24 +34,74 @@ function Students() {
   const fetchAllapp = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/getapp`, { withCredentials: true });
-      setappointments(response.data.app);
-      console.log('inside fetching')
-      console.log(response.data.app)
+      setAppointments(response.data.app);
+      setFilteredAppointments(response.data.app);
+      console.log('inside fetching');
+      console.log(response.data.app);
     } catch (error) {
-      console.error('Error fetching students data:', error);
+      console.error('Error fetching appointments data:', error);
     }
   };
-
-
 
   useEffect(() => {
     fetchAllapp();
   }, []);
 
+  useEffect(() => {
+    let filtered = [...appointments];
 
+    // Apply createdBy filter
+    if (filters.createdBy) {
+      filtered = filtered.filter(app => 
+        app.createdy.toLowerCase().includes(filters.createdBy.toLowerCase())
+      );
+    }
 
+    // Apply acceptedBy filter
+    if (filters.acceptedBy) {
+      filtered = filtered.filter(app => 
+        app.acceptedby.toLowerCase().includes(filters.acceptedBy.toLowerCase())
+      );
+    }
 
-  
+    // Apply college filter
+    if (filters.college) {
+      filtered = filtered.filter(app => 
+        app.college?.toLowerCase().includes(filters.college.toLowerCase())
+      );
+    }
+
+    // Apply date range filter
+    if (filters.dateRange.start && filters.dateRange.end) {
+      const startDate = new Date(filters.dateRange.start);
+      const endDate = new Date(filters.dateRange.end);
+      filtered = filtered.filter(app => {
+        const appDate = new Date(app.date);
+        return appDate >= startDate && appDate <= endDate;
+      });
+    }
+
+    // Apply sorting
+    if (filters.sortOrder === 'newToOld') {
+      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (filters.sortOrder === 'oldToNew') {
+      filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+
+    setFilteredAppointments(filtered);
+  }, [appointments, filters]);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'startDate' || name === 'endDate') {
+      setFilters(prev => ({
+        ...prev,
+        dateRange: { ...prev.dateRange, [name === 'startDate' ? 'start' : 'end']: value }
+      }));
+    } else {
+      setFilters(prev => ({ ...prev, [name]: value }));
+    }
+  };
 
   return (
     <div className="nonnavbar1">
@@ -50,7 +109,7 @@ function Students() {
         <div className="sessions1" style={{ marginTop: '4%' }}>
           <div className="textpart12">
             <div className="textdiv">
-              <p style={{ fontSize: '30px', marginBottom: '0' }}>appointments </p>
+              <p style={{ fontSize: '30px', marginBottom: '0' }}>Appointments</p>
             </div>
             <div className="imgdiv1">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-person-lines-fill" viewBox="0 0 16 16">
@@ -75,22 +134,73 @@ function Students() {
         </div>
       </div>
 
-      {/* Search Input */}
-      {appointments && appointments.length > 0 ? (
-  appointments.map((appt, index) => (
-    <div key={index}>
-      <p>date : {appt.date.toLocaleDateString()}</p>
-      <p> student : {appt.createdy}</p>
-      <p> doctor :{appt.acceptedby}</p>
-      <p> descrption :{appt.description} </p>
-      {/* Add any more appointment fields */}
-    </div>
-  ))
-) : (
-  <p>No appointments found.</p>
-)}
+      {/* Filter Controls */}
+      <div className="filters" style={{ margin: '20px 0' }}>
+        <input
+          type="text"
+          name="createdBy"
+          placeholder="Filter by Student"
+          value={filters.createdBy}
+          onChange={handleFilterChange}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+        <input
+          type="text"
+          name="acceptedBy"
+          placeholder="Filter by Doctor"
+          value={filters.acceptedBy}
+          onChange={handleFilterChange}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+        <input
+          type="text"
+          name="college"
+          placeholder="Filter by College"
+          value={filters.college}
+          onChange={handleFilterChange}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+        <input
+          type="date"
+          name="startDate"
+          placeholder="Start Date"
+          value={filters.dateRange.start}
+          onChange={handleFilterChange}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+        <input
+          type="date"
+          name="endDate"
+          placeholder="End Date"
+          value={filters.dateRange.end}
+          onChange={handleFilterChange}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+        <select
+          name="sortOrder"
+          value={filters.sortOrder}
+          onChange={handleFilterChange}
+          style={{ padding: '5px' }}
+        >
+          <option value="newToOld">New to Old</option>
+          <option value="oldToNew">Old to New</option>
+        </select>
+      </div>
 
-      
+      {/* Appointment List */}
+      {filteredAppointments && filteredAppointments.length > 0 ? (
+        filteredAppointments.map((appt, index) => (
+          <div key={index} style={{ margin: '10px 0', padding: '10px', border: '1px solid #ccc' }}>
+            <p><strong>Date:</strong> {new Date(appt.date).toLocaleDateString()}</p>
+            <p><strong>Student:</strong> {appt.createdy}</p>
+            <p><strong>Doctor:</strong> {appt.acceptedby}</p>
+            <p><strong>Description:</strong> {appt.description}</p>
+            {appt.college && <p><strong>College:</strong> {appt.college}</p>}
+          </div>
+        ))
+      ) : (
+        <p>No appointments found.</p>
+      )}
     </div>
   );
 }

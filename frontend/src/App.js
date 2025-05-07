@@ -115,7 +115,7 @@ function App() {
           <Route path='/suser/newpassword' element={<SuserNewPassword/>}/>
           <Route path='/admin/signup' element={<Addadmin/>}/>
           <Route path='/chat' element={<Chats/>}/>
-          <Route path='/appointments' element={<Vernav><Appointments></Appointments></Vernav>}/>
+          <Route path='/appointments' element={<><Vernav></Vernav> <Appointments></Appointments></>}/>
           <Route path='/doctorchat' element={<Chatd/>}/>
         </Routes>
       </Router>

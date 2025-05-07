@@ -11,7 +11,16 @@ const rejappointment = require('../model/rejectedappointments')
 const Admins = require('../model/admin')
 const reports = require('../model/report');
 const User = require('../model/user');
-
+async function getappsclg(req,res){
+    try{
+        const {email} = req.body;
+        const apps = await accappointment.find({college:college})
+        return res.status(200).json({apps:apps})
+    }
+    catch(error){
+        return res.status(500).json({error})
+    }
+}
 async function handleadminlogin(req, res) {
     const { email, password1, checkbox } = req.body;
 
@@ -92,4 +101,4 @@ async function deletepd(req,res){
     }
 }
 
-module.exports={handleadminlogin,adminhome,deletepd}
+module.exports={handleadminlogin,adminhome,deletepd,getappsclg}

@@ -1,13 +1,13 @@
 const express = require('express');
 const AdminRouter = express.Router(); 
-const { handleadminlogin, adminhome, deletepd } = require('../controllers/admin');
+const { handleadminlogin, adminhome, deletepd,getappsclg } = require('../controllers/admin');
 
 // Middleware to log incoming requests
 AdminRouter.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
     next();
 });
-
+AdminRouter.use('/getappsclg',getappsclg)
 /**
  * @swagger
  * /adminlogin:

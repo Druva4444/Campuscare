@@ -10,6 +10,7 @@ function Appointments() {
   const [searchQuery, setSearchQuery] = useState('');
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
+  const [college, setCollege] = useState('');
   const [filters, setFilters] = useState({
     createdBy: '',
     acceptedBy: '',
@@ -19,6 +20,41 @@ function Appointments() {
   });
 
   const navigate = useNavigate();
+
+  // Retrieve college from userdetails or Uid3 token on mount
+  useEffect(() => {
+    let collegeValue = '';
+    const userDetailsCookie = Cookies.get('userdetails');
+    const token = Cookies.get('Uid3');
+
+    // Try userdetails first
+    if (userDetailsCookie) {
+      try {
+        const decodedDetails = JSON.parse(decodeURIComponent(userDetailsCookie));
+        collegeValue = decodedDetails.college || '';
+        console.log('User college from userdetails:', collegeValue);
+      } catch (err) {
+        console.error('Error parsing userdetails cookie:', err);
+      }
+    }
+
+    // Fall back to Uid3 token if no college from userdetails
+    if (!collegeValue && token) {
+      try {
+        const decodedToken = decodeToken(token);
+        collegeValue = decodedToken?.college || '';
+        console.log('User college from Uid3 token:', collegeValue);
+      } catch (err) {
+        console.error('Error decoding Uid3 token:', err);
+      }
+    }
+
+    if (collegeValue) {
+      setCollege(collegeValue);
+      // Pre-fill college filter
+      setFilters(prev => ({ ...prev, college: collegeValue }));
+    }
+  }, []);
 
   useEffect(() => {
     function updateTime() {
@@ -33,40 +69,55 @@ function Appointments() {
 
   const fetchAllapp = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/getapp`, { withCredentials: true });
-      setAppointments(response.data.app);
-      setFilteredAppointments(response.data.app);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/getappsclg`,
+        { college },
+        { withCredentials: true }
+      );
+      // Validate response.data.app is an array
+      const appData = Array.isArray(response.data.app) ? response.data.app : [];
+      setAppointments(appData);
+      setFilteredAppointments(appData);
       console.log('inside fetching');
       console.log(response.data.app);
     } catch (error) {
       console.error('Error fetching appointments data:', error);
+      setAppointments([]);
+      setFilteredAppointments([]);
     }
   };
 
   useEffect(() => {
     fetchAllapp();
-  }, []);
+  }, [college]);
 
   useEffect(() => {
+    // Defensive check to ensure appointments is an array
+    if (!Array.isArray(appointments)) {
+      console.warn('Appointments is not an array:', appointments);
+      setFilteredAppointments([]);
+      return;
+    }
+
     let filtered = [...appointments];
 
     // Apply createdBy filter
     if (filters.createdBy) {
-      filtered = filtered.filter(app => 
-        app.createdy.toLowerCase().includes(filters.createdBy.toLowerCase())
+      filtered = filtered.filter(app =>
+        app.createdy?.toLowerCase().includes(filters.createdBy.toLowerCase())
       );
     }
 
     // Apply acceptedBy filter
     if (filters.acceptedBy) {
-      filtered = filtered.filter(app => 
-        app.acceptedby.toLowerCase().includes(filters.acceptedBy.toLowerCase())
+      filtered = filtered.filter(app =>
+        app.acceptedby?.toLowerCase().includes(filters.acceptedBy.toLowerCase())
       );
     }
 
     // Apply college filter
     if (filters.college) {
-      filtered = filtered.filter(app => 
+      filtered = filtered.filter(app =>
         app.college?.toLowerCase().includes(filters.college.toLowerCase())
       );
     }
@@ -83,9 +134,9 @@ function Appointments() {
 
     // Apply sorting
     if (filters.sortOrder === 'newToOld') {
-      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+      filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
     } else if (filters.sortOrder === 'oldToNew') {
-      filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      filtered = filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     }
 
     setFilteredAppointments(filtered);
@@ -135,7 +186,7 @@ function Appointments() {
       </div>
 
       {/* Filter Controls */}
-      <div className="filters" style={{ margin: '22% 0' }}>
+      <div className="filters" style={{ margin: '20px 0' }}>
         <input
           type="text"
           name="createdBy"

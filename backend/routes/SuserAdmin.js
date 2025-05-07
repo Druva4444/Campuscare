@@ -5,7 +5,7 @@ const {
   postloginpage, handlelogout, gethome, getadminpage, deleteadmins,
   getcollegepage, handledeletecollege, getcolleges1, Addadmin, getGmail,
   fetchWaitingClgs, acceptClgReq, susersendotp, suserresetp, suserhandleforget,
-  deleteclgreq, getstudents, searchstudent, getappointments
+  deleteclgreq, getstudents, searchstudent, getappointments,getapp
 } = require('../controllers/suser');
 
 SuserAdmin.use((req, res, next) => {
@@ -260,7 +260,7 @@ SuserAdmin.get('/getstudents', getstudents);
  *         description: Search results
  */
 SuserAdmin.get('/searchstudent', searchstudent);
-
+SuserAdmin.get('/getapp',getapp)
 /**
  * @swagger
  * /getappointments:

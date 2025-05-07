@@ -21,6 +21,7 @@ import Aboutus from './aboutus';
 import Login from './forms/dslogin';
 import Index1 from './Index1';
 import A from './A';
+import Appointments from './superadmin/appointments.js'
 import Suserlg from './forms/suserlogin';
 import Vernavadmin from './admin/Vernavadmin';
 import Homeadmin from './admin/Homeadmin';
@@ -114,6 +115,7 @@ function App() {
           <Route path='/suser/newpassword' element={<SuserNewPassword/>}/>
           <Route path='/admin/signup' element={<Addadmin/>}/>
           <Route path='/chat' element={<Chats/>}/>
+          <Route path='/appointments' element={<Vernavadmin><Appointments></Appointments></Vernavadmin>}/>
           <Route path='/doctorchat' element={<Chatd/>}/>
         </Routes>
       </Router>

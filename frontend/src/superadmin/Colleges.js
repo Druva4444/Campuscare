@@ -252,12 +252,12 @@ function Colleges() {
                     boxShadow:
                       '10px 10px 36px #bebebe, -10px -10px 36px #ffffff',
                   }}>
-                    <p>Date: {new Date(appointment.date).toLocaleDateString()}</p>
-                    <p>Description: {appointment.description}</p>
-                    <p> student : {appointment.createdy} </p>
-                    <p> doctor :{appointment.acceptedby}
+                    <p style={{marginLeft:'40px'}}>Date: {new Date(appointment.date).toLocaleDateString()}</p>
+                    <p  style={{marginLeft:'40px'}}>Description: {appointment.description}</p>
+                    <p  style={{marginLeft:'40px'}}> student : {appointment.createdy} </p>
+                    <p  style={{marginLeft:'40px'}}> doctor :{appointment.acceptedby}</p>
             
-                    </p>
+                    
                   </div>
                 ))}
 
@@ -284,8 +284,10 @@ function Colleges() {
                     boxShadow:
                       '10px 10px 36px #bebebe, -10px -10px 36px #ffffff',
                   }}>
-                    <p>Date: {new Date(appointment.date).toLocaleDateString()}</p>
-                    <p>Description: {appointment.description}</p>
+                    <p  style={{marginLeft:'40px'}}>Date: {new Date(appointment.date).toLocaleDateString()}</p>
+                    <p  style={{marginLeft:'40px'}}>Description: {appointment.description}</p>
+                    <p  style={{marginLeft:'40px'}}>Description: {appointment.createdy}</p>
+                    <p  style={{marginLeft:'40px'}}> doctor :{appointment.acceptedby}</p>
                   </div>
                 ))}
               </div>

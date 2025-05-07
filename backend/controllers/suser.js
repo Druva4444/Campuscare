@@ -485,6 +485,17 @@ async function getcollegepage(req, res) {
       res.status(500).json({ message: "Error processing the request" });
     }
   }
+  async function getapp(req,res){
+    try{
+      const app = await accappointment.find();
+      return res.status(200).json(app)
+    }
+    catch(error){
+      console.log('error in ', error)
+      return res.status(500).json({error:error})
+
+    }
+  }
   async function getappointments(req,res){
     console.log("searching+246")
     try {
@@ -506,4 +517,4 @@ async function getcollegepage(req, res) {
   }
   
 module.exports = {postloginpage,handlelogout,gethome,getadminpage,deleteadmins,getcollegepage,handledeletecollege 
-    ,getcolleges1,Addadmin,getGmail,fetchWaitingClgs , acceptClgReq ,susersendotp , suserhandleforget , suserresetp,deleteclgreq,getstudents,searchstudent,getappointments};
+    ,getcolleges1,Addadmin,getGmail,fetchWaitingClgs , acceptClgReq ,susersendotp , suserhandleforget , suserresetp,deleteclgreq,getstudents,searchstudent,getappointments,getapp};

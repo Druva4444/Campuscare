@@ -21,34 +21,7 @@ function Students() {
     const timer = setInterval(updateTime, 1000);
     return () => clearInterval(timer);
   }, []);
- useEffect(() => {
-    const fetchEmail = () => {
-      try {
-        const userDetails = Cookies.get('userdetails');
-  
-        if (userDetails) {
-          const parsed = JSON.parse(userDetails);
-          setgmail(parsed.email);
-        } else {
-          const token = Cookies.get('Uid4');
-          if (token) {
-            const decoded = decodeToken(token); // decode without verification
-            if (decoded && decoded.email) {
-              setgmail(decoded.email);
-            } else {
-              console.warn("Invalid token structure");
-            }
-          } else {
-            console.warn("No userdetails or token cookie found");
-          }
-        }
-      } catch (err) {
-        console.error("Error reading cookies:", err);
-      }
-    };
-  
-    fetchEmail();
-  }, []);
+
   const fetchAllapp = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/getapp`, { withCredentials: true });
@@ -66,11 +39,7 @@ function Students() {
     fetchAllapp();
   }, []);
 
-  const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    fetchSearchedStudents(query);
-  };
+
 
 
   

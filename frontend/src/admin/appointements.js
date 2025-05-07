@@ -75,11 +75,11 @@ function Appointments() {
         { withCredentials: true }
       );
       // Validate response.data.app is an array
-      const appData = Array.isArray(response.data.app) ? response.data.app : [];
+      const appData = Array.isArray(response.data.apps) ? response.data.apps : [];
       setAppointments(appData);
       setFilteredAppointments(appData);
       console.log('inside fetching');
-      console.log(response.data.app);
+      console.log(response.data.apps);
     } catch (error) {
       console.error('Error fetching appointments data:', error);
       setAppointments([]);
@@ -186,7 +186,7 @@ function Appointments() {
       </div>
 
       {/* Filter Controls */}
-      <div className="filters" style={{ margin: '20px 0' }}>
+      <div className="filters" style={{ margin: '10px 22%' }}>
         <input
           type="text"
           name="createdBy"

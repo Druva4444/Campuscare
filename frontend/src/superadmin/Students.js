@@ -85,14 +85,14 @@ function Students() {
     fetchSearchedStudents(query);
   };
 
-  const handleStudentClick = async (email) => {
-    if (selectedStudentEmail === email) {
+  const handleStudentClick = async (gmail) => {
+    if (selectedStudentEmail === gmail) {
       // If clicked again on the same student, unselect
       setSelectedStudentEmail(null);
       setSelectedStudentAppointments(null);
     } else {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getappointments?email=${email}`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getappointments?email=${gmail}`, { withCredentials: true });
         const appointments = response.data; // assume this is an array of appointments
         console.log(appointments)
         const now = new Date();
@@ -111,7 +111,7 @@ function Students() {
         });
   
         setSelectedStudentAppointments({ upcoming, completed });
-        setSelectedStudentEmail(email);
+        setSelectedStudentEmail(gmail);
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }

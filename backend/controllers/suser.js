@@ -488,7 +488,7 @@ async function getcollegepage(req, res) {
   async function getappointments(req,res){
     console.log("searching+246")
     try {
-      const query = req.query.email; // extract query string
+      const query = req.query.gmail; // extract query string
       console.log(query+549)
       if (!query) {
         return res.status(400).json({ message: 'Query parameter is missing' });
